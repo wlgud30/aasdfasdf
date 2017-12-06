@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.login.userboard">
+
+	<resultMap type="com.login.dto.LoginDto" id="LoginDtoMap">
+		<result column="NO" property="no"/>
+		<result column="ID" property="id"/>
+		<result column="PW" property="pw"/>
+		<result column="NAME" property="name"/>
+		<result column="NIKNAME" property="nikname"/>
+		<result column="EMAIL" property="email"/>
+		<result column="PHONE" property="phone"/>
+		<result column="ADDR" property="addr"/>
+		<result column="SUBADDR" property="subaddr"/>
+		<result column="GRADE" property="grade"/>
+		<result column="ENABLED" property="enabled"/>
+		<result column="LASTDATE" property="lastdate"/>
+	</resultMap>
+
+	<select id="selectAll" resultMap="LoginDtoMap">
+	SELECT * FROM USERBOARD ORDER BY ENABLED DESC, NO
+	</select>
+	<select id="selectId" parameterType="map" resultType="LoginDto">
+	SELECT * FROM USERBOARD WHERE NAME=#{name} AND EMAIL=#{email}
+	</select>
+	<select id="selectPw" parameterType="map" resultType="LoginDto">
+	SELECT PW FROM USERBOARD WHERE ID=#{id} AND NAME=#{name} AND EMAIL=#{email}
+	</select>
+	<select id="idchk" parameterType="String" resultType="LoginDto">
+	SELECT * FROM USERBOARD WHERE ID=#{id}
+	</select>
+	<select id="nichk" parameterType="String" resultType="LoginDto">
+	SELECT * FROM USERBOARD WHERE NIKNAME=#{nikname}
+	</select>
+	<select id="emailchk" parameterType="String" resultType="LoginDto">
+	SELECT * FROM USERBOARD WHERE EMAIL = #{email}
+	</select>
+	<select id="selectLogin"  parameterType="map" resultType="LoginDto">
+	SELECT * FROM USERBOARD WHERE ID=#{id} AND PW=#{pw} AND ENABLED='Y'
+	</select>
+	<insert id="insert" parameterType="LoginDto">
+	INSERT INTO USERBOARD VALUES(USERSEQ.NEXTVAL,#{id},#{pw},#{name},#{nikname},#{email},#{phone},#{addr},#{subaddr},'USER','Y',NULL)
+	</insert>
+	<update id="update" parameterType="LoginDto">
+	UPDATE USERBOARD SET PW=#{pw},EMAIL=#{email},PHONE=#{phone},ADDR=#{addr},SUBADDR=#{subaddr} WHERE NO = #{no}
+	</update>
+	<update id="updateOut" parameterType="LoginDto">
+	UPDATE USERBOARD SET ENABLED='N' WHERE NO=#{no}
+	</update>
+	<update id="updateGrade" parameterType="map">
+	UPDATE USERBOARD SET GRADE = #{grade} 
+	WHERE NO IN  
+	<foreach collection="no" item="no"  open="(" close=")">
+	#{no}
+	</foreach>
+	</update>
+	
+</mapper>
