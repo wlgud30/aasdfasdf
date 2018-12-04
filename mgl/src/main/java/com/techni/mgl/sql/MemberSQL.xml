@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgl.Member">
+	<resultMap type="com.techni.mgl.domain.MemberVO" id="MemberVOMap">
+		<result column="MGL_USER_IDX" property="m_idx"/>
+		<result column="MGL_USER_ID" property="m_id"/>
+		<result column="MGL_USER_PW" property="m_pw"/>
+		<result column="MGL_USER_NM" property="m_nm"/>
+		<result column="MGL_USER_AL" property="m_al"/>
+		<result column="MGL_USER_SEX" property="m_sex"/>
+		<result column="MGL_USER_TSIZE" property="m_tsize"/>
+		<result column="MGL_USER_BIRTH" property="m_birth"/>
+		<result column="MGL_USER_TEL" property="m_tel"/>
+		<result column="MGL_USER_EMAIL" property="m_email"/>
+		<result column="MGL_USER_JOINDATE" property="m_joinDate"/>
+		<result column="MGL_USER_PHOTO" property="m_photo"/>
+		<result column="MGL_UCLUB_GRADE_CD" property="m_club_gd"/>
+		<result column="MGL_UCITY_GRADE_CD" property="m_city_gd"/>
+		<result column="MGL_UDO_GRADE_CD" property="m_do_gd"/>
+		<result column="MGL_UCON_GRADE_CD" property="m_con_gd"/>
+		<result column="MGL_USING_CHK" property="m_chk"/>
+		<result column="MGL_USING_OUTDAT" property="m_outDate"/>
+		<result column="MGL_USER_PUSHID" property="m_push"/>
+		<result column= "MGL_USER_AGENT" property="m_agent"/>
+		<result column="MGL_JOIN_SEQ" property="m_join_seq" />
+	</resultMap>
+	<sql id="memberFiled">
+		MGL_USER_IDX AS m_idx,
+		MGL_USER_ID AS m_id,
+		MGL_USER_PW AS m_pw,
+		MGL_USER_NM AS m_nm,
+		MGL_USER_AL AS m_al,
+		MGL_USER_SEX AS m_sex,
+		MGL_USER_TSIZE AS M_tsize,
+		MGL_USER_BIRTH AS m_birth,
+		MGL_USER_TEL AS m_tel,
+		MGL_USER_EMAIL AS m_email,
+		MGL_USER_JOINDATE AS m_joinDate
+		MGL_USER_PHOTO AS m_photo,
+		MGL_UCLUB_GRADE_CD AS m_uclub_grade,
+		MGL_UCITY_GRADE_CD AS m_ucity_grade,
+		MGL_UDO_GRADE_CD AS m_udo_grade,
+		MGL_UCON_GRADE_CD AS m_ucon_grade,
+		MGL_USING_CHK AS	 m_using_chk,
+		MGL_USER_DROPDATE AS m_dropDate,
+	</sql>
+	
+	<!-- 아이디 중복체크 -->
+	<select id="idCheck" resultType="int">
+			SELECT count(*) FROM MGL_USER WHERE MGL_USER_ID = #{m_id}
+	</select>
+	
+	<!-- 생년월일 전화번호 중복체크 -->
+	<select id="birthTelCheck" resultType="int">
+		SELECT 
+			count(*) 
+		FROM 
+			MGL_USER 
+		WHERE 
+			MGL_USER_TEL = #{m_tel} 
+		AND 
+			MGL_USER_BIRTH = #{m_birth}
+	</select>
+	<!-- 아이디찾기 -->
+	<select id="searchID" resultMap="MemberVOMap">
+		select 
+			mgl_user_id 
+		from 
+			mgl_user 
+		where 
+			mgl_user_tel = #{m_tel} 
+		and 
+			mgl_user_birth = #{m_birth}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insert">
+			INSERT INTO 
+				MGL_USER VALUES(
+						concat("U",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_JOIN_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+						#{m_id},
+						#{m_pw},
+						#{m_nm},
+						NULL,
+						#{m_sex},
+						#{m_tsize},
+						#{m_birth},
+						#{m_tel},
+						#{m_email},
+						SYSDATE(),
+						#{m_photo},
+						#{m_club_gd},
+						#{m_city_gd},
+						#{m_do_gd},
+						#{m_con_gd},
+						"가입",
+						NULL,
+						#{m_push},
+						NULL
+				)	
+	</insert>
+	
+	<!-- <insert id="m_joinSeq">
+		insert into MGL_SEQ VALUES(0);
+	</insert> -->
+	
+	<update id="m_joinSeq">
+		update mgl_seq set mgl_join_seq = mgl_join_seq+1
+	</update>
+	
+	<!-- 로그인 -->
+	<select id="login" resultMap="MemberVOMap">
+		SELECT 
+			* 
+		FROM
+			MGL_USER
+		WHERE
+			MGL_USER_ID = #{m_id}
+		AND
+			MGL_USER_PW = #{m_pw}
+	</select>
+	
+	<!-- 유저 정보 수정 -->
+	
+
+	<select id="getLogin" parameterType="com.techni.mgl.dto.LoginDTO" resultType="int">
+		SELECT
+			count(*) as cnt
+		FROM
+			MGL_USER
+		WHERE
+			MGL_USER_ID = #{m_id}
+		AND
+			MGL_USER_PW = #{m_pw}
+	</select>
+	
+	<update id="pushUpdate">
+		UPDATE MGL_USER 
+		SET MGL_USER_PUSHID = #{m_push}
+		WHERE MGL_USER_ID = #{m_id}
+	</update>
+
+	<!-- 회원 정보를 입력하기 위한 질의 명령 -->
+	<insert id="setInsertMember" parameterType="mVO">
+			INSERT
+			INTO
+				MGL_USER
+				(
+					MGL_USER_IDX,
+					MGL_USER_ID,
+					MGL_USER_PW,
+					MGL_USER_NM,
+					MGL_USER_SEX,
+					MGL_USER_BIRTH,
+					MGL_USER_TEL,
+					MGL_USER_EMAIL
+				)
+			VALUES
+				(
+					(SELECT * FROM(SELECT COUNT(MGL_USER_IDX)+1 FROM MGL_USER) NEXT), <!-- MYSQL에서 NEXTVAL 비슷한 쿼리 -->
+					#{m_id},
+					#{m_pw},
+					#{m_nm},
+					#{m_sex},
+					#{m_birth},
+					#{m_tel},
+					#{m_email}
+				)
+	</insert>
+	
+	<!-- 클럽 정보를 얻기 위한 명령 -->
+	<select id="getClubList" resultType="cVO" parameterType="string">
+		SELECT 
+			MGL_CLUB_IDX 				AS c_idx,
+			MGL_CLUB_NM 				AS c_nm,
+			MGL_CLUB_LOCATION		AS c_location,
+			MGL_CLUB_BIRTH 			AS c_birth,
+			MGL_CLUB_TIME 				AS c_time,
+			MGL_CLUB_WEEK 			AS c_week,
+			MGL_CLUB_INFO 			AS c_info,
+			MGL_CSTADIUM_IDX 		AS cst_idx
+		FROM MGL_CLUB
+		WHERE
+		MGL_CLUB_LOCATION = #{lselect}
+	</select>
+	
+	<!-- 단일클럽에 대한 회원들의 정보를 얻기 위한 명령 -->
+	<select id="getMemberList" parameterType="map" resultType="mVO">
+		SELECT
+			R.*,
+			CASE
+				WHEN <![CDATA[R.AGE >=1]]> AND <![CDATA[R.AGE <= 20]]> THEN "10대"
+				WHEN <![CDATA[R.AGE >=21]]> AND <![CDATA[R.AGE <= 30]]> THEN "20대"
+				WHEN <![CDATA[R.AGE >=31]]> AND <![CDATA[R.AGE <= 40]]> THEN "30대"
+				WHEN <![CDATA[R.AGE >=41]]> AND <![CDATA[R.AGE <= 50]]> THEN "40대"
+				WHEN <![CDATA[R.AGE >=51]]> AND <![CDATA[R.AGE <= 60]]> THEN "50대"
+				WHEN <![CDATA[R.AGE >=61]]> AND <![CDATA[R.AGE <= 70]]> THEN "60대"
+				WHEN <![CDATA[R.AGE >=71]]> AND <![CDATA[R.AGE <= 80]]> THEN "70대"
+				ELSE "고연령대"
+			END ageGroup
+		FROM (
+				SELECT
+					B.MGL_UCLUB_IDX AS uc_idx,
+					B.MGL_CLUB_IDX AS c_idx,
+					B.MGL_UCLUB_GRADE_CD AS uc_grade_cd,
+					B.MGL_UCLUB_MNG AS uc_mng,
+					A.MGL_USER_IDX AS m_idx,   
+					A.MGL_USER_ID AS m_id,   
+					A.MGL_USER_PW AS m_pw,   
+					A.MGL_USER_NM AS m_nm,   
+					A.MGL_USER_SEX AS m_sex,   
+					A.MGL_USER_BIRTH AS m_birth,   
+					A.MGL_USER_TEL AS m_tel,   
+					A.MGL_USER_EMAIL AS m_email,   
+					A.MGL_USER_LOGINDATE AS m_loginDate,   
+					A.MGL_USER_DROPDATE AS m_dropDate,   
+					A.MGL_USER_JOINDATE AS m_joinDate,
+					CAST(((TO_DAYS(NOW())-(TO_DAYS(A.MGL_USER_BIRTH)))/365)AS DECIMAL) AS AGE
+					FROM MGL_USER A, MGL_UCLUB B
+					WHERE
+						B.MGL_CLUB_IDX=${CIDX}
+					AND
+						B.MGL_USER_ID = A.MGL_USER_ID
+					) R
+					WHERE NOT EXISTS (
+					SELECT K.*, 
+						CASE
+							WHEN <![CDATA[R.AGE >=1]]> AND <![CDATA[R.AGE <= 20]]> THEN "10대"
+							WHEN <![CDATA[R.AGE >=21]]> AND <![CDATA[R.AGE <= 30]]> THEN "20대"
+							WHEN <![CDATA[R.AGE >=31]]> AND <![CDATA[R.AGE <= 40]]> THEN "30대"
+							WHEN <![CDATA[R.AGE >=41]]> AND <![CDATA[R.AGE <= 50]]> THEN "40대"
+							WHEN <![CDATA[R.AGE >=51]]> AND <![CDATA[R.AGE <= 60]]> THEN "50대"
+							WHEN <![CDATA[R.AGE >=61]]> AND <![CDATA[R.AGE <= 70]]> THEN "60대"
+							WHEN <![CDATA[R.AGE >=71]]> AND <![CDATA[R.AGE <= 80]]> THEN "70대"
+						ELSE "고연령대"
+						END ageGroup, 
+						CASE 
+							WHEN C.MGL_ATTEND_STATUS ='G' THEN "게임대기" 
+							WHEN C.MGL_ATTEND_STATUS ='P' THEN "게임중" 
+							WHEN C.MGL_ATTEND_STATUS ='R' THEN "휴식중" 
+						ELSE "게임가능" 
+						END gameStatus 
+					FROM ( 
+							SELECT 
+								B.MGL_UCLUB_IDX AS uc_idx, 
+								B.MGL_CLUB_IDX AS c_idx, 
+								B.MGL_UCLUB_GRADE_CD AS uc_grade_cd, 
+								B.MGL_UCLUB_MNG AS uc_mng, 
+								A.MGL_USER_IDX AS m_idx, 
+								A.MGL_USER_ID AS m_id, 
+								A.MGL_USER_PW AS m_pw, 
+								A.MGL_USER_NM AS m_nm, 
+								A.MGL_USER_SEX AS m_sex, 
+								A.MGL_USER_BIRTH AS m_birth, 
+								A.MGL_USER_TEL AS m_tel, 
+								A.MGL_USER_EMAIL AS m_email, 
+								A.MGL_USER_LOGINDATE AS m_loginDate, 
+								A.MGL_USER_DROPDATE AS m_dropDate, 
+								CAST(((TO_DAYS(NOW())-(TO_DAYS(A.MGL_USER_BIRTH)))/365) AS DECIMAL) AS AGE 
+							FROM MGL_USER A, MGL_UCLUB B
+							WHERE       B.MGL_CLUB_IDX = #{CIDX}
+							AND       B.MGL_USER_ID = A.MGL_USER_ID
+						) K, MGL_ATTEND C
+					WHERE 
+						K.m_id = C.MGL_USER_ID 
+					AND 
+						K.c_idx = C.MGL_CLUB_IDX 
+					AND 
+						SUBSTR(C.MGL_ATTEND_DATE,1,10) = SUBSTR(NOW(),1,10)
+					AND 
+						R.m_id = K.m_id
+					)
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

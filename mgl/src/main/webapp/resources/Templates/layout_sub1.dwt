@@ -1,0 +1,67 @@
+<!doctype html>
+<html><!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>MGL</title>
+<!-- InstanceEndEditable -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="apple-touch-icon" sizes="180x180" href="../img/favicon_180.png">
+<link rel="icon" type="image/png" sizes="152x152" href="../img/favicon_152.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/favicon_32.png">        
+<link rel="shortcut icon" type="image/x-icon" href="../img/favicon.ico">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="msapplication-TileImage" content="../img/favicon_144.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="../css/css.css" type="text/css" />
+<script src="../js/jquery-1.12.0.min.js"></script>
+<script src="../js/js_st.js"></script>
+<script src="../js/Navi.js"></script>
+<link rel="stylesheet" href="../js/prettydropdowns.css" type="text/css" />
+<script src="../js/jquery.prettydropdowns.js"></script>
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<div id="wrap">
+<header>
+<div class="head_top">
+<!-- InstanceBeginEditable name="head_top" -->	
+<div class="logo_top"><img src="../img/logo.svg"  alt="MGL" class="logo" onClick="location.href='index.html'"></div>
+<div class="tit_top"><h1>양천클럽</h1><h2>클럽정보</h2></div>
+<div class="bt_top"></div>
+<!-- InstanceEndEditable -->
+</div><!-- head_top end -->
+</header>
+<div id="container">
+<!-- InstanceBeginEditable name="container" -->	
+<div class="content">
+afafafa
+</div><!-- content end -->
+<!-- InstanceEndEditable -->
+</div><!-- container end -->
+<div id="ft_area"><!-- InstanceBeginEditable name="ft_area" -->
+    <!-- TemplateBeginEditable name="ft_tag" -->    
+    <script type="text/javascript">	
+   $(document).ready(function(){	 
+	$('.ft_menu').navi_depth({pageNum:1})
+     });
+    </script>
+    <!-- TemplateEndEditable -->
+     <script>	
+    $(document).ready(function(){	
+    var aa = $(location).attr('pathname').slice(-6, -5); 
+	$('.ft_menu').navi_depth({pageNum:aa})
+     });
+    </script>
+  <ul class="ft_menu">
+  <li onClick="location.href='05_notice_list1.html'"><span>공지</span></li>
+  <li onClick="location.href='05-03_game-state1-1-2.html'"><span>게임</span></li>
+  <li onClick="location.href='06-01_member-info1-3.html'"><span>회원</span></li>
+  <li onClick="location.href='04-01_club_info_view4.html'"><span>클럽</span></li>
+  </ul>
+<!-- InstanceEndEditable -->
+</div>
+</div><!-- wrap end -->
+</body>
+<!-- InstanceEnd --></html>

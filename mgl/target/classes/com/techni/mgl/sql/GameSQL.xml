@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgl.Game">
+	<resultMap type="com.techni.mgl.domain.ClubMatchVO" id="ClubMatchVOMap">
+		<result column="MGL_CLUB_COURT_SU" property="c_court_su"/>
+		<result column="MGL_CLUB_COURT_SA" property="c_court_sa"/>
+		<result column="MGL_CLUB_NM" property="c_nm"/>
+		<result column="MGL_CLUB_MATCH_ORDER" property="cm_order"/>
+		<result column="MGL_CLUB_GIDX" property="c_gidx"/>
+		<result column="MGL_CLUB_MATCH_START" property="cm_start"/>
+		<result column="MGL_CLUB_MATCH_END" property="cm_end"/>
+		<result column="MGL_USER_ID" property="u_id"/>
+		<result column="MGL_USER_SEX" property="u_sex"/>
+		<result column="MGL_UCLUB_GRADE_CD" property="u_club_gd"/>
+		<result column="MGL_CLUB_AT_ID1" property="cm_a1_id"/>
+		<result column="MGL_CLUB_AT_ID2" property="cm_a2_id"/>
+		<result column="MGL_CLUB_BT_ID1" property="cm_b1_id"/>
+		<result column="MGL_CLUB_BT_ID2" property="cm_b2_id"/>
+		<result column="MGL_USER_NM" property="u_nm"/>
+		<result column="MGL_USER_AGE" property="u_age" />
+		<result column="MGL_USER_PHOTO" property="u_photo"/>
+		<result column="MGL_CLUB_MATCH_TOTAL" property="cm_total"/>
+		<result column="MGL_CLUB_MATCH_WIN" property="cm_win"/>
+		<result column="MGL_CLUB_MATCH_APTN" property="cm_aptn"/>
+		<result column="MGL_CLUB_MATCH_CNT_GAP" property="cm_sc_gap"/>
+		<result column="MGL_CLUB_MATCH_IDX" property="cm_idx"/>
+		<result column="MGL_CLUB_TEAM_AB" property="teamAB"/>
+		<result column="MGL_STADIUM_COAT" property="cm_order"/>
+		<result column="MGL_CLUB_MATCH_DATE" property="cm_match_date"/>
+	</resultMap>
+	
+	<select	id="clubUseCourt" resultMap="ClubMatchVOMap">
+		SELECT * FROM (SELECT COUNT(*) as cm_gc FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_IDX = #{c_idx} AND MGL_CLUB_MATCH_STATUS = "게임" AND MID(MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))) a,
+				  (SELECT COUNT(*) as cm_wc FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_IDX = #{c_idx} AND MGL_CLUB_MATCH_STATUS = "대기" AND MID(MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))) B,
+				  (SELECT MGL_CLUB_COURT_SU,MGL_CLUB_COURT_SA FROM MGL_CLUB WHERE MGL_CLUB_IDX = #{c_idx}) C
+	</select>
+	<!-- 게임등록 -->
+	<insert id="clubGameSet">
+		INSERT INTO MGL_CLUB_MATCH_WAIT VALUES(
+				CONCAT("G",cast(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT max(MGL_club_match_SEQ) FROM MGL_SEQ) NEXT),3,0)),
+				#{c_idx},
+				SYSDATE(),
+				#{cm_start},
+				NULL,
+				#{cm_status},
+				(
+					SELECT 
+						IFNULL(MAX(MGL_CLUB_MATCH_ORDER)+1,1)
+					FROM 
+						MGL_CLUB_MATCH_WAIT a
+					WHERE 
+						MGL_CLUB_IDX =#{c_idx}
+					AND 
+						SUBSTR(MGL_CLUB_GIDX,2,6) = cast(date_format(now(),"%y%m%d")as char(6))
+				),
+				#{cm_a1_id},
+				#{cm_a2_id},
+				#{cm_b1_id},
+				#{cm_b2_id}
+																		)
+	</insert>
+	<!-- 게임을 등록한 참여자들의 상태변경 -->
+	<update id="gameJoinSChange">
+		UPDATE MGL_UATTEND SET MGL_ATTEND_STATUS = #{u_status}
+			WHERE MGL_CLUB_IDX = #{c_idx}
+			AND RIGHT(MGL_UATTEND_IDX,8) = cast(date_format(now(),"%Y%m%d")AS CHAR(8))
+			AND MGL_USER_ID IN (
+											#{cm_a1_id},
+											#{cm_a2_id},
+											#{cm_b1_id},
+											#{cm_b2_id}
+											)
+	</update>
+	
+	<update id="c_matchSeq">
+		update mgl_seq set mgl_club_match_seq = mgl_club_match_seq+1
+	</update>
+	
+	<!-- 게임중 리스트 출력 -->
+	<select id="gameingList" resultMap="ClubMatchVOMap">
+	SELECT * FROM
+		(SELECT MGL_CLUB_NM FROM MGL_CLUB WHERE MGL_CLUB_IDX = #{c_idx}) JA
+		LEFT JOIN
+		(	
+		SELECT MGL_CLUB_NM,MGL_CLUB_MATCH_ORDER ,MGL_CLUB_GIDX, MGL_CLUB_AT_ID1,B.MGL_USER_NM AS cm_a1_nm,MGL_CLUB_AT_ID2,C.MGL_USER_NM AS cm_a2_nm,MGL_CLUB_BT_ID1,D.MGL_USER_NM as cm_b1_nm,MGL_CLUB_BT_ID2,E.MGL_USER_NM as cm_b2_nm,B.MGL_USER_PHOTO as cm_a1_photo,C.MGL_USER_PHOTO as cm_a2_photo,D.MGL_USER_PHOTO as cm_b1_photo,E.MGL_USER_PHOTO as cm_b2_photo
+			FROM MGL_CLUB_MATCH_WAIT A 
+			INNER JOIN MGL_CLUB F USING(MGL_CLUB_IDX),
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)B,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)C,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)D,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)E
+			WHERE B.MGL_USER_ID = MGL_CLUB_AT_ID1
+			AND C.MGL_USER_ID = MGL_CLUB_AT_ID2
+			AND D.MGL_USER_ID = MGL_CLUB_BT_ID1
+			AND E.MGL_USER_ID = MGL_CLUB_BT_ID2
+			AND MGL_CLUB_MATCH_STATUS != "종료" 
+			AND MGL_CLUB_IDX = #{c_idx}
+			AND MID(MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))
+		)JB	
+			ON JA.MGL_CLUB_NM = JB.MGL_CLUB_NM		
+	</select>
+	<!-- 게임대기중 리스트 출력 -->
+	<select id="waitingList" resultMap="ClubMatchVOMap">
+		SELECT MGL_CLUB_GIDX,MGL_CLUB_MATCH_ORDER , MGL_CLUB_AT_ID1,B.MGL_USER_NM AS cm_a1_nm,MGL_CLUB_AT_ID2,C.MGL_USER_NM AS cm_a2_nm,MGL_CLUB_BT_ID1,D.MGL_USER_NM as cm_b1_nm,MGL_CLUB_BT_ID2,E.MGL_USER_NM as cm_b2_nm,B.MGL_USER_PHOTO as cm_a1_photo,C.MGL_USER_PHOTO as cm_a2_photo,D.MGL_USER_PHOTO as cm_b1_photo,E.MGL_USER_PHOTO as cm_b2_photo
+			FROM MGL_CLUB_MATCH_WAIT A ,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)B,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)C,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)D,
+			(SELECT MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO FROM MGL_USER)E
+			WHERE B.MGL_USER_ID = MGL_CLUB_AT_ID1
+			AND C.MGL_USER_ID = MGL_CLUB_AT_ID2
+			AND D.MGL_USER_ID = MGL_CLUB_BT_ID1
+			AND E.MGL_USER_ID = MGL_CLUB_BT_ID2
+			AND MGL_CLUB_IDX = #{c_idx} 
+			AND MGL_CLUB_MATCH_STATUS = "대기"
+			AND MID(MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))
+			order by a.mgl_club_match_order
+	</select>
+	<!-- 게임상태 종료로 업데이트 -->
+	<update id="gameEnd">
+		UPDATE MGL_CLUB_MATCH_WAIT SET 
+			MGL_CLUB_MATCH_STATUS = "종료" ,
+			MGL_CLUB_MATCH_END = SYSDATE()
+			WHERE MGL_CLUB_GIDX = #{c_gidx}
+	</update>
+	<!-- 대기순번이 가장빠른 대기게임을 게임상태로 바꾼다 -->
+	<update id="waitUpdate">
+		UPDATE MGL_CLUB_MATCH_WAIT A , 
+					(SELECT MGL_CLUB_MATCH_ORDER 
+						FROM MGL_CLUB_MATCH_WAIT 
+							WHERE MGL_CLUB_GIDX = #{c_gidx}) B
+			SET  
+			A.MGL_CLUB_MATCH_STATUS = "게임",
+			A.MGL_CLUB_MATCH_START = SYSDATE(),
+			A.MGL_CLUB_MATCH_ORDER = B.MGL_CLUB_MATCH_ORDER 
+				WHERE a.MGL_CLUB_IDX = #{c_idx}
+				AND MID(a.MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))
+				AND a.MGL_CLUB_MATCH_STATUS = "대기"
+				AND A.MGL_CLUB_MATCH_ORDER = (SELECT MIN(MGL_CLUB_MATCH_ORDER) FROM (SELECT * FROM MGL_CLUB_MATCH_wait) AS M1 WHERE MGL_CLUB_IDX = #{c_idx}
+				AND MID(MGL_CLUB_GIDX, 2, 6) = cast(date_format(now(),"%y%m%d") as char(6))
+				AND MGL_CLUB_MATCH_STATUS = "대기")
+	</update>
+	<!-- 점수등록화면 -->
+	<select id="scoreInsertForm" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CLUB_MATCH_ORDER,MGL_CLUB_GIDX,MGL_CLUB_MATCH_START,MGL_CLUB_MATCH_END,MGL_CLUB_MATCH_ORDER , MGL_CLUB_AT_ID1,B.MGL_USER_NM AS cm_a1_nm,MGL_CLUB_AT_ID2,C.MGL_USER_NM AS cm_a2_nm,MGL_CLUB_BT_ID1,D.MGL_USER_NM as cm_b1_nm,MGL_CLUB_BT_ID2,E.MGL_USER_NM as cm_b2_nm,B.MGL_USER_PHOTO as cm_a1_photo,C.MGL_USER_PHOTO as cm_a2_photo,D.MGL_USER_PHOTO as cm_b1_photo,E.MGL_USER_PHOTO as cm_b2_photo
+				FROM MGL_CLUB_MATCH_WAIT A ,
+		(SELECT 
+			MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO
+				FROM MGL_USER)B,
+		(SELECT 
+			MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO 
+				FROM MGL_USER)C,
+		(SELECT 
+			MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO 
+				FROM MGL_USER)D,
+		(SELECT 
+			MGL_USER_NM,MGL_USER_ID,MGL_USER_PHOTO 
+				FROM MGL_USER)E
+					WHERE B.MGL_USER_ID=MGL_CLUB_AT_ID1
+					AND C.MGL_USER_ID = MGL_CLUB_AT_ID2
+					AND D.MGL_USER_ID = MGL_CLUB_BT_ID1
+					AND E.MGL_USER_ID = MGL_CLUB_BT_ID2
+					AND MGL_CLUB_GIDX = #{c_gidx}
+	</select>
+	<!-- 포인트 계산을위한 유저의 정보를 가져온다 -->
+	<select id="pointUser" resultMap="ClubMatchVOMap">
+		SELECT 
+			A.MGL_USER_ID,MGL_USER_SEX,B.MGL_UCLUB_GRADE_CD,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+		FROM 
+			MGL_USER A
+		LEFT JOIN 
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_UCLUB 
+				WHERE MGL_CLUB_IDX =#{c_idx}
+			) B 
+		ON 
+			A.MGL_USER_ID = B.MGL_USER_ID
+		WHERE 
+			A.MGL_USER_ID = #{cm_a1_id}
+		OR 
+			A.MGL_USER_ID = #{cm_a2_id}
+		OR
+			A.MGL_USER_ID = #{cm_b1_id}
+		OR
+			A.MGL_USER_ID = #{cm_b2_id}
+		order by field(a.MGL_USER_ID,#{cm_a1_id},#{cm_a2_id},#{cm_b1_id},#{cm_b2_id}) 
+	</select>
+	<!-- 종료게임 이력을 등록한다 -->
+	<insert id="pointInsert">
+		INSERT INTO 
+			MGL_CLUB_MATCH VALUES
+			(
+				concat("G",cast(date_format(now(),"%y%m") as char(4)),LPAD((SELECT * FROM(SELECT max(MGL_club_match_END_SEQ) FROM MGL_SEQ) NEXT),5,0)),
+				#{c_gidx},
+				#{c_idx},
+				#{u_id},
+				SYSDATE(),
+				#{teamAB},
+				#{cm_order},
+				#{u_club_gd},
+				#{u_ageG},
+				#{u_gr},
+				#{cm_total},
+				#{cm_sc_gap},
+				#{cm_win},
+				#{cm_gp},
+				#{cm_vp},
+				#{cm_pp},
+				#{cm_ap},
+				(SELECT MGL_CLUB_MATCH_START FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}),
+				(SELECT MGL_CLUB_MATCH_END FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}),
+				(SELECT TIMESTAMPDIFF(MINUTE, (SELECT MGL_CLUB_MATCH_START FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}), (SELECT MGL_CLUB_MATCH_END FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx})))
+			)
+	</insert>
+	<insert id="clubMatchInsert">
+		INSERT INTO 
+			MGL_CLUB_MATCH VALUES
+			(
+				concat("G",cast(date_format(now(),"%y%m") as char(4)),LPAD((SELECT * FROM(SELECT max(MGL_club_match_END_SEQ) FROM MGL_SEQ) NEXT),5,0)),
+				#{c_gidx},
+				#{c_idx},
+				#{u_id},
+				SYSDATE(),
+				#{teamAB},
+				#{cm_order},
+				#{u_club_gd},
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				NULL,
+				(SELECT MGL_CLUB_MATCH_START FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}),
+				(SELECT MGL_CLUB_MATCH_END FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}),
+				(SELECT TIMESTAMPDIFF(MINUTE, (SELECT MGL_CLUB_MATCH_START FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx}), (SELECT MGL_CLUB_MATCH_END FROM MGL_CLUB_MATCH_WAIT WHERE MGL_CLUB_GIDX = #{c_gidx})))
+			)
+	</insert>
+	<update id="clubMatchPointInsert">
+		UPDATE MGL_CLUB_MATCH SET 
+			MGL_USER_AGE = #{u_ageG} , 
+			MGL_CLUB_MATCH_UEFFORT = #{u_gr},
+			MGL_CLUB_MATCH_TOTAL = #{cm_total},
+			MGL_CLUB_MATCH_CNT_GAP = #{cm_sc_gap},
+			MGL_CLUB_MATCH_WIN = #{cm_win},
+			MGL_CLUB_MATCH_GPTN = #{cm_gp},
+			MGL_CLUB_MATCH_VPTN = #{cm_vp},
+			MGL_CLUB_MATCH_PPTN = #{cm_pp},
+			MGL_CLUB_MATCH_APTN = #{cm_ap}
+		WHERE MGL_USER_ID = #{u_id}
+		AND MGL_CLUB_GIDX = #{c_gidx}
+	</update>
+	<!-- 경기종료 시퀀스 -->
+	<update id="cm_end_seq">
+		update mgl_seq set mgl_club_match_end_seq = mgl_club_match_end_seq+1
+	</update>
+	<!-- 경기종료후 결과창 -->
+	<select id="gameResult" resultMap="ClubMatchVOMap">
+		SELECT a.mgl_user_id,mgl_club_match_date,mgl_club_team_ab,mgl_stadium_coat,c.mgl_uclub_grade_cd,a.mgl_user_age,mgl_club_match_ueffort,mgl_club_match_total,mgl_club_match_cnt_gap,mgl_club_match_win,mgl_club_match_gptn,mgl_club_match_vptn,mgl_club_match_pptn,mgl_club_match_aptn,mgl_club_match_start,mgl_club_match_end,mgl_club_match_tgap,B.MGL_USER_NM,B.MGL_USER_PHOTO
+		FROM
+			(select * from mgl_club_match where mgl_club_gidx = #{c_gidx}) A,
+			MGL_USER B
+		left join 
+			(select * from mgl_uclub where mgl_club_idx=#{c_idx}) c 
+		on b.mgl_user_id = c.mgl_user_id
+		WHERE A.MGL_USER_ID = B.MGL_USER_ID
+		group by mgl_user_id
+		ORDER BY MGL_CLUB_MATCH_IDX
+	</select>
+	<!-- 종료게임의 인덱스 번호와 코트번호를 출력한다 -->
+	<select id="endGameGidx" resultMap="ClubMatchVOMap">
+	SELECT * FROM		
+		(
+		SELECT 
+			MGL_CLUB_NM,MGL_CLUB_IDX 
+		FROM 
+			MGL_CLUB 
+		WHERE 
+			MGL_CLUB_IDX=#{c_idx}
+		) JA LEFT JOIN
+		(
+		SELECT 
+			MGL_CLUB_IDX,mgl_club_match_total,MGL_CLUB_GIDX,MGL_STADIUM_COAT FROM MGL_CLUB_MATCH 
+		WHERE 
+			MGL_CLUB_IDX =#{c_idx} 
+		AND 
+			MGL_CLUB_MATCH_DATE = #{cm_ymd}
+		GROUP BY MGL_CLUB_GIDX
+		)	JB
+		ON JA.MGL_CLUB_IDX = JB.MGL_CLUB_IDX
+	</select>
+	<!-- 포인트 월별 요약 -->
+	<select id="pointDetail" resultMap="ClubMatchVOMap">	
+		SELECT 
+			MGL_CLUB_MATCH_END,MGL_CLUB_GIDX,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_DATE,MGL_CLUB_MATCH_IDX,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_APTN FROM MGL_CLUB_MATCH
+		WHERE 
+			MGL_USER_ID = #{u_id}
+		AND 
+			MGL_CLUB_MATCH_APTN IS NOT NULL	
+		AND 
+			MID(MGL_CLUB_MATCH_IDX,2,4) =  #{ym}	
+		AND 
+			MGL_CLUB_IDX = #{c_idx}
+		ORDER BY MGL_CLUB_MATCH_DATE desc,MGL_CLUB_MATCH_END desc
+	</select>
+	<!-- 포인트 통합 -->
+	<select id="pointDetailAll" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CLUB_MATCH_END,MGL_CLUB_GIDX,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_DATE,MGL_CLUB_MATCH_IDX,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_APTN FROM MGL_CLUB_MATCH
+		WHERE 
+			MGL_USER_ID = #{u_id}
+		AND 
+			MGL_CLUB_MATCH_APTN IS NOT NULL
+		AND 
+			MGL_CLUB_IDX = #{c_idx}
+		order by mgl_club_match_date desc,MGL_CLUB_MATCH_END desc
+	</select>
+	<!-- 순서 변경 -->
+	<update id="changeW">
+		UPDATE MGL_CLUB_MATCH_WAIT A , MGL_CLUB_MATCH_WAIT B
+		SET A.MGL_CLUB_MATCH_ORDER = B.MGL_CLUB_MATCH_ORDER,
+		B.MGL_CLUB_MATCH_ORDER = A.MGL_CLUB_MATCH_ORDER
+		WHERE A.MGL_CLUB_GIDX = #{c_gidx}
+		AND B.MGL_CLUB_GIDX = #{c_gidx_c}
+	</update>
+	<!-- 대기명단 삭제 -->
+	<delete id="deleteW">
+		delete 
+		from 
+			mgl_club_match_wait 
+		where 
+			mgl_club_gidx = #{c_gidx};
+	</delete>
+
+	<!-- -->
+	<select id="getClubStadiumCoatList" resultType="cstVO" parameterType="map">
+		SELECT 
+			R.*,
+			A.MGL_STADIUM_COAT_YN AS st_coatYn
+		FROM (
+			SELECT 
+				MGL_CSTADIUM_IDX AS cst_idx,
+				MGL_CLUB_IDX AS c_idx,
+				MGL_CSTADIUM_INFO AS cst_info,
+				MGL_CSTADIUM_COAT AS cst_coat
+			FROM
+				MGL_CSTADIUM
+			WHERE
+				MGL_CLUB_IDX = #{CIDX}
+		) R, MGL_STADIUM A
+		WHERE
+			A.MGL_STADIUM_COAT = R.cst_coat
+		<if test="COATYN == 'Y'">
+			AND A.MGL_STADIUM_COAT_YN = #{COATYN}
+		</if>
+	</select>
+	
+	<update id="setGameStateInfoRankUp">
+		UPDATE 
+			MGL_TEMP_TEAMGROUP
+		SET 
+			MGL_T_TEAMGROUP_RANK = #{temp_rank}
+			, MGL_T_TEAMGROUP_UDATE = NOW()
+		WHERE
+			MGL_T_TEAMGROUP_IDX = #{temp_idx}
+	</update>
+	
+	
+	<!-- 게임현황판에서 대기중 리스트를 얻기 위한 쿼리 -->
+	<select id="getGameStateInfo" resultType="cmVO" parameterType="map">
+		SELECT 
+			R.*,
+			U.MGL_USER_NM AS M_NM
+		FROM (
+				SELECT 
+						MGL_CLUB_MATCH_IDX AS cm_idx,
+						MGL_CLUB_IDX AS c_idx,
+						MGL_CLUB_MATCH_CNT AS cm_cnt,
+						MGL_CLUB_MATCH_GROUP_CNT AS cm_groupCnt,
+						MGL_USER_ID AS m_id,
+						MGL_CLUB_TEAM_AB AS cm_teamAB,
+						MGL_CLUB_MATCH_DATE AS cm_date,
+						MGL_CLUB_MATCH_REGDATE AS cm_regdate 
+				FROM
+					MGL_CLUB_MATCH
+				WHERE 
+					MGL_CLUB_IDX = #{CIDX}
+				AND
+					MGL_CLUB_MATCH_GROUP_CNT = #{GROUPCNT}
+				AND
+					SUBSTR(MGL_CLUB_MATCH_DATE,1,10) = SUBSTR(#{MATCHDATE},1,10)			
+		) R, MGL_USER U
+		WHERE
+			R.m_id = U.MGL_USER_ID
+		ORDER BY
+			R.cm_groupCnt ASC,
+			R.cm_teamAB ASC,
+			R.cm_idx ASC
+	</select>
+
+	<select id="getGameStateTempInfo" resultType="gttVO" parameterType="map">
+		SELECT
+			R.*,
+			( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_aone ) AS aone_nm,
+			( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_atwo ) AS atwo_nm,
+			( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_bone ) AS bone_nm,
+			( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_btwo ) AS btwo_nm
+		FROM (
+			SELECT 
+				MGL_T_TEAMGROUP_IDX AS temp_idx,
+				MGL_CLUB_IDX AS c_idx,
+				MGL_T_TEAMGROUP_CNT AS temp_cnt,
+				MGL_T_TEAMGROUP_AONE AS temp_aone,
+				MGL_T_TEAMGROUP_ATWO AS temp_atwo,
+				MGL_T_TEAMGROUP_BONE AS temp_bone,
+				MGL_T_TEAMGROUP_BTWO AS temp_btwo,
+				MGL_T_TEAMGROUP_TEMPYN AS temp_yn,
+				MGL_T_TEAMGROUP_RANK AS temp_rank,
+				MGL_T_TEAMGROUP_COAT AS temp_coat,
+				MGL_T_TEAMGROUP_MATCHDAY AS cc,
+				MGL_T_TEAMGROUP_REGDATE AS temp_regdate,
+				MGL_T_TEAMGROUP_UDATE AS temp_udate
+			FROM
+				MGL_TEMP_TEAMGROUP
+			WHERE
+				MGL_CLUB_IDX = #{CIDX}
+			AND
+				MGL_T_TEAMGROUP_MATCHDAY = #{MATCHDATE}
+			AND 
+				MGL_T_TEAMGROUP_TEMPYN = #{TEMPYN}
+			ORDER BY
+				MGL_T_TEAMGROUP_RANK ASC
+		) R
+		ORDER BY
+				R.temp_rank ASC
+		
+	</select>
+
+	<select id="getAttendMemberList" resultType="mVO" parameterType="map">
+		SELECT
+			R.*,
+			CASE  
+				WHEN <![CDATA[R.AGE >=1]]> AND <![CDATA[R.AGE <= 20]]> THEN "10대"
+				WHEN <![CDATA[R.AGE >=21]]> AND <![CDATA[R.AGE <= 30]]> THEN "20대"
+				WHEN <![CDATA[R.AGE >=31]]> AND <![CDATA[R.AGE <= 40]]> THEN "30대"
+				WHEN <![CDATA[R.AGE >=41]]> AND <![CDATA[R.AGE <= 50]]> THEN "40대"
+				WHEN <![CDATA[R.AGE >=51]]> AND <![CDATA[R.AGE <= 60]]> THEN "50대"
+				WHEN <![CDATA[R.AGE >=61]]> AND <![CDATA[R.AGE <= 70]]> THEN "60대"
+				WHEN <![CDATA[R.AGE >=71]]> AND <![CDATA[R.AGE <= 80]]> THEN "70대"   
+				ELSE "고연령대" END ageGroup,
+			CASE 
+				WHEN <![CDATA[C.MGL_ATTEND_STATUS ='G']]> THEN "게임대기"
+				WHEN <![CDATA[C.MGL_ATTEND_STATUS ='P']]> THEN "게임중"
+				WHEN <![CDATA[C.MGL_ATTEND_STATUS ='R']]> THEN "휴식중"
+				ELSE "게임가능" END gameStatus
+		FROM (     
+			SELECT      B.MGL_UCLUB_IDX AS uc_idx,
+							B.MGL_CLUB_IDX AS c_idx,
+							B.MGL_UCLUB_GRADE_CD AS uc_grade_cd,
+							B.MGL_UCLUB_MNG AS uc_mng,
+							A.MGL_USER_IDX AS m_idx,
+							A.MGL_USER_ID AS m_id,
+							A.MGL_USER_PW AS m_pw,
+							A.MGL_USER_NM AS m_nm,
+							A.MGL_USER_SEX AS m_sex,
+							A.MGL_USER_BIRTH AS m_birth,
+							A.MGL_USER_TEL AS m_tel,
+							A.MGL_USER_EMAIL AS m_email,
+							A.MGL_USER_LOGINDATE AS m_loginDate,
+							A.MGL_USER_DROPDATE AS m_dropDate,
+							CAST(((TO_DAYS(NOW())-(TO_DAYS(A.MGL_USER_BIRTH)))/365)AS DECIMAL) AS AGE
+			FROM MGL_USER A, MGL_UCLUB B
+			WHERE       B.MGL_CLUB_IDX = #{CIDX}
+			AND       B.MGL_USER_ID = A.MGL_USER_ID
+		) R, MGL_ATTEND C
+		WHERE
+			R.m_id = C.MGL_USER_ID
+		AND
+			R.c_idx = C.MGL_CLUB_IDX
+		AND 
+			SUBSTR(C.MGL_ATTEND_DATE,1,10) = SUBSTR(NOW(),1,10)
+	<if test= 'STATUS != null &amp;&amp; STATUS != "" ' >
+		AND C.MGL_ATTEND_STATUS = #{STATUS}
+	</if>
+	</select>
+	<insert id="setGameMemberAttend" parameterType="map">
+		INSERT INTO MGL_ATTEND 
+		(
+			MGL_ATTEND_IDX,
+			MGL_CLUB_IDX,
+			MGL_USER_ID,
+			MGL_ATTEND_DATE,
+			MGL_ATTEND_STATUS,
+			MGL_ATTEND_YN
+		) VALUES (
+			(SELECT * FROM(SELECT COUNT(MGL_ATTEND_IDX)+1 FROM MGL_ATTEND) NEXT), <!-- MYSQL에서 NEXTVAL 비슷한 쿼리 -->
+			#{CIDX},
+			#{UID},
+			#{today},
+			"A",<!-- default A : 출석 및 게임가능, G : 게임등록, R : 휴식중, P: 게임중 -->
+			"Y"
+		)
+	</insert>
+	<update id="setUpdateGameAttend" parameterType="map">
+		UPDATE MGL_ATTEND SET
+			MGL_ATTEND_STATUS = #{GSTATUS} <!-- 회원의 출석상태를 여러 상태로 변경 -->
+		WHERE 
+			MGL_USER_ID = #{UID}
+		AND
+			MGL_CLUB_IDX = #{CIDX}
+		AND 
+			SUBSTR(MGL_ATTEND_DATE,1,10) = SUBSTR(#{DATE},1,10)
+	</update>
+	
+	<!-- 게임 등록 > 대기 그룹를 얻기 위한 -->
+	<select id="setGameMatchGroupCnt" resultType="int">
+		SELECT 
+				COUNT(MGL_CLUB_MATCH_GROUP_CNT)+1 
+		FROM
+				MGL_CLUB_MATCH 
+		WHERE 
+			MGL_CLUB_IDX = #{CIDX}
+	</select>
+	<!-- 당일 게임 회차를 얻기 위한 -->
+	<select id="setGameMatchTodayCnt" resultType="int">
+		SELECT 
+				COUNT(MGL_CLUB_MATCH_CNT)+1 
+		FROM
+				MGL_CLUB_MATCH 
+		WHERE 
+			MGL_CLUB_IDX = #{CIDX}
+		AND
+			SUBSTR(MGL_CLUB_MATCH_DATE,1,10) = SUBSTR(#{DATE},1,10)
+	</select>
+	<!-- 게임 등록 임시대기  -->
+	<insert id="setGameTempRegist" parameterType="map">
+		INSERT INTO MGL_TEMP_TEAMGROUP	(
+			MGL_T_TEAMGROUP_IDX,				<!-- 임시대기 인덱스 -->
+			MGL_CLUB_IDX,							<!-- 클럽 인덱스 -->	
+			MGL_T_TEAMGROUP_CNT,				<!-- 클럽 임시대기 등록 카운트 -->	
+			MGL_T_TEAMGROUP_AONE,			<!-- 임시대기 A팀 1요원 -->
+			MGL_T_TEAMGROUP_ATWO,			<!-- 임시대기 A팀 2요원 -->
+			MGL_T_TEAMGROUP_BONE,			<!-- 임시대기 B팀 1요원 -->
+			MGL_T_TEAMGROUP_BTWO,			<!-- 임시대기 B팀 2요원 -->
+			MGL_T_TEAMGROUP_TEMPYN,		<!-- 임시대기 여부 Y : 대기, N : 진행중-->
+			MGL_T_TEAMGROUP_RANK,			<!-- 임시대기 순위 -->
+			MGL_T_TEAMGROUP_COAT,			<!-- 진행할 코트 코드 -->
+			MGL_T_TEAMGROUP_MATCHDAY,	<!-- 임시대기 경기등록날짜 -->
+			MGL_T_TEAMGROUP_REGDATE,		<!-- 임시대기 등록일 -->
+			MGL_T_TEAMGROUP_UDATE			<!-- 임시대기 수정일 -->
+		) VALUES (
+			(SELECT * FROM (SELECT COUNT(MGL_T_TEAMGROUP_IDX) + 1 FROM MGL_TEMP_TEAMGROUP) NEXT),
+			#{CIDX},
+			( SELECT * FROM 
+				( SELECT COUNT(MGL_T_TEAMGROUP_CNT) + 1 
+				FROM 
+					MGL_TEMP_TEAMGROUP
+				WHERE
+					MGL_CLUB_IDX = #{CIDX} 
+				AND 
+					MGL_T_TEAMGROUP_MATCHDAY = #{DATE}
+			) NEXT ),
+			#{U_1},
+			#{U_2},
+			#{U_3},
+			#{U_4},
+			#{TEMPYN},
+			( SELECT * FROM 
+				( SELECT COUNT(MGL_T_TEAMGROUP_RANK) + 1 
+				FROM 
+					MGL_TEMP_TEAMGROUP
+				WHERE
+					MGL_CLUB_IDX = #{CIDX} 
+				AND 
+					MGL_T_TEAMGROUP_MATCHDAY = #{DATE}
+			) NEXT ),
+			<if test="COAT != null">
+				#{COAT},
+			</if>
+			<if test="COAT == null || COAT ==''">
+			"",
+			</if>
+			#{DATE},
+			NOW(),
+			NOW()
+		)
+	</insert>
+	<!-- 경기장 코트 상태를 N으로 바꿔놓는다. -->
+	<update id="setUpdateStadiumCoat" parameterType="String">
+		UPDATE 
+			MGL_STADIUM 
+		SET 
+			MGL_STADIUM_COAT_YN = 'N'
+		WHERE
+			MGL_STADIUM_COAT = #{useCoat}
+	</update>
+	<!-- 임시저장 테이블 정보 -->
+	<select id="getGameScoreRegist" parameterType="String" resultType="gttVO">
+		SELECT
+				R.*,
+				( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_aone ) AS aone_nm,
+				( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_atwo ) AS atwo_nm,
+				( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_bone ) AS bone_nm,
+				( SELECT MGL_USER_NM FROM MGL_USER WHERE MGL_USER_ID = R.temp_btwo ) AS btwo_nm
+			FROM (
+				SELECT 
+					MGL_T_TEAMGROUP_IDX AS temp_idx,
+					MGL_CLUB_IDX AS c_idx,
+					MGL_T_TEAMGROUP_CNT AS temp_cnt,
+					MGL_T_TEAMGROUP_AONE AS temp_aone,
+					MGL_T_TEAMGROUP_ATWO AS temp_atwo,
+					MGL_T_TEAMGROUP_BONE AS temp_bone,
+					MGL_T_TEAMGROUP_BTWO AS temp_btwo,
+					MGL_T_TEAMGROUP_TEMPYN AS temp_yn,
+					MGL_T_TEAMGROUP_RANK AS temp_rank,
+					MGL_T_TEAMGROUP_COAT AS temp_coat,
+					MGL_T_TEAMGROUP_MATCHDAY AS temp_matchday,
+					MGL_T_TEAMGROUP_REGDATE AS temp_regdate,
+					MGL_T_TEAMGROUP_UDATE AS temp_udate
+				FROM
+					MGL_TEMP_TEAMGROUP
+				WHERE
+					MGL_T_TEAMGROUP_IDX = #{gIdx}
+			) R
+	</select>
+</mapper>

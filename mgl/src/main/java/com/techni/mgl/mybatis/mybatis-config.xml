@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 	myBatis 활동 방식을 설정한다. -->
+	<settings>	
+		<setting name="cacheEnabled" value="false" />
+		<setting name="useGeneratedKeys" value="true" />
+		<setting name="defaultExecutorType" value="REUSE" />	
+	</settings>
+	
+	<typeAliases>
+		<typeAlias alias="mVO" type="com.techni.mgl.domain.MemberVO"/>
+		<typeAlias alias="cVO" type="com.techni.mgl.domain.ClubVO" />
+		<typeAlias alias="ucVO" type="com.techni.mgl.domain.UClubVO"/>
+		<typeAlias alias="brdVO" type="com.techni.mgl.domain.BoardVO"/>
+		<typeAlias alias="cmVO" type="com.techni.mgl.domain.ClubMatchVO" />
+		<typeAlias alias="ucvDTO" type="com.techni.mgl.dto.UClubViewDTO"/>
+		<typeAlias alias="gttVO" type="com.techni.mgl.domain.GTempTeamVO"/>
+		<typeAlias alias="cstVO" type="com.techni.mgl.domain.CStadiumVO"/>
+		<typeAlias alias="cfVO" type="com.techni.mgl.domain.CfightVO"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="com/techni/mgl/sql/MemberSQL.xml" />
+		<mapper resource="com/techni/mgl/sql/UClubSQL.xml" />
+		<mapper resource="com/techni/mgl/sql/BoardSQL.xml" />
+		<mapper resource="com/techni/mgl/sql/GameSQL.xml"/>
+		<mapper resource="com/techni/mgl/sql/ClubSQL.xml"/>
+		<mapper resource="com/techni/mgl/sql/CfightSQL.xml"/>
+	</mappers>
+	
+</configuration>

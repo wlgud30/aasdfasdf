@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/tiles/header.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/tiles/header_2.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/game/gameRegist.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/game/gameScoreRegist.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/game/gameStateInfo.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/idSearchForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/installEx.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/installEx_2.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/joinForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/loginForm.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/member/terms.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/uclub/uClubDetail.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/mgl/uclub/uClubList.jsp=UTF-8
+separateDerivedEncodings=true
