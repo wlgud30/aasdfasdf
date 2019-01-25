@@ -4,25 +4,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.util.Date"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<link rel="stylesheet" href="/resources/css/swiper.css">
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<!-- InstanceBeginEditable name="head" -->
-<script src="/resources/js/jquery.battatech.excelexport.min.js?ver3"></script>
-<!-- InstanceEndEditable -->
-<script type="text/javascript">
-function detailForm(i){
-	$("#cf_g_idx").val("${cf_g_idx}"+i);
-	$("#frm").submit();
-}
-</script>
-</head>
+
+
+<%-- </head>
 <body>
 	<div id="wrap">
 		<header>
@@ -43,7 +27,7 @@ function detailForm(i){
 			</div>
 			<!-- head_top end -->
 		</header>
-		<div id="container">
+		<div id="container"> --%>
 			<!-- InstanceBeginEditable name="container" -->
 			<div id="swiper_nav" class="gray_bg">
 				<form id="frm" action="/Cfight/CfightMatchDetail.techni" method="post">
@@ -922,13 +906,13 @@ function detailForm(i){
 			</div>
 			<!-- content end-->
 			<!-- InstanceEndEditable -->
-		</div>
+<!-- 		</div> -->
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
+<!-- 	</div> -->
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#exto").click(function(){
@@ -940,7 +924,9 @@ function detailForm(i){
     			$('#toex > thead:first > tr:last').remove();
 			})
 		})
+		function detailForm(i){
+			$("#cf_g_idx").val("${cf_g_idx}"+i);
+			$("#frm").submit();
+		}
 	</script>
 	<!-- wrap end -->
-</body>
-</html>

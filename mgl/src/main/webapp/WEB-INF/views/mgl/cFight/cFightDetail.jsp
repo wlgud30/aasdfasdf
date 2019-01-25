@@ -3,17 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.Date" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script>
 	function ynChk(yn,cf_idx){
 		var ynS = "";
@@ -62,7 +52,7 @@
 		
 	}
 </script>
-<body>
+<%-- <body>
 	<div id="wrap">
 		<header>
 		<div class="head_top">
@@ -89,13 +79,13 @@
 				<c:if test="${cfm eq '매니저' }">
 					<span class="icon-group-set icon-f btn_i i-text" onclick="location.href='/Cfight/CfightGroup.techni?cf_idx=${list2[0].cf_idx}'">그룹설정</span>
 				</c:if>
-				<%-- 날짜비교 --%>
-				<%-- <c:if test="${today >= list[0].cf_end }">투데이가큽니다</c:if> --%>
+				날짜비교
+				<c:if test="${today >= list[0].cf_end }">투데이가큽니다</c:if>
 			</div>
 			<!-- InstanceEndEditable -->
 		</div>
 		<!-- head_top end --> </header>
-		<div id="container">
+		<div id="container"> --%>
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="content white_bg">
 				<table class="table_form">
@@ -154,7 +144,7 @@
 						</td>
 						<c:if test="${cfm eq '매니저'}">
 							<td class="btn_td">
-								<span class="btn_st btn_wh btn_small" onclick="location.href='/Cfight/CfightRegister.techni?cf_idx=${list2[0].cf_idx}'">선수등록${list2[0].cf_t_kind}</span>
+								<span class="btn_st btn_wh btn_small" onclick="location.href='/Cfight/CfightRegister.techni?cf_idx=${list2[0].cf_idx}'">선수등록</span>
 								<span class="btn_st btn_wh btn_small"onclick="location.href='/Cfight/CfightRegisterT.techni?cf_idx=${list2[0].cf_idx}&cf_t_kind=${list2[0].cf_t_kind}&cf_t_idx=${list2[0].cf_t_idx}'">팀등록</span>
 							</td>
 						</c:if>
@@ -210,13 +200,9 @@
 			</div>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>
+	

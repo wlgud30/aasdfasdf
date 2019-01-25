@@ -2,19 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
 <script type="text/javascript">
- $(document).ready(function() {
+/*  $(document).ready(function() {
 	 var u_status = "${u_status}";
 	 if(u_status != '게임중' && u_status !="게임가능"){
 		swal("MGL","오늘 게임에 참석 하시겠습니까?");
@@ -29,7 +18,7 @@
 			}
 		})
  	}
-}); 
+});  */
 	/* function upTeam(i,c_gidx){
 		if(i == 1){
 			swal("MGL","첫번째 대기순번 입니다.")
@@ -128,7 +117,7 @@
 				}
 			})
 	}
-	function attend(){
+	/* function attend(){
 		$.ajax({
 			type:"POST",
 			url:"/UClub/AttendInsert.techni",
@@ -177,7 +166,7 @@
 				swal("MGL","error : " + error);
 			}
 		});
-	}
+	} */
 /* 	function upTempTeam(num){
 		if(confirm("현재 대기순위를 올리시겠습니까?")){
 			location.href="/Game/GameStateInfoRankUp.techni?num="+num;
@@ -233,9 +222,7 @@
 		})
 	}
 </script>
-<body>
-	<div id="wrap">
-		<header>
+<%-- 		<header>
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
@@ -248,26 +235,11 @@
 					</h1>
 				</div>
 				<div class="bt_top">
-					<c:choose>
-						<c:when test="${u_status eq '게임중'}">
-							<span class="icon-playing icon-f btn_i i-text">게임중</span>
-						</c:when>
-						<c:when test="${u_status eq '대기중' }">
-							<span class="icon-expect icon-f btn_i i-text">대기중</span>
-						</c:when>
-						<c:when test="${u_status eq '게임가능'}">
-							<span class="icon-out icon-f btn_i i-text" onClick=attendOut();>퇴실</span>
-						</c:when>
-						<c:otherwise>
-							<span class="icon-enter icon-f btn_i i-text" onClick=attend();>출석</span>
-						</c:otherwise>
-					</c:choose>
 				</div>
 				<!-- InstanceEndEditable -->
 			</div>
 			<!-- head_top end -->
-		</header>
-		<div id="container">
+		</header> --%>
 			<!-- InstanceBeginEditable name="container" -->
 			<script>
 				$(document).ready(function() {
@@ -283,21 +255,14 @@
 			</script>
 			<div class="tab_btn_b_area">
 				<ul class="tab_btn_b">
-					<li class="active_tab"
-						onClick="location.href='/Game/GameState.techni'"><span>게임현황판</span></li>
-					<li onClick="location.href='/UClub/GameOKList.techni'"><span>게임등록</span></li>
-					<li onClick="location.href='/UClub/AttendList.techni '"><span>출석확인</span></li>
+					<li><span
+						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임등록</span></li>
+					<li class="active_tab"><span onClick="location.href='/Game/GameState.techni'">게임현황</span>
+						<span onClick="location.href='#'" class="sm_font">Live</span></li>
+					<li><span onClick="location.href='/Game/EndGame.techni '">종료게임</span></li>
 				</ul>
 			</div>
-			<div class="tab_bt_area white_bg">
-				<div>
-					<ul class="tabs_cont">
-						<li class="active_tab"><span
-							onClick="location.href='/Game/GameState.techni'">대기게임</span></li>
-						<li><span onClick="location.href='/Game/EndGame.techni'">종료게임</span></li>
-					</ul>
-				</div>
-			</div>
+			
 			<!-- tab_bt_area end -->
 			<c:if test="${list[0].c_gidx eq null }">
 				<div class="content white_bg pt_00">
@@ -433,7 +398,6 @@
 			</c:if> --%>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -447,13 +411,8 @@
 			<ul class="ft_menu">
 				<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
 				<li class="active_tab"
-					onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
+					onClick="location.href='/UClub/GamePrivateStateInfo.techni''"><span>게임</span></li>
 				<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
 				<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

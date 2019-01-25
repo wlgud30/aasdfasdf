@@ -68,6 +68,33 @@ public class MemberDAO {
 		sqlSession.insert("mgl.Member.setInsertMember", mVO);
 	}
 	
+	public int todayLogin(String m_id) {
+		return sqlSession.selectOne("mgl.Member.todayLogin",m_id);
+	}
+	
+	public int todayLoginInsert(String m_id) {
+		return sqlSession.insert("mgl.Member.todayLoginInsert", m_id);
+	}
+	
+	public int guestInsert(Map<String,String> map) {
+		return sqlSession.insert("mgl.Member.guestInsert",map);
+	}
+	public int guestSeq() {
+		return sqlSession.update("mgl.Member.g_joinSeq");
+	}
+	
+	public List<MemberVO> clubupdate(){
+		return sqlSession.selectList(nameSpace+"clubUpdate");
+	}
+	
+	public int clubupdate2(Map<String,String> map) {
+		return sqlSession.update(nameSpace+"clubUpdate2",map);
+	}
+	
+	public MemberVO represent(String u_id) {
+		return sqlSession.selectOne(nameSpace+"represent", u_id);
+	}
+	
 	public ArrayList<ClubVO> getClubList(String lselect){
 		return (ArrayList) sqlSession.selectList("mgl.Member.getClubList", lselect);
 	}

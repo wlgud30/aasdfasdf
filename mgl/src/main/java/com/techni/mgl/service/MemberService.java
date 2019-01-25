@@ -2,6 +2,7 @@ package com.techni.mgl.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -59,12 +60,43 @@ public class MemberService {
 	public int pushUpdate(Map<String,String>map){
 		return mDAO.pushUpdate(map);
 	}
+	@Transactional
+	public int todayLogin(String m_id) {
+		return mDAO.todayLogin(m_id);
+	}
+	
+	@Transactional
+	public int todayLoginInsert(String m_id) {
+		return mDAO.todayLoginInsert(m_id);
+	}
+	
+	@Transactional
+	public int guestInsert(Map<String,String> map) {
+			if(mDAO.guestInsert(map)>0 ) {
+				if(mDAO.guestSeq() > 0 ) {
+					return mDAO.m_join_seq();
+				}
+			}
+		return 0;
+	}
 	
 	public int getLogin(LoginDTO dto){
 			
 		return mDAO.getLogin(dto);
 	}
 	
+	@Transactional
+	public List<MemberVO> clubUpdate(){
+		return mDAO.clubupdate();
+	}
+	@Transactional
+	public	int clubUpdate2(Map<String,String> map) {
+		return mDAO.clubupdate2(map);
+	}
+	@Transactional
+	public MemberVO represent(String u_id) {
+		return mDAO.represent(u_id);
+	}
 //	public boolean getSessionSetting(int cnt, HttpSession session, LoginDTO dto){
 //		boolean isLogin = false;
 //		if(cnt == 0){

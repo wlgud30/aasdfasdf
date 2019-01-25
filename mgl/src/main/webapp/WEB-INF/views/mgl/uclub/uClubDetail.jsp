@@ -1,17 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
 <script>
 $(document).ready(function(){
 		var msg = "${msg}";
@@ -102,37 +91,29 @@ $(document).ready(function(){
 		}
 	} 
 	
-	
+	function chat(){
+		swal("MGL","서비스 준비중 입니다.")
+	}
 </script>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="ref()"></div>
-				<div class="tit_top">
-					<h1>${club[0].c_nm}</h1>
-				</div>
-				<div class="bt_top">
-					<c:if test="${club[0].u_mng eq '가입대기' or club[0].u_mng eq '탈퇴' or club[0].u_mng eq '' or club[0].u_mng eq null}">
-						<span id="iBtn" class="btn_st btn_wh">가입신청</span>
-					</c:if>
-					<c:if test="${club[0].u_mng eq '매니저' }">
-						<span class="icon-note btn_i i-text"><a href="/Club/ClubUpdateForm.techni">수정</a></span>
-						<span class="icon-dump icon-f btn_i i-text" onclick="clubDel();">삭제</span>
-					</c:if>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
+<div class="tab_btn_b_area">
+      <ul class="tab_btn_b">
+        <li class="active_tab">
+          <span onClick="location.href='/Club/ClubDetailMy.techni'">클럽정보</span>
+        </li>
+        <li>
+          <span onClick="location.href='/UClub/UclubMUserList.techni'">회원</span>
+        </li>
+        <li>
+          <span onClick="chat()">채팅</span>
+        </li>
+      </ul>
+    </div>
 			<!-- InstanceBeginEditable name="container" -->
 			<form id="frm" method="post">
 				<input type="hidden" name="c_idx" value="${club[0].c_idx }">
 				<input type="hidden" name="u_push" value=${club[0].u_push }>
 			</form>
-			<div class="content white_bg">
+			<div class="content white_bg mb_t">
 			<div class="photo-data">
 				<div class="img_upload_area">
 					<div class="img_upload" style="background-image: url(${club[0].c_photo})">
@@ -300,14 +281,17 @@ $(function(){
 						<td>${club.c_location }</td>
 					</tr>
 				</table> --%>
-			</div>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
+			<ul class="ft_menu">
+				<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
+				<li onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
+				<li 
+					onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
+				<li class="active_tab" onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
+			</ul>
 		</div>
 	<!-- wrap end -->
 </body>

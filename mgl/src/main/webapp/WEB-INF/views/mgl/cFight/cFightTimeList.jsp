@@ -3,32 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-</head>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="tit_top">
-					<h1 class="game_title">${list[0].cf_nm }</h1>
-				</div>
-				<div class="bt_top">
-					<span class="icon-score icon-f btn_i i-text" onClick="location.href='/Cfight/CfightReferee.techni'">심판</span>
-					<c:if test="${cfm eq '매니저' }">
-						<span class="icon-excel icon-f btn_i i-text" onclick="location.href='/Cfight/ExcelTimeDownload.techni'">엑셀</span>
-					</c:if>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
-			<!-- InstanceBeginEditable name="container" -->
 
 			<div class="tab_btn_b_area">
 				<ul class="tab_btn_b">
@@ -122,7 +96,6 @@
 				</c:forEach>
 			</ul>
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -135,7 +108,4 @@
 				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
 	<!-- wrap end -->
-</body>
-</html>

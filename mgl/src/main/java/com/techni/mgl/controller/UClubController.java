@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.dto.UClubViewDTO;
+import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
 @Controller
@@ -59,6 +61,8 @@ public class UClubController {
 
 	@Autowired
 	public UClubService ucService;
+	@Autowired
+	public MemberService mService;
 
 	@RequestMapping(value = "/upload/uploadForm.techni", method = RequestMethod.GET)
 	public void uplodaForm() {
@@ -106,9 +110,15 @@ public class UClubController {
 			List<ClubVO> list = ucService.searchList(map);
 
 			model.addAttribute("list", list);
-			System.out.println(list);
-
-			return "uclub/uClubList";
+			model.addAttribute("keyword", keyword);
+			int msg = 0;
+			
+			if(list.isEmpty()) {
+				msg = 1;	
+			}
+			
+			model.addAttribute("msg", msg);
+			return "uclub/uClubSearch.page";
 
 		} else {
 
@@ -165,22 +175,21 @@ public class UClubController {
 	}
 
 	@RequestMapping("/UClub/UClubAllList.techni")
-	public String uClubList(RedirectAttributes redirect ,Model model, HttpSession session) {
-
+	public String uClubList(Model model, HttpSession session) {
 		if (session.getAttribute("login") != null) {
 			MemberVO mvo = (MemberVO) session.getAttribute("login");
-			System.out.println(mvo.getM_id());
 			List<ClubVO> list = ucService.selectAll(mvo.getM_id());
+			System.out.println("ASDFB");
 			String token = mvo.getM_push();
 			model.addAttribute("token", token);
-			System.out.println("토큰"+token);
-			System.out.println(mvo.getM_id());
 			model.addAttribute("list", list);
 			model.addAttribute("id",mvo.getM_id());
 			model.addAttribute("nm", mvo.getM_nm());
 			model.addAttribute("pw",mvo.getM_pw());
+			MemberVO mvo2 = mService.represent(mvo.getM_id());
+			model.addAttribute("represent", mvo2.getM_represent());
 
-			return "uclub/uClubList";
+			return "uclub/uClubList.page";
 
 		} else {
 
@@ -193,6 +202,12 @@ public class UClubController {
 		}
 
 	}
+	
+	@RequestMapping("/UClub/UClubSearch.techni")
+	public String uClubSearch() {
+		return "uclub/uClubSearch.page";
+	}
+	
 	@RequestMapping("/UClub/UClubAllList2.techni")
 	public String uClubList2(RedirectAttributes redirect ,Model model, HttpSession session) {
 
@@ -339,12 +354,14 @@ public class UClubController {
 		model.addAttribute("m", ym.substring(2, 4));
 		model.addAttribute("u_id", u_id);
 
-		return "uclub/uClubMemberInfoList";
+		return "uclub/uClubMemberInfoList.pag";
 	}
 
 	@RequestMapping("/UClub/UclubMUserList.techni")
 	public String uClubMemberList(HttpSession session, Model model, @RequestParam(required = false) String c_idx,
 			@RequestParam(required = false) String msg) {
+		
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
 		
 		if(c_idx == null){
 			c_idx = (String) session.getAttribute("c_idx");
@@ -354,13 +371,29 @@ public class UClubController {
 		List<UClubVO> list = ucService.UClubMList(c_idx);
 		List<UClubVO> list2 = ucService.UClubJoinWaitList(c_idx);
 		List<UClubVO> list3 = ucService.UClubOutWaitList(c_idx);
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("c_idx", c_idx);
+		map.put("u_id",mvo.getM_id());
+		
+		UClubVO uvo = ucService.userMng(map);
+		
+		String mng = uvo.getUc_mng();
 
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 		model.addAttribute("list3", list3);
 		model.addAttribute("msg", msg);
-
-		return "uclub/uClubMemberList";
+		model.addAttribute("mng",mng);
+		model.addAttribute("c_idx", c_idx);
+		
+		if(mng == "회원"||mng=="가입대기"||mng=="탈퇴대기") {
+			return "uclub/uClubMemberList.pag";
+		}else {
+			return "uclub/uClubMemberList.pag";
+		}
+		
 	}
 
 	// admin 회원정보 > 회원가입승인 화면
@@ -622,15 +655,24 @@ public class UClubController {
 			if (i.getU_id().equals(u_id)) {
 				u_status = i.getU_status();
 			}
-
 		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
 
+        Calendar c1 = Calendar.getInstance();
+
+        String strToday = sdf.format(c1.getTime());
+
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("c_idx",c_idx);
+		map.put("ymd",strToday);
+		List<UClubVO> list2 = ucService.count(map);
+		
 		model.addAttribute("u_status", u_status);
 		model.addAttribute("list", list);
-
-		System.out.println(list.get(0).getU_age()+list.get(0).getU_club_gd()+"급수 나이"+list.toString());
-
-		return "game/gameRegist";
+		System.out.println(list2);
+		model.addAttribute("list2", list2);
+		
+		return "game/gameRegist.pag";
 	}
 
 	// 클럽유저리스트
@@ -762,9 +804,9 @@ public class UClubController {
 	}
 
 	@RequestMapping("/UClub/UClubWrite.techni")
-	public ModelAndView getUClubWriteForm(ModelAndView mv) {
-		mv.setViewName("uclub/uClubWriteForm");
-		return mv;
+	public String getUClubWriteForm(ModelAndView mv) {
+		
+		return "uclub/uClubWriteForm.page";
 	}
 
 	@RequestMapping("/UClub/UClubDetailNBeforeJoin.techni")
@@ -829,7 +871,7 @@ public class UClubController {
 
 		model.addAttribute("uvo", uvo);
 		model.addAttribute("list", list);
-		return "uclub/uClubMemberDetail";
+		return "uclub/uClubMemberDetail.page";
 	}
 
 	// 회원정보 > 회원정보 수정폼 호출
@@ -855,7 +897,7 @@ public class UClubController {
 
 		model.addAttribute("uvo", uvo);
 
-		return "uclub/UClubMemberUpdate";
+		return "uclub/UClubMemberUpdate.page";
 	}
 	//개인리그등록 화면
 	@RequestMapping("/UClub/GamePrivateStateInfo.techni")
@@ -866,8 +908,6 @@ public class UClubController {
 		String u_status = "";
 		String c_idx = (String) session.getAttribute("c_idx");
 
-		List<UClubVO> list = ucService.gameOKList(c_idx);
-
 		List<UClubVO> uvo2 = ucService.attendY(c_idx);
 
 		for (UClubVO i : uvo2) {
@@ -876,11 +916,20 @@ public class UClubController {
 			}
 
 		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
 
+        Calendar c1 = Calendar.getInstance();
+
+        String strToday = sdf.format(c1.getTime());
+
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("c_idx",c_idx);
+		map.put("ymd",strToday);
+		List<UClubVO> list2 = ucService.count(map);
 		model.addAttribute("u_status", u_status);
-		model.addAttribute("list", list);
+		model.addAttribute("list", list2);
 
-		return "game/gamePrivateStateInfo";
+		return "game/gamePrivateStateInfo.pag";
 	}
 	//팀리그등록화면
 	@RequestMapping("/UClub/GameTeamStateInfo.techni")
@@ -901,11 +950,20 @@ public class UClubController {
 			}
 
 		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
 
+        Calendar c1 = Calendar.getInstance();
+
+        String strToday = sdf.format(c1.getTime());
+
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("c_idx",c_idx);
+		map.put("ymd",strToday);
+		List<UClubVO> list2 = ucService.count(map);
 		model.addAttribute("u_status", u_status);
-		model.addAttribute("list", list);
+		model.addAttribute("list", list2);
 
-		return "game/gameTeamStateInfo";
+		return "game/gameTeamStateInfo.pag";
 	}
 
 	// 회원정보 > 회원정보 수정 액션 처리
@@ -987,5 +1045,22 @@ public class UClubController {
 		
 		return map;
 	}
-
+	@RequestMapping("/UClub/repersentChange.techni")
+	@ResponseBody
+	public Map<String,Object> repersentCahnge(HttpSession session,@RequestBody String c_idx){
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		
+		Map<String,String> map2 = new HashMap<String,String>();
+		map2.put("c_idx", c_idx);
+		map2.put("u_id", mvo.getM_id());
+		
+		int cnt = mService.clubUpdate2(map2);
+	
+		
+		map.put("cnt", cnt);
+		
+		return map;
+	}
 }

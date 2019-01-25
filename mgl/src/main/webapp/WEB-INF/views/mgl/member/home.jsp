@@ -2,65 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<script src="/resources/js/jquery-3.3.1.min.js"></script>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<style type="text/css">
-header:before {
-	border-bottom: 1px solid #dedee0;
-}
-
-header {
-	box-shadow: none
-}
-</style>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<div class="logo_top" id="main_logo">
-					<img src="/resources/img/logo_b.svg" alt="MGLB" class="logo"
-						onClick="location.href='index1.html'">
-				</div>
-				<div class="tit_top">
-					<h1>배드민턴</h1>
-				</div>
-				<div class="bt_top">
-					<span class="icon-bell btn_i"
-						onClick="location.href='06-03_member_list3.html'"></span> <span
-						class="notice_ub">9</span>
-				</div>
-				<!-- InstanceBeginEditable name="main_top" -->
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
-			<div class="fix_top">
-				
-				<div id="main_nav_area">
-					<ul id="main_nav">
-						<li onClick="location.href='index1.html'"><span>홈</span></li>
-						<li onClick="location.href='index1-2.html'"><span>클럽</span></li>
-						<li onClick="location.href='index1-3.html'"><span>게임이력</span>
-						</li>
-						<li onClick="location.href='index4.html'"><span>프로필</span></li>
-						<li onClick="location.href='index5.html'"><span>전체서비스</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<!-- fix_top end -->
-			<!-- InstanceBeginEditable name="main_content" -->
 			<div class="ct_sd pt_00">
 				<ul id="li_2divide" class="cet_lay white_bg mb_t">
 					<li><span class="item_text">게임 포인트</span> <span
@@ -139,17 +80,9 @@ header {
 					<div class="swiper-pagination"></div>
 				</div>
 			</div>
-			<!-- Swiper JS -->
-			<link rel="stylesheet" href="/resources/css/swiper.css">
-			
-			<!-- InstanceEndEditable -->
-		</div>
-		<!-- container end -->
-		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
-		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>
+		<script>
+			$(document).ready(function(){
+				$("#home").attr("class","active_tab");	
+				alert("${msg}");
+			});
+		</script>

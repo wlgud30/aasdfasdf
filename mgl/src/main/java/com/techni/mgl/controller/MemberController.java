@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +54,7 @@ import com.cloudrail.si.services.GooglePlus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
+import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
@@ -310,7 +313,28 @@ public class MemberController {
 		if(mvo!=null){
 			System.out.println("로그인");
 			session.setAttribute("login", mvo);
-			return "redirect:/UClub/UClubAllList.techni";
+			if(mService.todayLogin(m_id) == 0) {
+				int res = mService.todayLoginInsert(m_id);
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
+			if(ucService.representCheck(m_id)>0) {
+				session.setAttribute("c_idx",mvo.getM_represent());
+				
+				map.put("c_idx", mvo.getM_represent());
+				map.put("u_id",mvo.getM_id());
+				
+				UClubVO uvo = ucService.userMng(map);
+				
+				session.setAttribute("mng", uvo.getUc_mng());
+				
+				return "redirect:/Board/BoardList.techni";
+			}else {
+				return "redirect:/UClub/UClubAllList.techni";
+			}
+			
 		}else{
 			String msg="ID, P/W를  다시 입력해 주세요.";
 			System.out.println("입력한 ID : "+m_id);
@@ -321,6 +345,42 @@ public class MemberController {
 		return "member/loginForm";
 		}
 	}
+	
+	@RequestMapping("/Member/GuestInsert.techni")
+	@ResponseBody
+	public Map<String,Object> guestInsert(HttpSession session, @RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		JSONParser parser = new JSONParser();
+		JSONObject json2 = (JSONObject) parser.parse(json);
+		
+		String c_idx = (String) session.getAttribute("c_idx");
+		
+		String g_id = (String) json2.get("g_id");
+		String g_sex = (String) json2.get("g_sex");
+		String g_age = (String) json2.get("g_age");
+		String g_gd = (String) json2.get("g_gd");
+		
+		System.out.println(g_age);
+		
+		g_age = g_age+"0101";
+		
+		Map<String,String> map2 = new HashMap<String,String>();
+		System.out.println(g_age);
+		map2.put("m_nm", g_id);
+		map2.put("m_sex", g_sex);
+		map2.put("m_birth", g_age);
+		map2.put("m_club_gd", g_gd);
+		map2.put("c_idx", c_idx);
+		
+		int res = mService.guestInsert(map2);
+		System.out.println(res);
+		
+		map.put("cnt", res);
+		
+		return map;
+	}
+	
 	@RequestMapping("/Error/Error.techni")
 	public String errorPage(HttpServletRequest request,Model model){
 		
@@ -802,13 +862,32 @@ public class MemberController {
 	        }
 	}
 	@RequestMapping("/Member/home.techni")
-	public String home() {
-		
+	public String home(Model model) {
+		/*	List<MemberVO> list = mService.clubUpdate();
+			
+			for(int i = 0; i< list.size();i++) {
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("c_idx", list.get(i).getC_idx());
+				map.put("u_id", list.get(i).getM_id());
+				
+				int res = mService.clubUpdate2(map);
+				
+				if(res==0) {
+					model.addAttribute("msg","실패");
+					return "member/home.page";
+				}
+			}
+
+			model.addAttribute("msg","성공");*/
 		return "member/home.page";
 	}
 	@RequestMapping("/Member/accessTerms.techni")
 	public String accessTerms() {
 		return "member/accessTerms";
+	}
+	@RequestMapping("/Member/service.techni")
+	public String service() {
+		return "member/accessTerms_2.page";
 	}
 	
 	@RequestMapping("/Member/personalData.techni")

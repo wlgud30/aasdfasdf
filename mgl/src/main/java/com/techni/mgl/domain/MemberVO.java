@@ -21,6 +21,36 @@ public class MemberVO {
 	private String m_outDate;		//MGL_USER_DROPDATE	timestamp
 	private String m_push;		//MGL_USER_PUSH_TOKEN
 	private String m_agent;	 			//MGL_USER_AGENT
+	private String m_represent;
+	
+	
+	
+	
+	public String getM_represent() {
+		return m_represent;
+	}
+
+	public void setM_represent(String m_represent) {
+		this.m_represent = m_represent;
+	}
+
+	public String getM_loginTime() {
+		return m_loginTime;
+	}
+
+	public void setM_loginTime(String m_loginTime) {
+		this.m_loginTime = m_loginTime;
+	}
+
+	public int getM_joinYN() {
+		return m_joinYN;
+	}
+
+	public void setM_joinYN(int m_joinYN) {
+		this.m_joinYN = m_joinYN;
+	}
+	public String m_loginTime;
+	public int m_joinYN;
 	private int m_join_seq;
 	
 	

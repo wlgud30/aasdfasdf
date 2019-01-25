@@ -3,50 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.Date" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<body>
-	<div id="wrap">
-		<header>
-		<div class="head_top">
-			<!-- InstanceBeginEditable name="head_top" -->
-			<div class="tit_top">
-				<h1>클럽교류전</h1>
-			</div>
-			<div class="bt_top">
-				<c:choose>
-					<c:when test="${join eq '참석' }">
-						<span class="icon-approval icon-f btn_i i-text">참석</span>
-					</c:when>
-					<c:when test="${join eq '불참' }">
-						<span class="icon-delete icon-f btn_i i-text">불참</span>
-					</c:when>
-					<c:when test="${cm eq '매니저' and cfm ne '매니저'}">
-						<span class="icon-approval icon-f btn_i i-text" onClick="ynChk('Y','${list[0].cf_idx}')">참석</span>
-						<span class="icon-delete icon-f btn_i i-text" onClick="ynChk('N','${list[0].cf_idx}')">불참</span>
-					</c:when>
-				</c:choose>
-				<c:set var="today" value="<%=new Date()%>"/>
-				<fmt:formatDate value="${today}" pattern="yyyy-MM-dd" var="today"/>
-				<c:if test="${cfm eq '매니저' }">
-					<span class="icon-group-set icon-f btn_i i-text" onclick="location.href='/Cfight/CfightGroup.techni?cf_idx=${list2[0].cf_idx}'">그룹설정</span>
-				</c:if>
-				<%-- 날짜비교 --%>
-				<%-- <c:if test="${today >= list[0].cf_end }">투데이가큽니다</c:if> --%>
-			</div>
-			<!-- InstanceEndEditable -->
-		</div>
-		<!-- head_top end --> </header>
-		<div id="container">
+
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="content white_bg">
 				<table class="table_form">
@@ -160,8 +117,7 @@
 			</div>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
-		<!-- container end -->
+		
 		<div id="ft_area">
 			<ul id="ft_nv2" class="ft_menu">
 				<li onClick="location.href='/Cfight/CfightSummary.techni'" class="active_tab"><span>개요</span></li>
@@ -171,7 +127,5 @@
 				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
 </body>
 </html>

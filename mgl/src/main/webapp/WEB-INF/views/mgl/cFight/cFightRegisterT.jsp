@@ -3,18 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
 
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<script src="/resources/js/jquery-1.12.0.min.js"></script>
 <script>
 $(document).ready(function() {
 		$('#wh option[id=${cf_t_idx}]').attr('selected','selected');
@@ -165,23 +154,7 @@ function teamDelete(idx){
 }
 </script>
 <jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="location.href='/Cfight/CfightDetail.techni?cf_idx=${cf_idx}'"></div>
-				<div class="tit_top">
-					<h1 class="game_title">${list3[0].cf_nm} 팀등록</h1>
-				</div>
-				<div class="bt_top">
-					
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
+
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="cat_gray_area col_2input wauto">
 				<div>
@@ -306,13 +279,15 @@ function teamDelete(idx){
 			</div>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
+
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>
+		<script>
+		$(document).ready(function() {
+			$(".prettydropdown:eq(0)  label:eq(0)").remove();
+			$(".prettydropdown:eq(0)  label:eq(0)").remove();
+		});
+		</script>

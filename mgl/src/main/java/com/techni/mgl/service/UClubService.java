@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.techni.mgl.dao.MemberDAO;
 import com.techni.mgl.dao.UClubDAO;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.UClubVO;
@@ -20,6 +21,8 @@ public class UClubService {
 	
 	@Autowired
 	public UClubDAO ucDAO;
+	@Autowired
+	public MemberDAO mDAO;
 	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
@@ -59,7 +62,22 @@ public class UClubService {
 	}
 	@Transactional
 	public int user_insert(UClubVO uVO){
-		return ucDAO.user_insert(uVO);
+		
+	if(ucDAO.representCheck(uVO.getU_id())>0) {
+		if(ucDAO.user_insert(uVO) > 0) {
+			Map<String,String> map = new HashMap<String,String>();
+			
+			map.put("u_id", uVO.getU_id());
+			map.put("c_idx", uVO.getC_idx());
+			return mDAO.clubupdate2(map);
+		}
+	}
+		return 0;
+	}
+	
+	@Transactional
+	public int representCheck(String u_id) {
+		return ucDAO.representCheck(u_id);
 	}
 	
 	//시퀀스 증가
@@ -196,6 +214,25 @@ public class UClubService {
 	public int pushInsert(Map<String,String> map) {
 		return ucDAO.pushInsert(map);
 	}
+	// 게임가능 인원(카운트포함)
+	@Transactional
+	public List<UClubVO> count(Map<String,String> map){
+		return ucDAO.count(map);
+	}
+	//클럽의 회원등급
+	@Transactional
+	public UClubVO	userMng(Map<String,String> map) {
+		return ucDAO.userMng(map);
+	}
+	//클럽의 회원수
+	@Transactional
+	public int clubCount(String c_idx) {
+		return ucDAO.clubCount(c_idx);
+	}
+	
+	
+	
+	
 	
 	public UClubViewDTO getUClubDetail(String idx, HttpSession session){
 		//세션에 클럽인덱스를 넣어두자!!

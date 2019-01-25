@@ -2,17 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script>
 $(document).ready(function() {
 	
@@ -78,128 +68,8 @@ function clubAttend(nm,idx){
 	}) 
 	}
 }
-function formSubmit(){
-	alert($("#frm").serialize());
-	if($("#cf_nm").val()=="" || $("#cf_nm").val()==null){
-		swal("MGL","대회 명을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_start").val()=="" || $("#cf_start").val()==null){
-		swal("MGL","대회 일자를 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_sTime1").val()=="" || $("#cf_sTime1").val()==null ||$("#cf_sTime2").val()=="" || $("#cf_sTime2").val()==null){
-		swal("MGL","대회 시간을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_eTime1").val()=="" || $("#cf_eTime1").val()==null ||$("#cf_eTime2").val()=="" || $("#cf_eTime2").val()==null){
-		swal("MGL","대회 시간을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_point").val()=="" || $("#cf_point").val()==null){
-		swal("MGL","점수를 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_time").val()=="" || $("#cf_time").val()==null){
-		swal("MGL","소요시간을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_end").val()=="" || $("#cf_end").val()==null){
-		swal("MGL","등록마감 시간을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_cnm").val()=="" || $("#cf_cnm").val()==null){
-		swal("MGL","체육관 명을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_location").val()=="" || $("#cf_location").val()==null){
-		swal("MGL","체육관 위치를 입력해 주세요.");
-		return false;
-	}
-	if(!$('input:radio[name=cf_meth]').is(':checked')){
-		swal("MGL","대회 방식을 입력해 주세요.");
-		return false;
-	}
-	if($("#c1_idx").val()=="" || $("#c1_idx").val()==null && $("#c2_idx").val()=="" || $("#c2_idx").val()==null &&$("#c3_idx").val()=="" || $("#c3_idx").val()==null ){
-		swal("MGL","참여 클럽을 입력해 주세요.");
-		return false;
-	}
-	if($("#cf_body").val()=="" || $("#cf_body").val()==null){
-		swal("MGL","대회 소개를 입력해 주세요.");
-		return false;
-	}
-	var b = $("#trAppend tr").length;
-	alert(b);
-	for(var i = 1 ; i<b;i++){
-		if($("#no_"+i).val() == "" || $("#no_"+i).val() == null){
-			swal("MGL","게임 순서를 입력해 주세요.");
-			return false;
-		}
-		if($("#type_"+i).val() == "" || $("#type_"+i).val() == null){
-			swal("MGL","종목을 입력해 주세요.");
-			return false;
-		}
-		if($("#kind_"+i).val() == "" || $("#kind_"+i).val() == null){
-			swal("MGL","종류를 입력해 주세요.");
-			return false;
-		}
-	}
-	var fs = $("#frm").serialize();
-	swal({
-		title : "MGL",
-		text : "대항전을 등록하시겠습니까?",
-		buttons : {
-			confirm : "OK",
-			cancel : "NO"
-		}
-	})
-	.then((value) => {
-		if(value){
-			$.ajax({
-				type:"post",
-				data : fs,
-				url : "/Cfight/CfightInsert.techni",
-				datatype : "json",
-				success : function(data){
-					if(data.cnt>0){
-						swal({
-							title : "MGL",
-							text : "대항전이 등록되었습니다.",
-							type : "success"
-						})
-						.then((value) =>{
-							 location.href="/Board/BoardList.techni";
-						})
-					}else{
-						swal("MGL","죄송합니다. 다시 시도해 주세요.")
-					}
-				},
-				error : function(error){
-					swal("MGL","error : "+error);
-				}
-			}) 
-		}
-	})
-}
 
 </script>
-<body>
-	<div id="wrap">
-		<header>
-		<div class="head_top">
-			<!-- InstanceBeginEditable name="head_top" -->
-			<div class="btn_back" onClick="history.back();"></div>
-			<div class="tit_top">
-				<h1>대회생성</h1>
-			</div>
-			<div class="bt_top">
-				<!-- <span class="icon-match icon-f btn_i i-text">대진표생성</span>  -->
-				<span class="icon-save icon-f btn_i i-text" onclick="formSubmit()">등록</span>
-			</div>
-			<!-- InstanceEndEditable -->
-		</div>
-		<!-- head_top end --> </header>
-		<div id="container">
 			<!-- InstanceBeginEditable name="container" -->
 			<form id="frm">
 			<div class="content white_bg">
@@ -334,14 +204,8 @@ function formSubmit(){
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
 			</form>
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

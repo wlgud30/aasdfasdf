@@ -3,11 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<script src="/resources/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#court_${cf_court}').attr('selected','selected');
@@ -84,24 +79,6 @@ function pSubmit(){
 }
 
 </script>
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-</head>
-<body>
-	<div id="wrap">
-		<header>
-		<div class="head_top">
-			<!-- InstanceBeginEditable name="head_top" -->
-			<div class="btn_back" onClick="location.href='/Cfight/CfightDetail.techni'"></div>
-			<div class="tit_top">
-				<h1 class="game_title">${list2[0].cf_nm }</h1>
-			</div>
-			<div class="bt_top">
-					<span class="icon-file-view icon-f btn_i i-text" onClick="location.href='/Cfight/CfightAllMatch.techni'">전체보기</span>
-			</div>
-			<!-- InstanceEndEditable -->
-		</div>
-		<!-- head_top end --> </header>
-		<div id="container">
 		<form method="post" action="/Cfight/CfightPush.techni" id="frm2">
 			<input type="hidden" name="a1_id" id="a1_id"/>
 			<input type="hidden" name="a2_id" id="a2_id"/>
@@ -215,13 +192,15 @@ function pSubmit(){
 			</c:if>
 			<!-- content end-->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>
+		<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
+		<script>
+		$(document).ready(function() {
+			$(".prettydropdown:eq(0)  label:eq(0)").remove();
+			$(".prettydropdown:eq(0)  label:eq(0)").remove();
+		});
+		</script>

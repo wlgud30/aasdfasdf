@@ -3,25 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-</head>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="tit_top">
-					<h1 class="game_title">${list[0].cf_nm }</h1>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
+
 			<!-- InstanceBeginEditable name="container" -->
 			<script>
 				$(document).ready(function() {
@@ -57,7 +39,6 @@
 			</div>
 			<!-- content end-->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -78,8 +59,3 @@
 				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
-
-</body>
-</html>

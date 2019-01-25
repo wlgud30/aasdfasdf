@@ -1,17 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!doctype html>
-<html><!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<script src="/resources/js/jquery-3.3.1.min.js"></script>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
 <style type="text/css">
 .ti	{
 	display: block !important;text-overflow:ellipsis;overflow: hidden;white-space: nowrap
@@ -92,24 +81,6 @@ function pushTok(token,u_nm,msg,url){
 			}
 		}) 
 		$(".post1").click(function(){
-/* 			var method = method || "post"; 
-		    var path = "/Club/ClubDetail.techni";
-		    var form = document.createElement("form"); 
-		    form.setAttribute("method", method);
-		    form.setAttribute("action", path);
-		        var hiddenField = document.createElement("input");
-		        hiddenField.setAttribute("type", "hidden");
-		        hiddenField.setAttribute("name", "c_idx");
-		        hiddenField.setAttribute("value", c_idx);
-		        form.appendChild(hiddenField);
-		        var hiddenField2 = document.createElement("input");
-		        hiddenField2.setAttribute("type", "hidden");
-		        hiddenField2.setAttribute("name", "msg");
-		        hiddenField2.setAttribute("value", null);
-		        form.appendChild(hiddenField2);
-		    document.body.appendChild(form);
-		    form.submit();
-		}); */
 			var c_idx = $(this).attr("value");
 		    $("#c_idx").val(c_idx);
 		    $("#frm2").submit();
@@ -117,38 +88,22 @@ function pushTok(token,u_nm,msg,url){
 	})
 	
 </script>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="logo_top">
-					<img src="/resources/img/logo.svg"  alt="MGL" class="logo" onclick="location.href='/UClub/UClubAllList.techni'">
-				</div>
-				<div class="tit_top">
-					<h1>클럽(모임)</h1>
-				</div>
-				<div class="bt_top">
-					<span id = "do"></span>
-					<span class="icon-logout icon-f btn_i i-text" onClick="logout()">로그아웃</span>
-					<span class="icon-search icon-f btn_i i-text" onclick="location.href='#'">클럽찾기</span>
-					<span class="icon-add btn_i icon-f i-text" onclick="location.href='/UClub/UClubWrite.techni'">클럽생성</span>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			
-			<!-- head_top end -->
-		</header>
-		<div id="container">
+
+	
+		<div class="tab_btn_b_area" >
+      <ul class="tab_btn_b">
+        <li class="active_tab" onClick="location.href='/UClub/UClubAllList.techni'">
+          <span>나의클럽</span>
+        </li>
+        <li onClick="location.href='/UClub/UClubSearch.techni'">
+          <span>Best &amp; 검색</span>
+        </li>
+        <li onclick="location.href='/UClub/UClubWrite.techni'">
+          <span>클럽생성</span>
+        </li>
+      </ul>
+    </div>
 			<!-- InstanceBeginEditable name="container" -->
-			<form method="post" id="frm">
-				<div class="search_bar_area">
-					<div class="search_bar">
-						<input id='keyword' name='keyword' type="text" placeholder="지역, 클럽명으로 검색하세요.">
-						<span id="btn_search" class="icon-search icon-f btn_i" ></span>
-					</div>
-				</div>
-			</form>
 			<c:choose>
 				<c:when test="${list.size()==0 }">
 					<div class="content white_bg">
@@ -174,7 +129,7 @@ function pushTok(token,u_nm,msg,url){
 				</c:when>
 				<c:otherwise>
 			<div class="content white_bg pt_00">
-				<ul class="list_room">
+				<ul class="list_room white_bg mb_t">
 				<c:forEach var="data" items="${list}">
 					<li class="post1" value=${data.c_idx }>
 						<div class="room_photo">
@@ -182,11 +137,25 @@ function pushTok(token,u_nm,msg,url){
 						</div>
 						<div class="room_data">
 							<h4>${data.c_nm }</h4>
-							<div class="li_date">
-								<span class="ti"><c:set var="location" value="${data.c_location}" />${data.c_location}</span>
-								<span class="members"><i class="icon-user"></i>${data.cu_cnt}</span>
-							</div>
+							<p class="el_date"><c:set var="location" value="${data.c_location}" />${data.c_location}</p>
 						</div>
+						 <div class="btn_td">
+						 	<c:choose>
+						 		<c:when test="${data.c_idx eq represent}"><i class="la la-star mainclub sub_color hrefover" onClick="'"></i></c:when>
+						 		<c:otherwise><i class="la la-star-o mainclub sub_color hrefover" onClick="repersent('${data.c_idx}')"></i></c:otherwise>
+						 	</c:choose>
+							<span class="members"><i class="icon-user"></i>${data.cu_cnt}</span>
+					                <div class="btn_more"> 
+			                	<i class="more_menu la la-ellipsis-v"></i>
+					           	<ul class="me_ul">
+					               	<li onClick="location.href='02_board_list1.html'">공지</li>
+					               	<li onClick="location.href='05-03_game-state2-2.html'">게임</li>
+					               	<li onClick="location.href='06-01_member-info1-1-3.html'">랭킹</li>
+					               	<li onClick="location.href='02_board_list1.html'">클럽</li>
+				            	</ul>
+					               </div>
+					            <!-- btn_more --> 
+					          </div>
 					</li>
 					</c:forEach>
 				</ul>
@@ -198,14 +167,45 @@ function pushTok(token,u_nm,msg,url){
 			</form>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
+
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>
+		
+		<script>
+		$(document).ready(function(){
+			$("#club").attr("class","active_tab");
+		});
+		function repersent(c_idx){
+			swal({
+				title : "MGL",
+				text : "대표클럽을 변경하시겠습니까?",
+				buttons : true
+			})
+			.then((value) =>{
+			if(value){	
+				$.ajax({
+					async : true,
+					type : 'post',
+					data : c_idx,
+					url : "/UClub/repersentChange.techni",
+					dataType : "json",
+					contentType : "application/json; charset=UTF-8",
+					success : function(data) {
+						if(data.cnt > 0) {
+							location.href="/UClub/UClubAllList.techni";
+						}else{
+							swal("MGL","죄송합니다. 다시 시도해주세요.");
+						}
+					},
+					error : function(error){
+						swal("MGL","error : " + error);
+					}
+				});
+			}
+			});
+		}
+		</script>
+

@@ -63,6 +63,8 @@
 .icon-dump:before { content: '\e836'; } /* '' */
 .icon-expect:before { content: '\e837'; } /* '' */
 .icon-deport:before { content: '\e838'; } /* '' */
+.icon-view:before { content: '\e839'; } /* '' */
+.icon-club:before { content: '\e83a'; } /* '' */
 .icon-quit:before { content: '\e83b'; } /* '' */
 .icon-arrow-o-right:before { content: '\e83f'; } /* '' */
 .icon-arrow-o-left:before { content: '\e840'; } /* '' */
@@ -72,6 +74,12 @@
 .icon-write:before { content: '\e844'; } /* '' */
 .icon-playing:before { content: '\e845'; } /* '' */
 .icon-terms:before { content: '\e847'; } /* '' */
+.icon-invite:before { content: '\e84a'; } /* '' */
+.icon-ad:before { content: '\e84b'; } /* '' */
+.icon-club-info2:before { content: '\e84c'; } /* '' */
+.icon-new:before { content: '\e84d'; } /* '' */
+.icon-editfile:before { content: '\e84e'; } /* '' */
+.icon-newfile:before { content: '\e84f'; } /* '' */
 .icon-angle-left2:before { content: '\f100'; } /* '' */
 .icon-angle-right2:before { content: '\f101'; } /* '' */
 .icon-angle-left:before { content: '\f104'; } /* '' */

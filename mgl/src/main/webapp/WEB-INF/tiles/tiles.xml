@@ -22,6 +22,24 @@
         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
     </definition>
     
+  <!-- 메뉴2 표시 -->
+    <definition name="base2" template="/WEB-INF/tiles/templateTitle.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+        <put-attribute name="header_2" value="/WEB-INF/tiles/header_2.jsp" />
+    </definition>
+ 
+    <definition name="*.pag" extends="base2">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>
+ 
+     <definition name="*/*.pag" extends="base2">
+         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+     </definition>
+    
+    <definition name="*/*/*.pag" extends="base2">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>  
+    
     
     <!-- 메뉴 미표시 -->
     <definition name="baseEmpty" template="/WEB-INF/tiles/templateEmpty.jsp">

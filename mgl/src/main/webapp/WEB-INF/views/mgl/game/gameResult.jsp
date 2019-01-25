@@ -9,17 +9,7 @@
 	Calendar cal = Calendar.getInstance();
 	String Today = dateFormat.format(cal.getTime());
 %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script type="text/javascript">
 function ref(){
 	if(parent.document.referrer.includes("/Game/PointDetailAll.techni")){
@@ -32,7 +22,6 @@ function ref(){
 }
 
 </script>
-<body>
 	<div id="wrap">
 	<header>
 			<div class="head_top">
@@ -116,7 +105,3 @@ function ref(){
 	
 		</div>
 	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

@@ -10,16 +10,13 @@
 <link rel="stylesheet" href="/resources/css/login.css?ver4" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script src="/resources/js/jquery-3.3.1.min.js"></script>
-<script src="/resources/js/jquery.form.min.js"></script>
-<script src="/resources/js/sweetalert.min.js"></script>
 <jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
 </head>
 <body>
 	<div id="wrap">
-    	<div id="header"><tiles:insertAttribute name="header" ignore="true"/></div>
+    	<header id="header"><tiles:insertAttribute name="header" ignore="true"/></header>
     	<div id="container">
-    		<div id="header_2"><tiles:insertAttribute name="header_2" ignore="true"/></div>
+    		<%-- <div id="header_2"><tiles:insertAttribute name="header_2" ignore="true"/></div> --%>
 	    	<div id="body"><tiles:insertAttribute name="body" ignore="true"/></div>
 	    </div>
 	</div>

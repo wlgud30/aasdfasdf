@@ -23,6 +23,9 @@
 		<result column="MGL_USER_PUSHID" property="m_push"/>
 		<result column= "MGL_USER_AGENT" property="m_agent"/>
 		<result column="MGL_JOIN_SEQ" property="m_join_seq" />
+		<result column="MGL_LOGINTIME" property="m_loginTime"/>
+		<result column="MGL_CLUB_IDX" property="c_idx"/>
+		<result column="MGL_REPRESENT_CLUB" property="m_represent"/>
 	</resultMap>
 	<sql id="memberFiled">
 		MGL_USER_IDX AS m_idx,
@@ -96,6 +99,7 @@
 						"가입",
 						NULL,
 						#{m_push},
+						NULL,
 						NULL
 				)	
 	</insert>
@@ -272,16 +276,95 @@
 					)
 	</select>
 	
+	<select id="todayLogin"  resultType="int" >
+		SELECT 
+			count(*) as m_joinYN
+		FROM 
+			MGL_HIT_LOGIN
+		WHERE 
+			MGL_USER_ID = #{m_id} 
+		AND 
+			LEFT(MGL_LOGINTIME,8) = date_format(now(),"%Y%m%d")
+	</select>
 	
+	<insert id="todayLoginInsert">
+		INSERT INTO 
+				MGL_HIT_LOGIN VALUES(
+						SYSDATE(),
+						#{m_id}
+				)	
+	</insert>
 	
+	<insert id="guestInsert">
+		INSERT INTO 
+				MGL_USER VALUES(
+						concat("U",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_JOIN_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+						concat(#{c_idx},'G',cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_GUEST_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+						"",
+						#{m_nm},
+						NULL,
+						#{m_sex},
+						'95',
+						#{m_birth},
+						"",
+						"",
+						SYSDATE(),
+						"/resources/img/man_face.svg",
+						#{m_club_gd},
+						#{m_club_gd},
+						#{m_club_gd},
+						#{m_club_gd},
+						"가입",
+						NULL,
+						"",
+						NULL,
+						NULL
+				)
+	</insert>
 	
+	<update id="g_joinSeq">
+		update mgl_seq set mgl_guest_seq = mgl_guest_seq+1
+	</update>
 	
+	<insert id="selfMatchGuestInsert">
+		INSERT INTO 
+				MGL_USER VALUES(
+						concat("U",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_JOIN_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+						concat(#{cs_idx},'G',cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_GUEST_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+						"",
+						#{m_nm},
+						NULL,
+						#{m_sex},
+						'95',
+						#{m_birth},
+						"",
+						"",
+						SYSDATE(),
+						"/resources/img/man_face.svg",
+						#{m_club_gd},
+						#{m_club_gd},
+						#{m_club_gd},
+						#{m_club_gd},
+						"가입",
+						NULL,
+						"",
+						NULL,
+						NULL
+				)	
+	</insert>
 	
+	<select id="clubUpdate" resultMap="MemberVOMap">
+		SELECT MGL_USER_ID,MGL_UCLUB_INDAT,MGL_CLUB_IDX FROM MGL_UCLUB group by mgl_user_id order by mgl_uclub_indat
+	</select>
 	
+	<update id="clubUpdate2">
+		UPDATE MGL_USER SET MGL_REPRESENT_CLUB = #{c_idx}
+		WHERE MGL_USER_ID = #{u_id}
+	</update>
 	
-	
-	
-	
+	<select id="represent" resultMap="MemberVOMap">
+		SELECT MGL_REPRESENT_CLUB FROM MGL_USER WHERE MGL_USER_ID =#{u_id}
+	</select>
 	
 	
 	

@@ -1,20 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<body>
-	<div id="wrap">
-		<header>
+		<%-- <header>
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
@@ -24,61 +11,13 @@
 					<h1><a href='/Board/BoardList.techni'>${list[0].c_nm }</a></h1>
 				</div>
 				<div class="bt_top">
-					<c:choose>
-						<c:when test="${u_status eq '게임중'}">
-							<span class="icon-playing icon-f btn_i i-text">게임중</span>
-						</c:when>
-						<c:when test="${u_status eq '대기중' }">
-							<span class="icon-expect icon-f btn_i i-text">대기중</span>
-						</c:when>
-						<c:when test="${u_status eq '게임가능'}">
-							<span class="icon-out icon-f btn_i i-text" onClick=attendOut();>퇴실</span>
-						</c:when>
-						<c:otherwise>
-							<span class="icon-enter icon-f btn_i i-text" onClick=attend();>출석</span>
-						</c:otherwise>
-					</c:choose>	
 				</div>
 				<!-- InstanceEndEditable -->
 			</div>
 			<!-- head_top end -->
-		</header>
-		<div id="container">
+		</header> --%>
 			<!-- InstanceBeginEditable name="container" -->
 			<script>
-			function attend(){
-				$.ajax({
-					type:"POST",
-					url:"/UClub/AttendInsert.techni",
-					success:function(data){
-						if(data.cnt > 0 ){
-							location.href="/UClub/AttendList.techni"
-						}else{
-							swal("MGL", "이미 출석된 회원입니다.");
-						}
-					},
-					error : function(error){
-						swal("MGL","error : " + error);
-					}
-				});
-			}
-
-			function attendOut(){
-				$.ajax({
-					type:"POST",
-					url:"/UClub/attendOut.techni",
-					success:function(data){
-						if(data.cnt > 0 ){
-							location.href="/UClub/AttendList.techni"
-						}else{
-							swal("MGL", "이미 퇴실 상태입니다.");
-						}
-					},
-					error : function(error){
-						swal("MGL","error : " + error);
-					}
-				});
-			}
 				$(document).ready(function() {
 					var date = new Date();
 					var week = new Array('일', '월', '화', '수', '목', '금', '토');
@@ -209,18 +148,15 @@
 			</script>
 			<div class="tab_btn_b_area">
 				<ul class="tab_btn_b">
-					<li class="active_tab" onClick="location.href='/Game/GameState.techni'"><span>게임현황판</span></li>
-					<li onClick="location.href='/UClub/GameOKList.techni'"><span>게임등록</span></li>
-					<li onClick="location.href='/UClub/AttendList.techni '"><span>출석확인</span></li>
+					<li><span
+						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임등록</span></li>
+					<li><span onClick="location.href='/Game/GameState.techni'">게임현황</span>
+						<span onClick="location.href='#'" class="sm_font">Live</span></li>
+					<li class="active_tab"><span onClick="location.href='/Game/EndGame.techni '">종료게임</span></li>
 				</ul>
 			</div>
 			<div class="tab_bt_area white_bg">
-				<div>
-					<ul class="tabs_cont">
-						<li><span onClick="location.href='/Game/GameState.techni'">대기게임</span></li>
-						<li class="active_tab"><span onClick="location.href='/Game/EndGame.techni'">종료게임</span></li>
-					</ul>
-				</div>
+
 			</div>
 			<!-- tab_bt_area end -->
 			<div class="pd_lrb cet_lay">
@@ -418,10 +354,6 @@
 				</c:otherwise>
 				</c:choose>
 			</div>
-			
-			<!-- content end -->
-			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -434,13 +366,8 @@
     		</script>
 			<ul class="ft_menu">
 				<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
-				<li class="active_tab" onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
+				<li class="active_tab" onClick="location.href='/UClub/GamePrivateStateInfo.techni'"><span>게임</span></li>
 				<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
 				<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

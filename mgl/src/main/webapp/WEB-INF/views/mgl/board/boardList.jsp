@@ -2,23 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<script>
 
-</script>
-<body>
-	<div id="wrap">
-		<header>
+		<%-- <header>
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
@@ -29,13 +14,12 @@
 				</div>
 				<div class="bt_top">
 					<span class="icon-pencil btn_i i-text" onClick="location.href='/Board/BoardWriteForm.techni'">글쓰기</span>
-					<span class="icon-outline_4 icon-f btn_i i-text" onclick="location.href='/Cfight/CfightInsertForm.techni?c_nm=${list[0].c_nm}'">대회개설</span>
+					<span class="icon-outline_4 icon-f btn_i i-text" onclick="game_kind()">대회개설</span>
 				</div>
 				<!-- InstanceEndEditable -->
 			</div>
 			<!-- head_top end -->
-		</header>
-		<div id="container">
+		</header> --%>
 			<c:if test="${fn:length(list2) ne 0 }">
 			 <div class="content white_bg line-tb">
 				 <table class="board_td board2">
@@ -48,6 +32,24 @@
 					 		</td>
 					 		<td>
 					 			<span class="date">${list.cf_start }</span>
+					 		</td>
+					 	</tr>
+					 </c:forEach>
+				 </table>
+			 </div>
+			</c:if>
+			<c:if test="${fn:length(list3) ne 0 }">
+			 <div class="content white_bg line-tb">
+				 <table class="board_td board2">
+					 <c:forEach items="${list3 }" var="list">
+					 	<tr onclick="location.href='/Game/selfMatchDetail.techni?cs_idx=${list.cs_idx}'">
+					 		<td class="bd_title">
+					 			<strong class="dark_font">
+					 				<span class="main_color">[자체대회]</span> ${list.cs_nm}
+					 			</strong>
+					 		</td>
+					 		<td>
+					 			<span class="date">${list.cs_start }</span>
 					 		</td>
 					 	</tr>
 					 </c:forEach>
@@ -151,7 +153,6 @@
 			<!-- InstanceEndEditable -->
 				</c:otherwise>
 			</c:choose>
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -164,14 +165,36 @@
     </script>
 			<ul class="ft_menu">
 				<li class="active_tab"  onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
-				<li onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
+				<li onClick="location.href='/UClub/GamePrivateStateInfo.techni'"><span>게임</span></li>
 				<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
 				<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
 			</ul>
 
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>
+	<script>
+		function game_kind(){
+			swal("MGL","게임의 종류를 선택해 주세요",{
+				buttons:{
+					"자체대회" :{
+						text : "자체대회",
+						value : "self",
+					},
+					"교류전" : {
+						text : "교류전",
+						value : "club_fight"
+					},
+					cancel : "취소",
+				},
+			})
+			.then((value) => {
+				switch (value)	{
+				case "self":
+					location.href="/Game/GameSelfMatchInsert.techni";
+					break;
+				case "club_fight":
+					location.href="/Cfight/CfightInsertForm.techni?c_nm=${list[0].c_nm}";
+					break;
+				}
+			});
+		}
+	</script>

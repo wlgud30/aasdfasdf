@@ -7,7 +7,6 @@
 <!-- InstanceBeginEditable name="doctitle" -->
 <title>MGL</title>
 <!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
 <!-- InstanceBeginEditable name="head" -->
 <!-- InstanceEndEditable -->
 </head>

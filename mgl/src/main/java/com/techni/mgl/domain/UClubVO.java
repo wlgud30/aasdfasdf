@@ -38,13 +38,34 @@ public class UClubVO {
 	public String push_date;
 	public String push_send;
 	public String push_url;
+	public int wait_count;
+	public int end_count;
 	
 	
 	
 	
 	
 	
-	
+	public int getWait_count() {
+		return wait_count;
+	}
+
+
+	public void setWait_count(int wait_count) {
+		this.wait_count = wait_count;
+	}
+
+
+	public int getEnd_count() {
+		return end_count;
+	}
+
+
+	public void setEnd_count(int end_count) {
+		this.end_count = end_count;
+	}
+
+
 	public String getPush_ment() {
 		return push_ment;
 	}

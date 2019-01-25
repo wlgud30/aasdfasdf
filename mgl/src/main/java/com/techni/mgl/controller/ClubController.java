@@ -90,7 +90,7 @@ public class ClubController {
 		model.addAttribute("yn", i);
 		model.addAttribute("club", cvo);
 		
-		return "uclub/uClubDetail";
+		return "uclub/uClubDetail.pag";
 	}
 	
 	@RequestMapping(value="/Club/ClubYN.techni")
@@ -136,8 +136,8 @@ public class ClubController {
 		map.put("u_id", mvo.getM_id());
 		int res = cService.detailChoice(map);
 		if(res > 0) {
-			redirect.addAttribute("c_idx", c_idx);
-			System.out.println(c_idx);
+			/*redirect.addAttribute("c_idx", c_idx);
+			System.out.println(c_idx);*/
 		return "redirect:/Board/BoardList.techni";
 		}else{
 			System.out.println(c_idx);

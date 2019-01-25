@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techni.mgl.dao.GameDAO;
 import com.techni.mgl.domain.CStadiumVO;
+import com.techni.mgl.domain.CfightVO;
 import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.GTempTeamVO;
 import com.techni.mgl.domain.MemberVO;
@@ -45,10 +46,10 @@ public class GameService {
 		int res2 = 0;
 		int res3 = 0;
 		if(res > 0 ){
-			res2 = gDAO.gameJoinSChange(map);
-			if(res2>0){
+			/*res2 = gDAO.gameJoinSChange(map);
+			if(res2>0){*/
 				res3 = gDAO.c_matchSeq();
-			}
+			/*}*/
 		}
 		return res3;
 	}
@@ -69,8 +70,8 @@ public class GameService {
 		int res2 = 0;
 		
 		if(res>0){
-			int res3 = gDAO.gameJoinSChange(map);
-			if(res3>0){
+			/*int res3 = gDAO.gameJoinSChange(map);
+			if(res3>0){*/
 				
 			
 		int i = 0 ;
@@ -90,7 +91,7 @@ public class GameService {
 					res2 = clubMatchInsert(cmvo);
 					i++;
 				}
-		}
+		/*}*/
 		}
 		return res2;
 	}
@@ -164,6 +165,290 @@ public class GameService {
 			return 0;
 		}
 	}
+	//자체대회 생성
+	@Transactional
+	public int selfMatchInsert(Map<String,String> map) {
+		int res = gDAO.selfMatchInsert(map);
+		if(res > 0) {
+			return gDAO.selfMatchSeq();
+		}else {
+			return 0;
+		}
+	}
+	
+	//자체대회 리스트
+	@Transactional
+	public List<ClubMatchVO> selfMatchList(String c_idx){
+
+		return gDAO.selfMatchList(c_idx);
+	}
+	//자체대회 디테일
+	@Transactional
+	public ClubMatchVO selfMatchDetail(String cs_idx){
+		return gDAO.selfMatchDetail(cs_idx);
+	}
+	
+	//자체대회 참석여부
+	@Transactional
+	public int selfMatchJoinYN(Map<String,String> map) {
+		return gDAO.selfMatchJoinYN(map);
+	}
+	
+	//자체대회 참석
+	@Transactional
+	public int selfMatchJoin(Map<String,String> map) {
+		return gDAO.selfMatchJoin(map);
+	}
+	
+	//자체대회 불참
+	@Transactional
+	public int selfMatchExit(Map<String,String> map) {
+		return gDAO.selfMatchExit(map);
+	}
+	
+	//자체대회 참석인원
+	@Transactional
+	public List<ClubMatchVO> selfMatchJoinList(String cs_idx){
+		return gDAO.selfMatchJoinList(cs_idx);
+	}
+	
+	//자체대회 불참인원
+	@Transactional
+	public List<ClubMatchVO> selfMatchClubList(Map<String,String> map){
+		return gDAO.selfMatchClubList(map);
+	}
+	
+	//자체대회 다중참석
+	@Transactional
+	public int selfMatchMultiJoin(Map<Object,Object> map) {
+		return gDAO.selfMatchMultiJoin(map);
+	}
+	
+	//자체대회 다중참석 취소
+	@Transactional
+	public int selfMatchMultiUnJoin(Map<Object,Object> map) {
+		return gDAO.selfMatchMultiUnJoin(map);
+	}
+	
+	//자체대회 등급정렬
+	@Transactional
+	public List<ClubMatchVO> selfMatchGD(String cs_idx){
+		return gDAO.selfMatchGD(cs_idx);
+	}
+	//자체대회 청백업데이트
+	@Transactional
+	public int BWUpdate(Map<String,String> map) {
+		return gDAO.BWUpdate(map);
+	}
+	//자체대회 종목인서트
+	@Transactional
+	public int selfMatchTypeInsert(Map<String,Object> map) {
+		return gDAO.selfMatchTypeInsert(map);
+	}
+	
+	//자체대회 해당 종목에 등록된팀들
+	@Transactional
+	public List<ClubMatchVO> selfMatchTeamList(Map<String,String> map){
+		return gDAO.selfMatchTeamList(map);
+	}
+	//자체대회 해당 종목에 등록된팀들
+	@Transactional
+	public List<ClubMatchVO> selfMatchPrivateList(Map<String,String> map){
+		return gDAO.selfMatchPrivateList(map);
+	}
+	//자체대회 해당 종목에 등록되지않은 참가자들
+	@Transactional
+	public List<ClubMatchVO> selfMatchNotKindJoinList(Map<String,String> map){
+		return gDAO.selfMatchNotKindJoinList(map);
+	}
+	//게임참가인원, 자체대회 참가인원
+	@Transactional
+	public ClubMatchVO selfMatchGameCount(String cs_idx){
+		return gDAO.selfMatchGameCount(cs_idx);
+	}
+	//자체대회 팀 생성
+	@Transactional
+	public int selfMatchTeamInsert(Map<String,String> map) {
+		return gDAO.selfMatchTeamInsert(map);
+	}
+	//자체대회 팀 생성(개인리그용)
+	@Transactional
+	public int selfMatchTeamInsert2(Map<String,Object> map) {
+		return gDAO.selfMatchTeamInsert2(map);
+	}
+	@Transactional
+	//자체대회 팀 삭제
+	public int selfMatchTeamDelete(String cs_idx) {
+		return gDAO.selfMatchTeamDelete(cs_idx);
+	}
+	@Transactional
+	//자체대회 팀 삭제(개인리그용)
+	public int selfMatchTeamDelete2(String cs_k_idx) {
+		return gDAO.selfMatchTeamDelete2(cs_k_idx);
+	}
+	//자체대회 개인 생성
+	@Transactional
+	public int selfMatchPrivateInsert(Map<String,Object> map) {
+		int res = gDAO.selfMatchPrivateInsert(map);
+		return res;
+	}
+	@Transactional
+	//자체대회 개인 삭제
+	public int selfMatchPrivateDelete(Map<String,Object> map) {
+		return gDAO.selfMatchPrivateDelete(map);
+	}
+	@Transactional
+	public List<ClubMatchVO> selfMatchKindList(String cs_idx)	{
+		return gDAO.selfMatchKindList(cs_idx);
+	}
+	@Transactional
+	public int selfMatchCount(Map<String,String> map) {
+		return gDAO.selfMatchCount(map);
+	}
+	@Transactional
+	//자체대회 개인참가자 리스트
+	public List<ClubMatchVO> selfMatchPrivateNotKindJoinList(Map<String,String> map){
+		return gDAO.selfMatchPrivateNotKindJoinList(map);
+	}
+	//자체대회 청팀리스트
+	@Transactional
+	public List<ClubMatchVO> selectBlueTeam(String cs_idx){
+		return gDAO.selectBlueTeam(cs_idx	);
+	}
+	//자체대회 백팀리스트
+	@Transactional
+	public List<ClubMatchVO> selectWhiteTeam(String cs_idx){
+		return gDAO.selectWhiteTeam(cs_idx	);
+	}
+	//대진표 인서트
+	@Transactional
+	public int gameInsert(Map<String,Object>map,Map<String,Object> map2){
+		
+		int res = gDAO.gameInsert(map);
+		int res2 = 0;
+		int res3 = 0;
+		if(res >0){
+			res2  = gDAO.matchListYN((String)map.get("cs_idx"));
+		}
+		if(res2 >0){
+			res3=gDAO.endGameInsert(map2);
+		}
+		return res3;
+	}	
+	//나의 대진표
+	@Transactional
+	public List<ClubMatchVO> myMatchList(Map<String,String> map){
+		return gDAO.myMatchList(map);
+	}
+	//시간 리스트
+	@Transactional
+	public List<ClubMatchVO> timeMatchList(String cs_idx){
+		return gDAO.timeMatchList(cs_idx);
+	}
+	//코트 리스트
+	@Transactional
+	public List<ClubMatchVO> courtMatchList(String cs_idx){
+		return gDAO.courtMatchList(cs_idx);
+	}
+	//시간,코트별 대진표 리스트
+	@Transactional
+	public List<ClubMatchVO> matchList(Map<String,String> map){
+		return gDAO.matchList(map);
+	}
+	//종목 리스트
+	@Transactional
+	public List<ClubMatchVO> kindMatchList(String cs_idx){
+		return gDAO.kindMatchList(cs_idx);
+	}
+	//종목 디테일
+	@Transactional
+	public List<ClubMatchVO> kindMatchDetail(String cf_g_idx){
+		return gDAO.kindMatchDetail(cf_g_idx);
+	}
+	//참가자보기(종목리스트)
+	@Transactional
+	public List<ClubMatchVO> entryKindList(String cs_idx){
+		return gDAO.entryKindList(cs_idx);
+	}
+	//참가자보기(종목리스트)
+	@Transactional
+	public List<ClubMatchVO> entryKindDetail(String cs_idx){
+		return gDAO.entryKindDetail(cs_idx);
+	}	
+	//일정
+	@Transactional
+	public List<ClubMatchVO> kindDetailList(Map<String,String> map){
+		return gDAO.kindDetailList(map);
+	}
+	//종목 디테일(랭킹)
+	@Transactional
+	public List<ClubMatchVO> kindDetailRank(Map<String,String> map){
+		return gDAO.kindDetailRank(map);
+	}
+	//코트수
+	@Transactional
+	public int courtCount(String cs_idx){
+		return gDAO.courtCount(cs_idx);
+	}
+	//심판화면
+	@Transactional
+	public List<ClubMatchVO> referee(Map<String,String> map){
+		return gDAO.referee(map);
+	}
+	//나의순위
+	@Transactional
+	public List<ClubMatchVO> myRank(Map<String,String> map){
+		return gDAO.myRank(map);
+	}
+	//내종목리스트
+	@Transactional
+	public List<ClubMatchVO> myKindList(Map<String,String> map){
+		return gDAO.myKindList(map);
+	}
+	//대항전 종목 리스트
+	@Transactional
+	public List<ClubMatchVO> csKindList(String cs_idx){
+		return gDAO.csKindList(cs_idx);
+	}
+	//대항전 종목 순위
+	@Transactional
+	public List<ClubMatchVO> csKindRank(String cs_idx){
+		return gDAO.csKindRank(cs_idx);
+	}
+	//점수 입력을위한 유저정보
+	@Transactional
+	public List<ClubMatchVO> pointUser2(Map<String,String> map){
+		return gDAO.pointUser2(map);
+	}
+	//점수업데이트
+	@Transactional
+	public int pointUpdate(Map<String,Object>map, String cs_gidx){
+		int res = gDAO.pointUpdate(map);
+		int res2 = 0;
+		if(res>0){
+			res2 = gDAO.endUpdate(cs_gidx);
+		}
+		return res2;
+	}	
+	//종목삭제
+	@Transactional
+	public int selfMatchKindDelete(String cs_idx) {
+		return gDAO.selfMatchKindDelete(cs_idx);
+	}
+	//allmatch
+	@Transactional
+	public List<ClubMatchVO> all_court(String cs_idx){
+		return gDAO.all_court(cs_idx);
+	}
+	@Transactional
+	public List<ClubMatchVO> all_dat(String cs_idx){
+		return gDAO.all_dat(cs_idx);
+	}
+	@Transactional
+	public List<ClubMatchVO> all_match(String cs_idx){
+		return gDAO.all_match(cs_idx);
+	}	
+	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
 	 */	

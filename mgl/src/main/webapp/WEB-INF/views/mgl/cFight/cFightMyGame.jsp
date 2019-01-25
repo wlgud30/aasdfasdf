@@ -4,34 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="java.util.Date"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="tit_top">
-					<h1 class="game_title">${list3[0].cf_nm}</h1>
-				</div>
-				<div class="bt_top">
-					<span class="icon-score icon-f btn_i i-text" onClick="location.href='/Cfight/CfightReferee.techni'">심판</span>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
-			<!-- InstanceBeginEditable name="container" -->
+
 			<script>
 				$(document).ready(function() {
 					var aa = $(location).attr('pathname').slice(-8, -7);
@@ -253,7 +226,6 @@
 			</div> -->
 			<!-- match_cont end-->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_tag" -->
@@ -274,7 +246,3 @@
 				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>

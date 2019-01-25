@@ -1,6 +1,5 @@
 package com.techni.mgl.domain;
 
-import java.util.List;
 
 public class ClubMatchVO {
 
@@ -67,8 +66,675 @@ public class ClubMatchVO {
 	public String cm_b1_photo;
 	public String cm_b2_photo;
 	public String cm_gidx_c;
+	public String cs_idx;
+	public String cs_location;
+	public String cs_start;
+	public String cs_end;
+	public String cs_sTime;
+	public String cs_eTime;
+	public String cs_time;
+	public String cs_point;
+	public String cs_court;
+	public String cs_kind;
+	public String cs_content;
+	public String cs_nm;
+	public String cs_cnm;
+	public String cs_k_idx;
+	public String cs_k_nm;
+	public int cs_k_num;
+	public String cs_t_idx;
+	public String cs_a_id;
+	public String cs_a_nm;
+	public String cs_a_photo;
+	public String cs_a_grade;
+	public String cs_a_age;
+	public String cs_b_id;
+	public String cs_b_nm;
+	public String cs_b_photo;
+	public String cs_b_grade;
+	public String cs_b_age;
+	public int c_t_count;
+	public int c_count;
+	public int cs_k_count;
+	public String cs_t_bw;
+	public String cs_match_list;
+	public String cs_status;
+	public String cs_w_date;
+	public String cs_gidx;
+	public int cs_no;
+	public String a1_nm;
+	public String a1_id;
+	public String a1_age;
+	public String a1_gd;
+	public String a2_nm;
+	public String a2_id;
+	public String a2_age;
+	public String a2_gd;
+	public String b1_nm;
+	public String b1_id;
+	public String b1_age;
+	public String b1_gd;
+	public String b2_nm;
+	public String b2_id;
+	public String b2_age;
+	public String b2_gd;
+	public int team_a_score;
+	public int team_b_score;
+	public String kind_count;
+	public int win_count;
+	public int lose_count;
+	public int total_sum;
+	public int gap_sum;
+	public String sum_aptn;
+	public double ueffort;
+	public int total;
+	public int cnt_gap;
+	public String win;
+	public double gptn;
+	public double vptn;
+	public double pptn;
+	public double aptn;
+	public String token;
+	public String group_count;
+	public String cs_at_id1;
+	public String cs_at_id2;
+	public String cs_bt_id1;
+	public String cs_bt_id2;
 	
 	
+	
+	
+	public String getCs_at_id1() {
+		return cs_at_id1;
+	}
+
+	public void setCs_at_id1(String cs_at_id1) {
+		this.cs_at_id1 = cs_at_id1;
+	}
+
+	public String getCs_at_id2() {
+		return cs_at_id2;
+	}
+
+	public void setCs_at_id2(String cs_at_id2) {
+		this.cs_at_id2 = cs_at_id2;
+	}
+
+	public String getCs_bt_id1() {
+		return cs_bt_id1;
+	}
+
+	public void setCs_bt_id1(String cs_bt_id1) {
+		this.cs_bt_id1 = cs_bt_id1;
+	}
+
+	public String getCs_bt_id2() {
+		return cs_bt_id2;
+	}
+
+	public void setCs_bt_id2(String cs_bt_id2) {
+		this.cs_bt_id2 = cs_bt_id2;
+	}
+
+	public String getGroup_count() {
+		return group_count;
+	}
+
+	public void setGroup_count(String group_count) {
+		this.group_count = group_count;
+	}
+
+	public int getWin_count() {
+		return win_count;
+	}
+
+	public void setWin_count(int win_count) {
+		this.win_count = win_count;
+	}
+
+	public int getLose_count() {
+		return lose_count;
+	}
+
+	public void setLose_count(int lose_count) {
+		this.lose_count = lose_count;
+	}
+
+	public int getTotal_sum() {
+		return total_sum;
+	}
+
+	public void setTotal_sum(int total_sum) {
+		this.total_sum = total_sum;
+	}
+
+	public int getGap_sum() {
+		return gap_sum;
+	}
+
+	public void setGap_sum(int gap_sum) {
+		this.gap_sum = gap_sum;
+	}
+
+	public String getSum_aptn() {
+		return sum_aptn;
+	}
+
+	public void setSum_aptn(String sum_aptn) {
+		this.sum_aptn = sum_aptn;
+	}
+
+	public double getUeffort() {
+		return ueffort;
+	}
+
+	public void setUeffort(double ueffort) {
+		this.ueffort = ueffort;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public int getCnt_gap() {
+		return cnt_gap;
+	}
+
+	public void setCnt_gap(int cnt_gap) {
+		this.cnt_gap = cnt_gap;
+	}
+
+	public String getWin() {
+		return win;
+	}
+
+	public void setWin(String win) {
+		this.win = win;
+	}
+
+	public double getGptn() {
+		return gptn;
+	}
+
+	public void setGptn(double gptn) {
+		this.gptn = gptn;
+	}
+
+	public double getVptn() {
+		return vptn;
+	}
+
+	public void setVptn(double vptn) {
+		this.vptn = vptn;
+	}
+
+	public double getPptn() {
+		return pptn;
+	}
+
+	public void setPptn(double pptn) {
+		this.pptn = pptn;
+	}
+
+	public double getAptn() {
+		return aptn;
+	}
+
+	public void setAptn(double aptn) {
+		this.aptn = aptn;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getKind_count() {
+		return kind_count;
+	}
+
+	public void setKind_count(String kind_count) {
+		this.kind_count = kind_count;
+	}
+
+	public int getTeam_a_score() {
+		return team_a_score;
+	}
+
+	public void setTeam_a_score(int team_a_score) {
+		this.team_a_score = team_a_score;
+	}
+
+	public int getTeam_b_score() {
+		return team_b_score;
+	}
+
+	public void setTeam_b_score(int team_b_score) {
+		this.team_b_score = team_b_score;
+	}
+
+	public String getA1_nm() {
+		return a1_nm;
+	}
+
+	public void setA1_nm(String a1_nm) {
+		this.a1_nm = a1_nm;
+	}
+
+	public String getA1_id() {
+		return a1_id;
+	}
+
+	public void setA1_id(String a1_id) {
+		this.a1_id = a1_id;
+	}
+
+	public String getA1_age() {
+		return a1_age;
+	}
+
+	public void setA1_age(String a1_age) {
+		this.a1_age = a1_age;
+	}
+
+	public String getA1_gd() {
+		return a1_gd;
+	}
+
+	public void setA1_gd(String a1_gd) {
+		this.a1_gd = a1_gd;
+	}
+
+	public String getA2_nm() {
+		return a2_nm;
+	}
+
+	public void setA2_nm(String a2_nm) {
+		this.a2_nm = a2_nm;
+	}
+
+	public String getA2_id() {
+		return a2_id;
+	}
+
+	public void setA2_id(String a2_id) {
+		this.a2_id = a2_id;
+	}
+
+	public String getA2_age() {
+		return a2_age;
+	}
+
+	public void setA2_age(String a2_age) {
+		this.a2_age = a2_age;
+	}
+
+	public String getA2_gd() {
+		return a2_gd;
+	}
+
+	public void setA2_gd(String a2_gd) {
+		this.a2_gd = a2_gd;
+	}
+
+	public String getB1_nm() {
+		return b1_nm;
+	}
+
+	public void setB1_nm(String b1_nm) {
+		this.b1_nm = b1_nm;
+	}
+
+	public String getB1_id() {
+		return b1_id;
+	}
+
+	public void setB1_id(String b1_id) {
+		this.b1_id = b1_id;
+	}
+
+	public String getB1_age() {
+		return b1_age;
+	}
+
+	public void setB1_age(String b1_age) {
+		this.b1_age = b1_age;
+	}
+
+	public String getB1_gd() {
+		return b1_gd;
+	}
+
+	public void setB1_gd(String b1_gd) {
+		this.b1_gd = b1_gd;
+	}
+
+	public String getB2_nm() {
+		return b2_nm;
+	}
+
+	public void setB2_nm(String b2_nm) {
+		this.b2_nm = b2_nm;
+	}
+
+	public String getB2_id() {
+		return b2_id;
+	}
+
+	public void setB2_id(String b2_id) {
+		this.b2_id = b2_id;
+	}
+
+	public String getB2_age() {
+		return b2_age;
+	}
+
+	public void setB2_age(String b2_age) {
+		this.b2_age = b2_age;
+	}
+
+	public String getB2_gd() {
+		return b2_gd;
+	}
+
+	public void setB2_gd(String b2_gd) {
+		this.b2_gd = b2_gd;
+	}
+
+	public int getCs_no() {
+		return cs_no;
+	}
+
+	public void setCs_no(int cs_no) {
+		this.cs_no = cs_no;
+	}
+
+	public String getCs_gidx() {
+		return cs_gidx;
+	}
+
+	public void setCs_gidx(String cs_gidx) {
+		this.cs_gidx = cs_gidx;
+	}
+
+	public String getCs_w_date() {
+		return cs_w_date;
+	}
+
+	public void setCs_w_date(String cs_w_date) {
+		this.cs_w_date = cs_w_date;
+	}
+
+	public String getCs_status() {
+		return cs_status;
+	}
+
+	public void setCs_status(String cs_status) {
+		this.cs_status = cs_status;
+	}
+
+	public String getCs_match_list() {
+		return cs_match_list;
+	}
+
+	public void setCs_match_list(String cs_match_list) {
+		this.cs_match_list = cs_match_list;
+	}
+
+	public String getCs_t_bw() {
+		return cs_t_bw;
+	}
+
+	public void setCs_t_bw(String cs_t_bw) {
+		this.cs_t_bw = cs_t_bw;
+	}
+
+	public int getCs_k_count() {
+		return cs_k_count;
+	}
+
+	public void setCs_k_count(int cs_k_count) {
+		this.cs_k_count = cs_k_count;
+	}
+
+	public int getC_t_count() {
+		return c_t_count;
+	}
+
+	public void setC_t_count(int c_t_count) {
+		this.c_t_count = c_t_count;
+	}
+
+	public int getC_count() {
+		return c_count;
+	}
+
+	public void setC_count(int c_count) {
+		this.c_count = c_count;
+	}
+
+	public String getCs_a_nm() {
+		return cs_a_nm;
+	}
+
+	public void setCs_a_nm(String cs_a_nm) {
+		this.cs_a_nm = cs_a_nm;
+	}
+
+	public String getCs_a_photo() {
+		return cs_a_photo;
+	}
+
+	public void setCs_a_photo(String cs_a_photo) {
+		this.cs_a_photo = cs_a_photo;
+	}
+
+	public String getCs_a_grade() {
+		return cs_a_grade;
+	}
+
+	public void setCs_a_grade(String cs_a_grade) {
+		this.cs_a_grade = cs_a_grade;
+	}
+
+	public String getCs_a_age() {
+		return cs_a_age;
+	}
+
+	public void setCs_a_age(String cs_a_age) {
+		this.cs_a_age = cs_a_age;
+	}
+
+	public String getCs_b_nm() {
+		return cs_b_nm;
+	}
+
+	public void setCs_b_nm(String cs_b_nm) {
+		this.cs_b_nm = cs_b_nm;
+	}
+
+	public String getCs_b_photo() {
+		return cs_b_photo;
+	}
+
+	public void setCs_b_photo(String cs_b_photo) {
+		this.cs_b_photo = cs_b_photo;
+	}
+
+	public String getCs_b_grade() {
+		return cs_b_grade;
+	}
+
+	public void setCs_b_grade(String cs_b_grade) {
+		this.cs_b_grade = cs_b_grade;
+	}
+
+	public String getCs_b_age() {
+		return cs_b_age;
+	}
+
+	public void setCs_b_age(String cs_b_age) {
+		this.cs_b_age = cs_b_age;
+	}
+
+	public String getCs_k_idx() {
+		return cs_k_idx;
+	}
+
+	public void setCs_k_idx(String cs_k_idx) {
+		this.cs_k_idx = cs_k_idx;
+	}
+
+	public String getCs_k_nm() {
+		return cs_k_nm;
+	}
+
+	public void setCs_k_nm(String cs_k_nm) {
+		this.cs_k_nm = cs_k_nm;
+	}
+
+	public int getCs_k_num() {
+		return cs_k_num;
+	}
+
+	public void setCs_k_num(int cs_k_num) {
+		this.cs_k_num = cs_k_num;
+	}
+
+	public String getCs_t_idx() {
+		return cs_t_idx;
+	}
+
+	public void setCs_t_idx(String cs_t_idx) {
+		this.cs_t_idx = cs_t_idx;
+	}
+
+	public String getCs_a_id() {
+		return cs_a_id;
+	}
+
+	public void setCs_a_id(String cs_a_id) {
+		this.cs_a_id = cs_a_id;
+	}
+
+	public String getCs_b_id() {
+		return cs_b_id;
+	}
+
+	public void setCs_b_id(String cs_b_id) {
+		this.cs_b_id = cs_b_id;
+	}
+
+	public String getCs_idx() {
+		return cs_idx;
+	}
+
+	public void setCs_idx(String cs_idx) {
+		this.cs_idx = cs_idx;
+	}
+
+	public String getCs_location() {
+		return cs_location;
+	}
+
+	public void setCs_location(String cs_location) {
+		this.cs_location = cs_location;
+	}
+
+	public String getCs_start() {
+		return cs_start;
+	}
+
+	public void setCs_start(String cs_start) {
+		this.cs_start = cs_start;
+	}
+
+	public String getCs_end() {
+		return cs_end;
+	}
+
+	public void setCs_end(String cs_end) {
+		this.cs_end = cs_end;
+	}
+
+	public String getCs_sTime() {
+		return cs_sTime;
+	}
+
+	public void setCs_sTime(String cs_sTime) {
+		this.cs_sTime = cs_sTime;
+	}
+
+	public String getCs_eTime() {
+		return cs_eTime;
+	}
+
+	public void setCs_eTime(String cs_eTime) {
+		this.cs_eTime = cs_eTime;
+	}
+
+	public String getCs_time() {
+		return cs_time;
+	}
+
+	public void setCs_time(String cs_time) {
+		this.cs_time = cs_time;
+	}
+
+	public String getCs_point() {
+		return cs_point;
+	}
+
+	public void setCs_point(String cs_point) {
+		this.cs_point = cs_point;
+	}
+
+	public String getCs_court() {
+		return cs_court;
+	}
+
+	public void setCs_court(String cs_court) {
+		this.cs_court = cs_court;
+	}
+
+	public String getCs_kind() {
+		return cs_kind;
+	}
+
+	public void setCs_kind(String cs_kind) {
+		this.cs_kind = cs_kind;
+	}
+
+	public String getCs_content() {
+		return cs_content;
+	}
+
+	public void setCs_content(String cs_content) {
+		this.cs_content = cs_content;
+	}
+
+	public String getCs_nm() {
+		return cs_nm;
+	}
+
+	public void setCs_nm(String cs_nm) {
+		this.cs_nm = cs_nm;
+	}
+
+	public String getCs_cnm() {
+		return cs_cnm;
+	}
+
+	public void setCs_cnm(String cs_cnm) {
+		this.cs_cnm = cs_cnm;
+	}
 
 	public String getCm_gidx_c() {
 		return cm_gidx_c;

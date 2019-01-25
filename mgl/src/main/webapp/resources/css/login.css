@@ -15,27 +15,28 @@ input:-webkit-autofill{-webkit-box-shadow: 0 0 0 1000px #f5f6f7 inset;}
 input,select,textarea{-webkit-appearance: none; -webkit-border-radius:0;-moz-appearance: none;appearance: none;margin: 0;}
 /*로그인*/
 #login_bg{display:table;width: 100%;} #login_bg #wrap{display:table-cell; vertical-align:middle}
-#login_area{vertical-align: middle;display: table;text-align: center;margin: 0 auto;max-height:515px; height:100%;} 
-#login_form{background: #f5f6f7;border:2px solid #e3e4e6;position:relative;display: table-cell;vertical-align: middle;max-width:330px;}
-#login_cont{margin: 0 auto; padding:16% 40px 14%}
+#login_area{vertical-align: middle;display: table;text-align: center;margin: 0 auto;max-height:575px; height:100%;} 
+#login_form{background: #f5f6f7;border:2px solid #e3e4e6;position:relative;display: table-cell;vertical-align: middle;max-width:340px;}
+#login_cont{margin: 0 auto; padding:14% 50px 14%}
 #login_cont input[type="text"],#login_cont input[type="password"]{border:none;border-bottom:1px solid #b1b2b3;width:100%;padding: 7px 4px 8px;height:32px;line-height:1em; background-color:transparent;margin-bottom:12px; font-size:1.09em}
 ::-webkit-input-placeholder {color:#666;}
 :-moz-placeholder { /* Firefox 18- */color:#666;opacity:1 !important;}
 ::-moz-placeholder { /* Firefox 19+ */color:#666;opacity:1 !important}
 #login_cont input:-ms-input-placeholder { /* IE 10+ */color:#666;}
 ::-ms-input-placeholder { /* Edge */color:#666;}
-.logo_box {letter-spacing: 0.4px;} .logo_img{max-width:186px}
+.logo_box {letter-spacing: 0.4px;} .logo_img{max-width:220px}
 /*로그인 폰트*/
-.login_title{font-size:1.66em;color:#333;padding-top:15%; text-align:left;margin-bottom:10px}
+.login_title{font-size:1.67em;color:#333;padding-top:12%; text-align:left;margin-bottom:8px}
 .login_title:before{font-family: 'simple-line-icons';content:"\e08e";font-size:20px;line-height: 2em;margin-right:6px;color: #ac68cc;}
 .text-normal{font-weight:normal}
 /*버튼*/
 .bt_login{display:block;text-align:center;cursor:pointer;color:#fff;line-height:37px;padding:0 10px;height:37px; font-weight:600}
-.bt_area {margin:12px auto 0;}.bt_area li{overflow:hidden}
+.bt_area {margin:12px auto 0;}.bt_area li{overflow:hidden} .login01_bt{padding-top:50%;}
 .bt_area li:first-child{padding-bottom: 20px;}
 .act-color{background:#ac68cc;} .sub1-color{background:#5f71d4} .half_bt{ width:calc(50% - 1px); float:left} .bt_login ~.bt_login {margin-left:2px;}
 /*sns 로그인*/
 #sns-login-li{width:100%;display:table;font-size:0.93em;text-align:center;letter-spacing: -0.7px;margin-top: 20px;border:1px solid #b1b4c4;} 
 #sns-login-li li{display:table-cell;vertical-align:middle;padding-top:10px;padding-bottom: 8px;} #sns-login-li img{width:26px;display: block;margin: 0 auto 3px;} #sns-login-li li ~ li{border-left:1px solid #b1b4c4;}
-@media only screen and (max-width:680px),(max-device-width :768px) and (orientation : landscape){#login_bg #wrap{background: #f5f6f7;} #login_form{border:none} }
-@media only screen and (max-width:330px){#login_cont{padding:10% 40px;} #login_area{ max-height:100%}  .logo_img{max-width:180px}}
+@media only screen and (max-width:680px),(max-device-width :768px) and (orientation : landscape){
+#login_bg #wrap{background: #f5f6f7;} #login_form{border:none} #login_cont{ padding-left:40px; padding-right:40px}}
+@media only screen and (max-width:330px){#login_cont{padding:10% 40px;} #login_area{ max-height:100%}}

@@ -90,16 +90,16 @@
 					    session.setAttribute("state", state);
 			%>
 	<script type="text/javascript">
-	/* Kakao.init('2414323fe8d134c3fab9ad7f62f99cba'); */
+	 Kakao.init('2414323fe8d134c3fab9ad7f62f99cba'); 
 		function route(route){
-			/* if(route=="google"){ */
-				/* location.href="${google_url}" */
-				swal("MGL","서비스 준비 중 입니다.")
-			<%--	}else if(route=="naver"){
+			 if(route=="google"){ 
+				location.href="${google_url}"
+				/* swal("MGL","서비스 준비 중 입니다.") */
+			}else if(route=="naver"){
 				location.href="<%=apiURL%>";
 			}else if(route=="kakao"){
 				location.href="https://kauth.kakao.com/oauth/authorize?client_id=d8193c16fc0293b7a0fbae13d2cc5e62&redirect_uri=http://mgl.techni.co.kr:8081/Member/kakaoLogin.techni&response_type=code"
-			}  --%>
+			} 
 		}
 	</script>
 </body>

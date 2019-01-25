@@ -3,17 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.Date" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script type="text/javascript">
 function bun(){
 	var json = new Array();
@@ -79,22 +69,7 @@ function bun(){
 	})  
 }
 </script>
-<body>
-	<div id="wrap">
-		<header>
-		<div class="head_top">
-			<!-- InstanceBeginEditable name="head_top" -->
-			<div class="btn_back" onClick="location.href='/Board/BoardList.techni'"></div>
-			<div class="tit_top">
-				<h1 class="game_title">${list[0].cf_nm } 그룹 설정</h1>
-			</div>
-			<div class="bt_top">
-				<span onclick=" bun()" class="icon-arrow-o-right icon-f btn_i"></span>
-			</div>
-			<!-- InstanceEndEditable -->
-		</div>
-		<!-- head_top end --> </header>
-		<div id="container">
+
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="content white_bg">
 				<table id="trow"class="game_td thead_td cet_lay td_pd_l0">
@@ -125,13 +100,8 @@ function bun(){
 			</div>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>

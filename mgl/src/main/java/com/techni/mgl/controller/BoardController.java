@@ -34,9 +34,11 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.techni.mgl.domain.BoardVO;
 import com.techni.mgl.domain.CfightVO;
+import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.service.BoardService;
 import com.techni.mgl.service.CfightService;
+import com.techni.mgl.service.GameService;
 import com.techni.mgl.service.UClubService;
 
 @Controller
@@ -48,6 +50,8 @@ public class BoardController {
 	CfightService cfService;
 	@Autowired
 	UClubService ucService;
+	@Autowired
+	GameService gService;
 	
 	@RequestMapping("/Install/apkDownload.techni")
 	public String apkDownload(){
@@ -137,9 +141,20 @@ public class BoardController {
 		map.put("u_id", mvo.getM_id());
 		List<BoardVO> list = brdService.bbsList(map);
 		List<CfightVO> list2 = cfService.cFightList(c_idx);
+		List<ClubMatchVO> list3 = gService.selfMatchList(c_idx);
+		
+		int count = ucService.clubCount(c_idx);
+		
+		Map<String,Object> map2 = new HashMap<String,Object>();
+		
+		map2.put("c_nm",list.get(0).getC_nm());
+		map2.put("count", count);
+		
+		session.setAttribute("cvo", map2);
 		System.out.println(list2.toString());
 		model.addAttribute("list", list);
 		model.addAttribute("list2",list2);
+		model.addAttribute("list3",list3);
 		int res = 0;
 		int res2 = 0;
 			for(BoardVO bvo : list){
@@ -154,7 +169,7 @@ public class BoardController {
 			model.addAttribute("nBbs", res2);
 			model.addAttribute("sBbs", res);
 		
-		return "board/boardList";
+		return "board/boardList.pag";
 	}
 	
 

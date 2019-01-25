@@ -16,8 +16,8 @@
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>	
 	<bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
   		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-  		<property name="url" value="jdbc:mysql://localhost:3306/mgl_db?allowMultiQueries=true&amp;autoReconnect=true"/>
-  		<property name="username" value="root"/>
+  		<property name="url" value="jdbc:mysql://118.129.196.72:3306/mgl_db?allowMultiQueries=true&amp;autoReconnect=true"/>
+  		<property name="username" value="wlgud"/>
   		<property name="password" value="techni"/>
   		<property name="validationQuery" value="select 1"/>
  	</bean>

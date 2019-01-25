@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
 import com.techni.mgl.domain.CfightVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.service.CfightService;
@@ -47,6 +49,7 @@ import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
 @Controller
+/*@SessionAttributes({"cf_idx","cf_nm"}) 바뀌지 않는 값만 넣어줘야 될것같다.*/
 public class CfightController {
 
 	@Autowired
@@ -59,7 +62,7 @@ public class CfightController {
 
 		model.addAttribute("c_nm", c_nm);
 
-		return "cFight/cFightInsert";
+		return "cFight/cFightInsert.pag";
 	}
 
 	@RequestMapping("Cfight/SelectCidx.techni")
@@ -155,6 +158,7 @@ public class CfightController {
 		List<CfightVO> list = cfService.cFightJoinClub(cf_idx);
 		List<CfightVO> list2 = cfService.cFightTypeList(map);
 		List<CfightVO> list3 = cfService.cf_nm(cf_idx);
+		session.setAttribute("cf_nm", list3.get(0).getCf_nm());
 
 		if (list.get(0).getCf_match_list().equals("Y")) {
 
@@ -165,7 +169,7 @@ public class CfightController {
 			model.addAttribute("list", mList);
 			model.addAttribute("list3", list3);
 
-			return "cFight/cFightMyGame";
+			return "cFight/cFightMyGame.pag";
 		} else {
 
 			
@@ -202,7 +206,7 @@ public class CfightController {
 			model.addAttribute("cfm", cfm);
 			model.addAttribute("join", join);
 
-			return "cFight/cFightDetail";
+			return "cFight/cFightDetail.pag";
 		}
 	}
 
@@ -247,7 +251,7 @@ public class CfightController {
 		model.addAttribute("list2", list2);
 		model.addAttribute("cf_idx", cf_idx);
 
-		return "cFight/cFightRegister";
+		return "cFight/cFightRegister.pag";
 	}
 
 	// 클럽 선수 팀 등록화면
@@ -271,7 +275,7 @@ public class CfightController {
 		model.addAttribute("cf_idx", cf_idx);
 		model.addAttribute("cf_t_idx", cf_t_idx);
 
-		return "cFight/cFightRegisterT";
+		return "cFight/cFightRegisterT.pag";
 	}
 
 	// 팀 등록
@@ -336,7 +340,7 @@ public class CfightController {
 
 		model.addAttribute("list", list);
 
-		return "cFight/cFightTeamList";
+		return "cFight/cFightTeamList.pag";
 	}
 
 	// 클럽대항전 유저 테이블에 인서트
@@ -444,7 +448,7 @@ public class CfightController {
 
 		model.addAttribute("list", list);
 
-		return "cFight/cFightGroup";
+		return "cFight/cFightGroup.pag";
 	}
 
 	@RequestMapping("Cfight/CfightGroupInsert.techni")
@@ -908,7 +912,7 @@ public class CfightController {
 		model.addAttribute("list2", list2);
 		model.addAttribute("cfm", cfm);
 
-		return "cFight/cFightTimeList";
+		return "cFight/cFightTimeList.pag";
 	}
 
 	@RequestMapping("Cfight/CfightCourtList.techni")
@@ -924,7 +928,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
-		return "cFight/cFightCourtList";
+		return "cFight/cFightCourtList.pag";
 	}
 
 	@RequestMapping("Cfight/CfightTypeList.techni")
@@ -938,7 +942,7 @@ public class CfightController {
 
 		model.addAttribute("list", list);
 
-		return "cFight/cFightTypeList";
+		return "cFight/cFightTypeList.pag";
 	}
 
 	@RequestMapping("Cfight/CfightMatchDetail.techni")
@@ -971,14 +975,14 @@ public class CfightController {
 		List<CfightVO> list2 = cfService.typeDetailList(map);
 
 		List<CfightVO> list3 = cfService.typeDetailRank(map);
-
+		session.setAttribute("cf_t_nm", list2.get(0).getCf_t_nm());
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 		model.addAttribute("list3", list3);
 		model.addAttribute("cfm", cfm);
 		model.addAttribute("cf_g_idx", cf_g_idx.substring(0, 15));
 
-		return "cFight/cFightMatchDetail";
+		return "cFight/cFightMatchDetail.pag";
 	}
 
 	@RequestMapping("Cfight/CfightEntryType.techni")
@@ -992,7 +996,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
-		return "cFight/cFightEntryType";
+		return "cFight/cFightEntryType.pag";
 	}
 
 	@RequestMapping("Cfight/CfightEntryClub.techni")
@@ -1006,7 +1010,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
-		return "cFight/cFightEntryClub";
+		return "cFight/cFightEntryClub.pag";
 	}
 
 	@RequestMapping("Cfight/CfightReferee.techni")
@@ -1030,7 +1034,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2",list2);
 		
-		return "cFight/cFightReferee";
+		return "cFight/cFightReferee.pag";
 	}
 
 	@RequestMapping("Cfight/CfightMyRank.techni")
@@ -1053,7 +1057,7 @@ public class CfightController {
 		model.addAttribute("list3", list3);
 		model.addAttribute("u_id", mvo.getM_id());
 
-		return "cFight/cFightMyRank";
+		return "cFight/cFightMyRank.pag";
 	}
 
 	@RequestMapping("Cfight/CfightTypeRank.techni")
@@ -1067,7 +1071,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
-		return "cFight/cFightTypeRank";
+		return "cFight/cFightTypeRank.pag";
 	}
 
 	@RequestMapping("Cfight/CfightSummary.techni")
@@ -1085,7 +1089,7 @@ public class CfightController {
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
-		return "cFight/cFightSummary";
+		return "cFight/cFightSummary.pag";
 	}
 
 	@RequestMapping("Cfight/CfightScoreInsert.techni")
@@ -1322,7 +1326,7 @@ public class CfightController {
 
 		model.addAttribute("list", list);
 
-		return "cFight/cFightClubRank";
+		return "cFight/cFightClubRank.pag";
 	}
 	@RequestMapping("Cfight/ExcelTimeDownload.techni")
 	public void Exceldownload(HttpServletRequest req , HttpServletResponse res,HttpSession session) throws IOException, RowsExceededException, WriteException{
@@ -1503,7 +1507,7 @@ public class CfightController {
 				model.addAttribute("list", list);
 				model.addAttribute("list2",list2);
 				
-				return "cFight/cFightReferee";
+				return "cFight/cFightReferee.pag";
 	}
 	@RequestMapping("Cfight/CfightAllMatch.techni")
 	public String allMatch(HttpSession session, Model model){
@@ -1517,6 +1521,6 @@ public class CfightController {
 		model.addAttribute("list2", list2);
 		model.addAttribute("list3", list3);
 		
-		return "cFight/cFightAllMatch";
+		return "cFight/cFightAllMatch.pag";
 	}
 }

@@ -7,17 +7,19 @@
 <link rel="icon" type="image/png" sizes="152x152" href="/resources/img/favicon_152.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/resources/img/favicon_32.png">        
 <link rel="shortcut icon" type="image/x-icon" href="/resources/img/favicon.ico">
+<link rel="icon" type="image/png" sizes="196x196" href="/resources/img/favicon_196.png">
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="msapplication-TileImage" content="/resources/img/favicon_144.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/resources/css/css.css?ver4" type="text/css" />
+<link rel="stylesheet" href="/resources/css/css.css?ver8" type="text/css" />
+<link rel="stylesheet" href="/resources/css/swiper.css">
 <script src="/resources/js/jquery-3.3.1.min.js"></script>
-<script src="/resources/js/js_st.js?ver3"></script>
+<script src="/resources/js/js_st.js?ver2"></script>
 <script src="/resources/js/jquery.form.min.js"></script>
-<script src="/resources/js/Navi.js?ver4"></script>
-<script src="/resources/js/sweetalert.min.js"></script>
-<link rel="stylesheet" href="/resources/css/prettydropdowns.css?ver2" type="text/css" />
-<script src="/resources/js/jquery.prettydropdowns.js?ver2"></script>
+<script src="/resources/js/Navi.js?ver2"></script>
+<script src="/resources/js/sweetalert.min.js?ver2"></script>
+<link rel="stylesheet" href="/resources/css/prettydropdowns.css?ver3" type="text/css" />
+<script src="/resources/js/jquery.prettydropdowns.js?ver3"></script>
 <%
 if(session.getAttribute("login")==null){
 %>

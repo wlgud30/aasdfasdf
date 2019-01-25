@@ -3,6 +3,7 @@ package com.techni.mgl.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.sun.org.apache.xpath.internal.operations.Gte;
 import com.techni.mgl.domain.CStadiumVO;
+import com.techni.mgl.domain.CfightVO;
 import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.GTempTeamVO;
 import com.techni.mgl.domain.MemberVO;
@@ -144,7 +146,7 @@ public class GameController {
 		model.addAttribute("list2", list2);
 		model.addAttribute("u_status", u_status);
 		
-		return "game/gameStateInfo";
+		return "game/gameStateInfo.pag";
 	}
 	//점수 버튼을 누르면 현재 게임중인 게임과 대기중인 게임이 업데이트
 	@RequestMapping("/Game/GameScoreRegist.techni")
@@ -277,7 +279,7 @@ public class GameController {
 		
 		model.addAttribute("cmvo", cmvo);
 		
-		return "game/gameScoreRegist";
+		return "game/gameScoreRegist.pag";
 	}
 	
 	@RequestMapping("/Game/GameScoreInsert.techni")
@@ -520,7 +522,7 @@ public class GameController {
 		model.addAttribute("list", list);
 		
 		
-		return "game/gameResult";
+		return "game/gameResult.pag";
 	}
 	
 	@RequestMapping("/Game/EndGame.techni")
@@ -571,7 +573,7 @@ public class GameController {
 		 System.out.println("씨엠와엠디" + cm_ymd);
 		 model.addAttribute("u_status", u_status);
 		
-		return "game/gameStateInfoEnd";
+		return "game/gameStateInfoEnd.pag";
 	}
 	//포인트 요약
 	@RequestMapping("/Game/PointDetail.techni")
@@ -598,7 +600,7 @@ public class GameController {
 		
 		model.addAttribute("list", list);
 		
-		return "uclub/uClubMemberPoint";
+		return "uclub/uClubMemberPoint.page";
 	}
 	
 	//포인트 총합
@@ -618,7 +620,7 @@ public class GameController {
 			
 			model.addAttribute("list", list);
 			
-			return "uclub/uClubMemberPoint";
+			return "uclub/uClubMemberPoint.page";
 		}
 		
 	//팀리그 등록
@@ -910,8 +912,1635 @@ public class GameController {
 		 model.addAttribute("u_status", u_status);
 		 model.addAttribute("list",list);
 		 
-		return "game/gameTodayRank";
+		return "game/gameTodayRank.pag";
 	}
+	
+	@RequestMapping("/Game/GameSelfMatchInsert.techni")
+	public String gameSelfMatchInsert() {
+		return "game/gameSelfMatch.pag";
+	}
+	
+	@RequestMapping("Game/selfMatchInsert.techni")
+	@ResponseBody
+	public Map<Object, Object> cFightInsert(HttpSession session, ServletRequest req) {
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		
+		Map<String, String> map1 = new HashMap<String, String>();
+
+		map1.put("cs_location", req.getParameter("cs_location"));
+		map1.put("cs_start", req.getParameter("cs_start"));
+		map1.put("cs_end", req.getParameter("cs_end"));
+		map1.put("cs_sTime", req.getParameter("cs_sTime1") + req.getParameter("cs_sTime2") + "00");
+		map1.put("cs_eTime", req.getParameter("cs_eTime1") + req.getParameter("cs_eTime2") + "00");
+		map1.put("cs_point", req.getParameter("cs_point"));
+		map1.put("cs_time", req.getParameter("cs_time"));
+		map1.put("cs_cnm", req.getParameter("cs_cnm"));
+		map1.put("cs_court", req.getParameter("cs_court"));
+		map1.put("cs_meth", req.getParameter("cs_meth"));
+		map1.put("cs_content", req.getParameter("cs_body"));
+		map1.put("c_idx", (String) session.getAttribute("c_idx"));
+		map1.put("cs_nm", req.getParameter("cs_nm"));
+		map1.put("cs_kind", req.getParameter("cs_meth"));
+		
+		System.out.println(req.getParameter("cs_eTime1"));
+		int res = gService.selfMatchInsert(map1);
+		if (res > 0 ) {
+			map.put("cnt", 1);
+		} else {
+			map.put("cnt", 0);
+		}
+
+		return map;
+	}
+	
+	// 자체대회 디테일 화면
+	@RequestMapping("Game/selfMatchDetail.techni")
+	public String selfMatchDetail(Model model , @RequestParam(required = false)String cs_idx , HttpSession session) {
+		
+		if(cs_idx == null || cs_idx.isEmpty()) {
+			cs_idx = (String) session.getAttribute("cs_idx");
+		}
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		String u_id = mvo.getM_id();
+		
+		ClubMatchVO  cmvo = gService.selfMatchDetail(cs_idx);
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("cs_idx", cs_idx);
+		map.put("u_id", u_id);
+		
+		int res = gService.selfMatchJoinYN(map);
+		
+		session.setAttribute("cs_nm", cmvo.getCs_nm());
+		session.setAttribute("cs_idx", cs_idx);
+		
+		if ( cmvo.getCs_match_list().equals("Y")&&res != 0) {
+
+			map.put("u_id", mvo.getM_id());
+
+			List<ClubMatchVO> mList = gService.myMatchList(map);
+			
+			model.addAttribute("list", mList);
+			model.addAttribute("listYN","Y");
+			
+			return "game/gameSelfMatchMyGame.pag";
+		}else {
+			
+			model.addAttribute("list", cmvo);
+			model.addAttribute("res",res );
+			model.addAttribute("listYN","N");
+				
+			return "game/gameSelfMatchDetail.pag";
+		}
+		
+		
+	}
+	
+	//자체대회 참석 여부
+	@RequestMapping("Game/selfMatchJoin.techni")
+	@ResponseBody
+	public Map<Object,Object> selfMatchJoin(Model model , @RequestBody String json, HttpSession session) throws ParseException{
+		
+		JSONParser parser = new JSONParser();
+        JSONObject json2 = (JSONObject) parser.parse(json);
+        
+        String cs_idx = (String) json2.get("cs_idx");
+        String yn = (String) json2.get("yn");
+		Map<Object,Object> map = new HashMap<Object,Object> ();
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		String u_id = mvo.getM_id();
+		
+		Map<String,String> map2 = new HashMap<String,String> ();
+		map2.put("cs_idx", cs_idx);
+		map2.put("u_id", u_id);
+		map2.put("c_idx",(String) session.getAttribute("c_idx"));
+		
+		int res = 0;
+		
+		if(yn.equals("Y")) {
+			res = gService.selfMatchJoin(map2);
+		}else {
+			res = gService.selfMatchExit(map2);
+		}
+		if(res == 0 ) {
+			map.put("cnt", 0);
+		}else {
+			map.put("cnt", 1);
+		}
+		System.out.println(res);
+		return map;
+	}
+	
+	//자체대회 참석(게스트)
+	@RequestMapping("Game/selfMatchGuestJoin.techni")
+	public Map<String,String> selfMatchGuestJoin(Model model , HttpSession session, String u_id,String u_birth,String u_club_gd){
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		
+		Map<String,String> map = new HashMap<String,String> ();
+		
+		Map<String,String> map2 = new HashMap<String,String> ();
+		map2.put("cs_idx", cs_idx);
+		map2.put("u_id", u_id);
+		
+		return map;
+	}
+	
+	//자체대회 대리신청페이지(회원외의등급)
+	@RequestMapping("Game/selfMatchRegister.techni")
+	public String selfMatchRegister(Model model , HttpSession session) {
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		String c_idx = (String) session.getAttribute("c_idx");
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("c_idx", c_idx);
+		map.put("cs_idx", cs_idx);
+		
+		List<ClubMatchVO> list = gService.selfMatchJoinList(cs_idx);
+		List<ClubMatchVO> list2 = gService.selfMatchClubList(map);
+		int count = ucService.clubCount(c_idx);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("list2", list2);
+		model.addAttribute("count", count);
+		model.addAttribute("cs_idx", cs_idx);
+		
+		return "game/gameSelfMatchRegister.pag";
+	}
+	//자체대회 다중 참석
+	@RequestMapping("Game/selfMatchMultiJoin.techni")
+	@ResponseBody
+	public Map<Object,Object> selfMatchMultiJoin(HttpSession session, @RequestBody String json) throws ParseException{
+		Map<Object,Object> map = new HashMap<Object,Object>();
+		String c_idx = (String) session.getAttribute("c_idx");
+
+		JSONParser parser = new JSONParser();
+		JSONObject json2 = (JSONObject) parser.parse(json);
+
+		String arr = json2.get("u_id").toString().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\"", "");
+		System.out.println(arr);
+		String[] ar = arr.split(",");
+
+		String kind = (String) json2.get("kind");
+		Map<Object, Object> map2 = new HashMap<Object, Object>();
+		
+		int cnt = 0;
+		
+		if(kind.equals("n")) {
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+			for (int i = 0; i < ar.length; i++) {
+				Map<String, String> map1 = new HashMap<String, String>();
+				map1.put("u_id", ar[i]);
+				list.add(map1);
+			}
+			
+			System.out.println(list);
+			map2.put("list", list);
+			map2.put("c_idx", c_idx);
+			map2.put("cs_idx", (String) json2.get("cs_idx"));
+			
+			cnt = gService.selfMatchMultiJoin(map2);
+		}else {
+			map2.put("u_id", arr);
+			map2.put("cs_idx", (String) json2.get("cs_idx"));
+			
+			cnt = gService.selfMatchMultiUnJoin(map2);
+		}
+		map.put("cnt", cnt);
+		
+		
+		return map;
+	}
+	//자체대회 종목 등록폼
+	@RequestMapping("/Game/selfMatchTypeInsertForm.techni")
+	public String selfMatchTypeForm(HttpSession session, Model model , String cs_kind){
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		model.addAttribute("cs_idx", cs_idx);
+		System.out.println("cs kind : " + cs_kind);
+		if(cs_kind.equals("청백전")) {
+			List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+			
+			model.addAttribute("list", list);
+	        
+			return "game/gameSelfMatchType.pag";
+		}else if(cs_kind.equals("개인리그전")) {
+			List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("cs_kind", cs_kind);
+			return "game/gameSelfPrivateMatchType.pag";
+			
+		}else if(cs_kind.equals("팀리그전")) {
+			List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("cs_kind", cs_kind);
+			return "game/gameSelfPrivateMatchType.pag";
+		}
+		
+		List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+		
+		model.addAttribute("list", list);
+        
+		return "game/gameSelfMatchType.pag";
+	}
+	//자체대회(개인,팀) 종목 등록폼
+	@RequestMapping("/Game/selfPrivateMatchTypeInsertForm.techni")
+	public String selfPrivateMatchTypeForm(HttpSession session, Model model){
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		model.addAttribute("cs_idx", cs_idx);
+		
+		List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+		
+		model.addAttribute("list", list);
+        
+		return "game/gameSelfPrivateMatchType.pag";
+	}
+	
+	//자체대회 종목 등록
+		@RequestMapping("/Game/selfMatchTypeInsert.techni")
+		@ResponseBody
+		public Map<String,Object> selfMatchType(@RequestBody String json) throws ParseException{
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			Map<String,Object> map2 = new HashMap<String,Object>();
+	        
+			JSONParser parser = new JSONParser();
+			JSONObject json2 = (JSONObject) parser.parse(json);
+			
+			String no = (String) json2.get("no");
+			String type = (String) json2.get("type");
+			String cs_idx = (String) json2.get("cs_idx");
+			
+			String[] noArr = no.split(",");
+			String[] typeArr = type.split(",");
+			
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+			for (int i = 0; i < noArr.length; i++) {
+				Map<String, String> map1 = new HashMap<String, String>();
+				map1.put("no", noArr[i]);
+				map1.put("type", typeArr[i]);
+				list.add(map1);
+			}
+			
+			map2.put("list", list);
+			map2.put("cs_idx", cs_idx);
+			
+			gService.selfMatchKindDelete(cs_idx);
+			
+			int cnt = gService.selfMatchTypeInsert(map2);
+			
+			map.put("cnt", cnt);
+			
+			return map;
+		}
+		
+	//자체대회 청백 등록폼
+		@RequestMapping("/Game/selfMatchWBInsertForm.techni")
+		public String selfMatchWBInsertForm(HttpSession session, Model model ) {
+			String cs_idx = (String) session.getAttribute("cs_idx");
+			
+			List<ClubMatchVO> list = gService.selfMatchGD(cs_idx);
+			List<ClubMatchVO> list2 = new ArrayList<ClubMatchVO>();
+			List<ClubMatchVO> list3 = new ArrayList<ClubMatchVO>();
+			for(int i = 0 ; i<list.size();i++) {
+				if(i==0||i%2==0) {
+					list2.add(list.get(i));
+				}else {
+					list3.add(list.get(i));
+				}
+			}
+			List<ClubMatchVO> blueList = gService.selectBlueTeam(cs_idx);
+			List<ClubMatchVO> whiteList = gService.selectWhiteTeam(cs_idx);
+			System.out.println(list2);
+			System.out.println(list3);
+			model.addAttribute("list", list);
+			model.addAttribute("list2", list2);
+			model.addAttribute("list3", list3);
+			model.addAttribute("cs_idx", cs_idx);
+			model.addAttribute("blueList", blueList);
+			model.addAttribute("whiteList", whiteList);
+			
+			
+			return "game/gameSelfMatchWBInsert.pag";
+		}
+	//자체대회 청백 등록
+		@RequestMapping("/Game/selfMatchWBInsert.techni")
+		@ResponseBody
+		public Map<String,Object> selfMatchWBInsert(@RequestBody String json ) throws ParseException {
+			Map<String,Object> map = new HashMap<String,Object>();
+			
+			
+			JSONParser parser = new JSONParser();
+	        JSONObject json2 = (JSONObject) parser.parse(json);
+	        
+	        String blue = (String) json2.get("blueTeam");
+	        String white = (String) json2.get("whiteTeam");
+	        String cs_idx = (String) json2.get("cs_idx");
+			
+	        Map<String, String> map2 = new HashMap<String, String>();
+	        Map<String, String> map3 = new HashMap<String, String>();
+	        
+	        map2.put("u_id", blue);
+	        map2.put("bw", "b");
+	        map2.put("cs_idx", cs_idx);
+	        map3.put("u_id", white);
+	        map3.put("bw", "w");
+	        map3.put("cs_idx", cs_idx);
+			
+	        int res = gService.BWUpdate(map2);
+	        int res2 = gService.BWUpdate(map3);
+	        
+	        if(res>0 &&res2>0) {
+	        	map.put("cnt", 1);
+	        }else {
+	        	map.put("cnt", 0);
+	        }
+			
+			return map;
+		}
+	
+	//자체대회 팀등록 화면
+	@RequestMapping("/Game/selfMatchTeamInsertForm.techni")
+	public String selfMatchTeamInsertForm(String cs_kind,Model model, HttpSession session,@RequestParam(required = false) String cs_k_idx) {
+		Map<String,String> map = new HashMap<String,String>();
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		List<ClubMatchVO> list0 = gService.selfMatchKindList(cs_idx);
+		
+		if(cs_k_idx == null) {
+			cs_k_idx = list0.get(0).getCs_k_idx();
+		}
+		
+		map.put("cs_idx", cs_idx);
+		map.put("cs_k_idx", cs_k_idx);
+		
+		List<ClubMatchVO> list = gService.selfMatchTeamList(map);
+
+		List<ClubMatchVO> list2 = gService.selfMatchNotKindJoinList(map);
+		ClubMatchVO list3 = gService.selfMatchGameCount(cs_idx);
+		
+		model.addAttribute("list",list);
+		model.addAttribute("list2", list2);
+		model.addAttribute("list3", list3);
+		model.addAttribute("list0", list0);
+		model.addAttribute("cs_k_idx", cs_k_idx);
+		model.addAttribute("cs_idx", cs_idx);
+		model.addAttribute("cs_kind", cs_kind);
+		
+		return "game/gameSelfMatchRegistT.pag";
+	}
+	//자체대회 청팀등록 화면
+	@RequestMapping("/Game/selfMatchBlueTeamInsertForm.techni")
+	public String selfMatchBlueTeamInsertForm(Model model, HttpSession session,@RequestParam(required = false) String cs_k_idx) {
+		Map<String,String> map = new HashMap<String,String>();
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		List<ClubMatchVO> list0 = gService.selfMatchKindList(cs_idx);
+		
+		if(cs_k_idx == null) {
+			cs_k_idx = list0.get(0).getCs_k_idx();
+		}
+		
+		map.put("cs_idx", cs_idx);
+		map.put("cs_k_idx", cs_k_idx);
+		
+		List<ClubMatchVO> blist = gService.selfMatchTeamList(map);
+		List<ClubMatchVO> list = new ArrayList<ClubMatchVO>();
+		List<ClubMatchVO> list2 = new ArrayList<ClubMatchVO>();
+		
+		for(ClubMatchVO cmvo : blist) {
+			String bw = cmvo.getCs_t_bw();
+			if(bw != null) {
+				if(bw.equals("b")) {
+					list.add(cmvo);
+				}
+			}
+		}
+		
+		List<ClubMatchVO> blist2 = gService.selfMatchNotKindJoinList(map);
+		for(ClubMatchVO cmvo : blist2) {
+			String bw = cmvo.getCs_t_bw();
+			if(bw != null) {
+				if(bw.equals("b")) {
+					list2.add(cmvo);
+				}
+			}
+		}
+		ClubMatchVO list3 = gService.selfMatchGameCount(cs_idx);
+		
+		model.addAttribute("list",list);
+		model.addAttribute("list2", list2);
+		model.addAttribute("list3", list3);
+		model.addAttribute("list0", list0);
+		model.addAttribute("cs_k_idx", cs_k_idx);
+		model.addAttribute("cs_idx", cs_idx);
+		
+		return "game/gameSelfMatchRegistBlueT.pag";
+	}
+	//자체대회 백팀등록 화면
+	@RequestMapping("/Game/selfMatchWhiteTeamInsertForm.techni")
+	public String selfMatchWhiteTeamInsertForm(Model model, HttpSession session,@RequestParam(required = false) String cs_k_idx) {
+		Map<String,String> map = new HashMap<String,String>();
+		String cs_idx = (String) session.getAttribute("cs_idx");
+		List<ClubMatchVO> list0 = gService.selfMatchKindList(cs_idx);
+		
+		if(cs_k_idx == null) {
+			cs_k_idx = list0.get(0).getCs_k_idx();
+		}
+		
+		map.put("cs_idx", cs_idx);
+		map.put("cs_k_idx", cs_k_idx);
+		
+		List<ClubMatchVO> wlist = gService.selfMatchTeamList(map);
+		List<ClubMatchVO> list = new ArrayList<ClubMatchVO>();
+		List<ClubMatchVO> list2 = new ArrayList<ClubMatchVO>();
+		
+		for(ClubMatchVO cmvo : wlist) {
+			String bw = cmvo.getCs_t_bw();
+			if(bw != null) {
+				if(bw.equals("w")) {
+					list.add(cmvo);
+				}
+			}
+		}
+		
+		List<ClubMatchVO> wlist2 = gService.selfMatchNotKindJoinList(map);
+		for(ClubMatchVO cmvo : wlist2) {
+			String bw = cmvo.getCs_t_bw();
+			if(bw != null) {
+				if(bw.equals("w")) {
+					list2.add(cmvo);
+				}
+			}
+		}
+		ClubMatchVO list3 = gService.selfMatchGameCount(cs_idx);
+		
+		model.addAttribute("list",list);
+		model.addAttribute("list2", list2);
+		model.addAttribute("list3", list3);
+		model.addAttribute("list0", list0);
+		model.addAttribute("cs_k_idx", cs_k_idx);
+		model.addAttribute("cs_idx", cs_idx);
+		
+		return "game/gameSelfMatchRegistWhiteT.pag";
+	}
+	//자체대회 개인등록 화면
+		@RequestMapping("/Game/selfMatchPrivateInsertForm.techni")
+		public String selfMatchPrivateInsertForm(String cs_kind,Model model, HttpSession session,@RequestParam(required = false) String cs_k_idx) {
+			String cs_idx = (String) session.getAttribute("cs_idx");
+			
+			Map<String,String> map = new HashMap<String,String>();
+			
+			List<ClubMatchVO> list0 = gService.selfMatchKindList(cs_idx);
+			
+			if(cs_k_idx == null) {
+				cs_k_idx = list0.get(0).getCs_k_idx();
+			}
+			
+			
+			map.put("cs_idx", cs_idx);
+			map.put("cs_k_idx", cs_k_idx);
+			
+			int cs_k_count = 0;
+			
+			List<ClubMatchVO> list = gService.selfMatchPrivateList(map);
+
+			List<ClubMatchVO> list2 = gService.selfMatchPrivateNotKindJoinList(map);
+			
+			if(!list.isEmpty()) {
+				cs_k_count = list.get(0).getCs_k_count();
+			}
+			
+			
+			model.addAttribute("list",list);
+			model.addAttribute("list2", list2);
+			model.addAttribute("list0", list0);
+			model.addAttribute("cs_k_idx", cs_k_idx);
+			model.addAttribute("cs_idx", cs_idx);
+			model.addAttribute("cs_kind",cs_kind);
+			model.addAttribute("cs_k_count", cs_k_count);
+			
+			return "game/gameSelfMatchPrivateInsert.pag";
+		}
+		//자체대회 개인등록
+		@RequestMapping("/Game/selfMatchPrivateInsert.techni")
+		@ResponseBody
+		public Map<String,Object> selfMatchPrivateInser(@RequestBody String json) throws ParseException {
+			Map<String,Object> map = new HashMap<String,Object>();
+			
+			JSONParser parser = new JSONParser();
+	        JSONObject json2 = (JSONObject) parser.parse(json);
+	        String user_id = (String) json2.get("user_id");
+			String cs_k_idx = (String) json2.get("cs_k_idx");
+			String cs_idx = (String) json2.get("cs_idx");
+			String count = (String) json2.get("count");
+			System.out.println(user_id);
+			String[] arr = user_id.split(",");
+			List<Object> teamList = new ArrayList<Object>();
+			Map<String,Object> map2 = new HashMap<String,Object>();
+			
+			for(int i = 0 ;i<arr.length;i++) {
+					Map<String,String> map1 = new HashMap<String,String>();
+					map1.put("u_id", arr[i]);
+					teamList.add(map1);
+			}
+			Map<String,String> map3 = new HashMap<String,String> ();
+			
+			map3.put("cs_k_idx", cs_k_idx);
+			map3.put("count", count);
+			map3.put("cs_idx", cs_idx);
+			
+			List<ClubMatchVO> list = gService.selfMatchPrivateList(map3);
+			
+			map2.put("cs_k_idx", cs_k_idx);
+			map2.put("cs_idx",cs_idx);
+			map2.put("list", teamList);
+			int res2 =0;
+			
+			int res = gService.selfMatchPrivateDelete(map2);
+			
+			if(list.isEmpty()) {
+				res = 1;
+			}
+			
+			if(res>0) {
+				int res3 = gService.selfMatchCount(map3);
+				if(res3 > 0) {
+					res2 = gService.selfMatchPrivateInsert(map2);
+				}
+			}
+			
+			map.put("cnt", res2);
+			
+			return map;
+		}
+	//자체대회 팀등록
+	@RequestMapping("/Game/selfMatchTeamInsert.techni")
+	@ResponseBody
+	public Map<String,Object> selfMatchTeamInsert(@RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		JSONParser parser = new JSONParser();
+        JSONObject json2 = (JSONObject) parser.parse(json);
+        
+        String cs_k_idx = (String) json2.get("cs_k_idx");
+        String cs_idx = (String) json2.get("cs_idx");
+        String u_id_a = (String) json2.get("u_id_a");
+        String u_id_b = (String) json2.get("u_id_b");
+        String wb = (String) json2.get("bw");
+        
+        Map<String,String> map2 = new HashMap<String,String>();
+        
+        map2.put("cs_k_idx", cs_k_idx);
+        map2.put("cs_idx", cs_idx);
+        map2.put("u_id_a", u_id_a);
+        map2.put("u_id_b", u_id_b);
+        map2.put("bw", wb);
+        
+        int res = gService.selfMatchTeamInsert(map2);
+		
+        map.put("cnt", res);
+        
+		return map;
+	}
+	//자체대회 팀들삭제
+	@RequestMapping("/Game/selfMatchTeamDelete.techni")
+	@ResponseBody
+	public Map<String,Object> selfMatchTeamDelete(@RequestBody String cs_t_idx) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();			
+		
+	    
+        System.out.println(cs_t_idx);
+	    
+        int res = gService.selfMatchTeamDelete(cs_t_idx);
+		
+        map.put("cnt", res);
+	        
+		return map;
+		}
+	
+	//자체대회 대진표
+	@RequestMapping("/Game/selfMatchGameInsert.techni")
+	public Map<Object, Object> selfMatchGameInsert(Model model, HttpSession session , @RequestParam(required = false)String kind) throws java.text.ParseException {
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		String cs_idx = (String) session.getAttribute("cs_idx");
+
+		if(kind.isEmpty()) {
+			kind = "팀리그전";
+		}
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
+		Map<String, Object> insertMap = new HashMap<String, Object>();
+		Map<String, Object> updateMap = new HashMap<String, Object>();
+
+		Map<String, String> map1 = new HashMap<String, String>();
+
+		int var = 0;
+	
+		insertMap.put("list", list);
+		insertMap.put("cs_idx", cs_idx);
+		updateMap.put("list", list2);
+		System.out.println(list2);
+	
+		String hae = "";
+		List<Object> gameList = new ArrayList<Object>();
+		List<ClubMatchVO> k_idx_list = gService.selfMatchKindList(cs_idx);
+		if(kind.equals("청백전")) {
+			for (ClubMatchVO cvo : k_idx_list) {		//종목수 만큼 반복문 돌리면된다
+				Map<String, String> pMap = new HashMap<String, String>();
+
+				pMap.put("cs_idx", cs_idx);
+				pMap.put("cs_k_idx", cvo.getCs_k_idx());	//종목인덱스를 넣자
+				List<ClubMatchVO> group = gService.selfMatchTeamList(pMap);//해당 종목에 참여한 팀리스트를 가져온다
+				List<ClubMatchVO> groupB = new ArrayList<ClubMatchVO>();
+				List<ClubMatchVO> groupW = new ArrayList<ClubMatchVO>();
+				
+				for(int i = 0; i<group.size();i++) {
+					String bw = group.get(i).getCs_t_bw();
+					if(bw != null) {
+						if(bw.equals("b")) {
+							groupB.add(group.get(i));
+						}else if(bw.equals("w")) {
+							groupW.add(group.get(i));
+						}
+					}
+				}
+				
+				if(groupB.size() != groupW.size()) {
+					
+					map.put("msg", "백팀과 청팀의 숫자가 맞지않습니다.");
+					
+					return map;
+				}
+				
+				int g = 0;
+				/*hae += cvo.getCf_t_idx()+",";*/
+					for (int i = 0; i < groupB.size(); i++) {
+						Map<String, String> uMap = new HashMap<String, String>();
+						uMap.put("cs_k_idx", cvo.getCs_k_idx());
+						uMap.put("cs_gidx", cvo.getCs_k_idx() + "_" + g);
+						uMap.put("team_a_idx", groupB.get(i).getCs_t_idx());
+						uMap.put("team_a_user_a", groupB.get(i).getCs_a_id());
+						uMap.put("team_a_user_b", groupB.get(i).getCs_b_id());
+						uMap.put("team_b_idx", groupW.get(i).getCs_t_idx());
+						uMap.put("team_b_user_a", groupW.get(i).getCs_a_id());
+						uMap.put("team_b_user_b", groupW.get(i).getCs_b_id());
+						gameList.add(uMap);
+						g++;
+					}
+			}
+		}
+		for (ClubMatchVO cvo : k_idx_list) {		//종목수 만큼 반복문 돌리면된다
+			Map<String, String> pMap = new HashMap<String, String>();
+
+			pMap.put("cs_idx", cs_idx);
+			pMap.put("cs_k_idx", cvo.getCs_k_idx());	//종목인덱스를 넣자
+			List<ClubMatchVO> group = gService.selfMatchTeamList(pMap);//해당 종목에 참여한 팀리스트를 가져온다
+			int g = 0;
+			/*hae += cvo.getCf_t_idx()+",";*/
+			if (group.size()==5) {	//팀수
+				int a = 0;
+				int b = 1;
+				for (int i = 1; i <= 10; i++) {
+					Map<String, String> uMap = new HashMap<String, String>();
+					uMap.put("cs_k_idx", cvo.getCs_k_idx());
+					uMap.put("cs_gidx", cvo.getCs_k_idx() + "_" + g);
+					uMap.put("team_a_idx", group.get(a).getCs_t_idx());
+					uMap.put("team_a_user_a", group.get(a).getCs_a_id());
+					uMap.put("team_a_user_b", group.get(a).getCs_b_id());
+					uMap.put("team_b_idx", group.get(b).getCs_t_idx());
+					uMap.put("team_b_user_a", group.get(b).getCs_a_id());
+					uMap.put("team_b_user_b", group.get(b).getCs_b_id());
+					gameList.add(uMap);
+					b++;
+					g++;
+					if (i == group.size() - 1) {
+						a = 1;
+						b = 2;
+					}
+					if (i == group.size() - 1
+							+ group.size() - 2) {
+						a = 2;
+						b = 3;
+					}
+					if (i == group.size() - 1 + group.size() - 2
+							+ group.size() - 3) {
+						a = 3;
+						b = 4;
+					}
+					if (i == group.size() - 1 + group.size() - 2
+							+ group.size() - 3
+							+ group.size() - 4) {
+						a = 4;
+						b = 5;
+					}
+				}
+			} else if (group.size()==4) {
+				int a = 0;
+				int b = 1;
+				for (int i = 1; i <= 6; i++) {
+					Map<String, String> uMap = new HashMap<String, String>();
+					uMap.put("cs_k_idx", cvo.getCs_k_idx());
+					uMap.put("cs_gidx", cvo.getCs_k_idx() + "_" + g);
+					uMap.put("team_a_idx", group.get(a).getCs_t_idx());
+					uMap.put("team_a_user_a", group.get(a).getCs_a_id());
+					uMap.put("team_a_user_b", group.get(a).getCs_b_id());
+					uMap.put("team_b_idx", group.get(b).getCs_t_idx());
+					uMap.put("team_b_user_a", group.get(b).getCs_a_id());
+					uMap.put("team_b_user_b", group.get(b).getCs_b_id());
+					gameList.add(uMap);
+					b++;
+					g++;
+					if (i == group.size() - 1) {
+						a = 1;
+						b = 2;
+					}
+					if (i == group.size() - 1
+							+ group.size() - 2) {
+						a = 2;
+						b = 3;
+					}
+				}
+			} else if (group.size()==3) {
+				int a = 0;
+				int b = 1;
+				for (int i = 1; i <= 3; i++) {
+					Map<String, String> uMap = new HashMap<String, String>();
+					uMap.put("cs_k_idx", cvo.getCs_k_idx());
+					uMap.put("cs_gidx", cvo.getCs_k_idx() + "_" + g);
+					uMap.put("team_a_idx", group.get(a).getCs_t_idx());
+					uMap.put("team_a_user_a", group.get(a).getCs_a_id());
+					uMap.put("team_a_user_b", group.get(a).getCs_b_id());
+					uMap.put("team_b_idx", group.get(b).getCs_t_idx());
+					uMap.put("team_b_user_a", group.get(b).getCs_a_id());
+					uMap.put("team_b_user_b", group.get(b).getCs_b_id());
+					gameList.add(uMap);
+					b++;
+					g++;
+					if (i == group.size() - 1) {
+						a = 1;
+						b = 2;
+					}
+				}
+			} else if (group.size()==2) {
+				int a = 0;
+				int b = 1;
+				Map<String, String> uMap = new HashMap<String, String>();
+				uMap.put("cs_k_idx", cvo.getCs_k_idx());
+				uMap.put("cs_gidx", cvo.getCs_k_idx() + "_" + g);
+				uMap.put("team_a_idx", group.get(a).getCs_t_idx());
+				uMap.put("team_a_user_a", group.get(a).getCs_a_id());
+				uMap.put("team_a_user_b", group.get(a).getCs_b_id());
+				uMap.put("team_b_idx", group.get(b).getCs_t_idx());
+				uMap.put("team_b_user_a", group.get(b).getCs_a_id());
+				uMap.put("team_b_user_b", group.get(b).getCs_b_id());
+				gameList.add(uMap);
+			}
+		}
+		ClubMatchVO cfvo = gService.selfMatchDetail(cs_idx);
+		String[] ar = new String[Integer.parseInt(cfvo.getCs_court()) * 4];
+		// 배열 사이즈는 사용가능 코트수 *8
+		int va = 0;
+		int bl = 0;
+		System.out.println("게임리스트 ㅁㄴㅇㄹ"+gameList);
+
+		List<Object> endGameList = new ArrayList<Object>();
+
+		for (int i = 0; i < gameList.size(); i++) {
+			Map<String, Object> newM = new HashMap<String, Object>();
+			newM = (Map<String, Object>) gameList.get(i);
+			int vv = 1;
+			Map<String, String> M = new HashMap<String, String>();
+			Map<String, String> M2 = new HashMap<String, String>();
+			Map<String, String> M3 = new HashMap<String, String>();
+			Map<String, String> M4 = new HashMap<String, String>();
+			M.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+			M.put("cs_gidx", (String) newM.get("cs_gidx"));
+			M.put("cs_k_idx", newM.get("cs_k_idx").toString());
+			M.put("cs_team_idx", (String) newM.get("team_a_idx"));
+			M.put("u_id", (String) newM.get("team_a_user_a"));
+			M.put("c_idx", (String) newM.get("team_a_club"));
+			vv++;
+			M2.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+			M2.put("cs_gidx", (String) newM.get("cs_gidx"));
+			M2.put("cs_k_idx", newM.get("cs_k_idx").toString());
+			M2.put("cs_team_idx", (String) newM.get("team_a_idx"));
+			M2.put("u_id", (String) newM.get("team_a_user_b"));
+			M2.put("c_idx", (String) newM.get("team_a_club"));
+			vv++;
+			M3.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+			M3.put("cs_gidx", (String) newM.get("cs_gidx"));
+			M3.put("cs_k_idx", newM.get("cs_k_idx").toString());
+			M3.put("cs_team_idx", (String) newM.get("team_b_idx"));
+			M3.put("u_id", (String) newM.get("team_b_user_a"));
+			M3.put("c_idx", (String) newM.get("team_b_club"));
+			vv++;
+			M4.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+			M4.put("cs_gidx", (String) newM.get("cs_gidx"));
+			M4.put("cs_k_idx", newM.get("cs_k_idx").toString());
+			M4.put("cs_team_idx", (String) newM.get("team_b_idx"));
+			M4.put("u_id", (String) newM.get("team_b_user_b"));
+			M4.put("c_idx", (String) newM.get("team_b_club"));
+			endGameList.add(M);
+			endGameList.add(M2);
+			endGameList.add(M3);
+			endGameList.add(M4);
+
+		}
+
+		System.out.println("end게임" + endGameList);
+
+		List<Object> rGameList = new ArrayList<Object>();
+		for (int i = 0; i < gameList.size() + 1; i++) {
+			Map<String, Object> newM = new HashMap<String, Object>();
+			System.out.println(i);
+			newM = (Map<String, Object>) gameList.get(i);
+			int jjj = 0;
+			for (int jk = 0; jk < rGameList.size(); jk++) {
+				Map<String, Object> nM = new HashMap<String, Object>();
+				nM = (Map<String, Object>) rGameList.get(jk);
+				if (nM.containsValue(newM.get("cs_gidx"))) { // rgamelist에
+																// csgidx가없다면
+																// jjj는1
+					System.out.println("여긴어캐와");
+					jjj = 1;
+					break;
+				}
+			}
+			System.out.println(Arrays.asList(ar).toString());
+			System.out.println(i);
+			System.out.println(gameList.size());
+
+			if (jjj != 1 && !Arrays.asList(ar).contains((String) newM.get("team_a_user_a"))
+					&& !Arrays.asList(ar).contains((String) newM.get("team_a_user_b"))
+					&& !Arrays.asList(ar).contains((String) newM.get("team_b_user_a"))
+					&& !Arrays.asList(ar).contains((String) newM.get("team_b_user_b"))) {
+				ar[va] = (String) newM.get("team_a_user_a");
+				System.out.println((String) newM.get("team_a_user_a"));
+				ar[va + 1] = (String) newM.get("team_a_user_b");
+				ar[va + 2] = (String) newM.get("team_b_user_a");
+				ar[va + 3] = (String) newM.get("team_b_user_b");
+				va = va + 4;
+				System.out.println(Arrays.asList(ar).toString());
+				i = -1;
+
+				rGameList.add(newM);
+				gameList.remove(newM);
+				if (gameList.isEmpty()) {
+					break;
+				}
+			} else if (i + 1 == gameList.size()) {
+				System.out.println(i);
+				System.out.println(gameList.size());
+				ar[va] = ""; // 0 +4 = 4 4+4 = 8 8+4=12
+				ar[va + 1] = "";
+				ar[va + 2] = "";
+				ar[va + 3] = "";
+				va = va + 4;
+				i = -1;
+				Map<String, Object> nM = new HashMap<String, Object>();
+				nM.put("cs_gidx", cs_idx + "_blank" + bl);
+				nM.put("team_b_idx", null);
+				nM.put("team_a_idx", null);
+				nM.put("team_a_user_a", null);
+				nM.put("team_a_user_b", null);
+				nM.put("team_b_user_a", null);
+				nM.put("team_b_user_b", null);
+				nM.put("cs_g_idx", null);
+				rGameList.add(nM);
+				bl++;
+				if (gameList.isEmpty()) {
+					break;
+				}
+			}
+			if (va == (Integer.parseInt(cfvo.getCs_court()) * 4)) {
+				// 여기서 23은 ar의 배열사이즈-1(배열은0부터시작이기때문)
+				// va+3==(Integer.parseInt(cfvo.getCf_court())*4)-1
+				for (int j = 0; j < Integer.parseInt(cfvo.getCs_court()) * 4; j++) {
+					// 여기서 반복 횟수는 사용 가능 코트수*4
+					ar[j] = "";
+				}
+				va = 0;
+			}
+		}
+		/*
+		 * for(int ac = 0 ; ac<second.length;ac++){ for(int ad = 0 ;
+		 * ad<second[ac].length;ad++){ System.out.println("2차원"+second[ac][ad]);
+		 * } }
+		 */
+		for (int i = 0; i < rGameList.size(); i++) {
+			Map<String, Object> nM = new HashMap<String, Object>();
+			nM = (Map<String, Object>) rGameList.get(i);
+			System.out.print(nM.get("team_a_user_a") + ",");
+			System.out.print(nM.get("team_a_user_b") + ",");
+			System.out.print(nM.get("team_b_user_a") + ",");
+			System.out.print(nM.get("team_b_user_b") + ",");
+			if (i + 1 % 4 == 0) {
+				System.out.println("");
+			}
+		}
+		System.out.println(gameList);
+		System.out.println(gameList.size());
+		System.out.println(rGameList);
+		System.out.println(rGameList.size());
+
+		List<Object> rGameList2 = new ArrayList<Object>();
+		int ii = 0;
+		int jj = 0;
+		int s = (rGameList.size() / (Integer.parseInt(cfvo.getCs_court())*10)) * 5;/*
+		if((rGameList.size() / Integer.parseInt(cfvo.getCf_court())) % 2 != 0){
+			s= s+1;
+		}*/
+		for (int i = 0; i < s; i++) {
+			Map<String, Object> newM = new HashMap<String, Object>();
+			for(int j = 0 ; j<Integer.parseInt(cfvo.getCs_court());j++){
+				newM = (Map<String, Object>) rGameList.get(ii);
+				rGameList2.add(newM);
+				ii++;
+			}
+			for(int j = 0 ; j<Integer.parseInt(cfvo.getCs_court());j++){
+				newM = (Map<String, Object>) rGameList.get(jj+(Integer.parseInt(cfvo.getCs_court()) * 5));
+				rGameList2.add(newM);
+				jj++;
+				if((jj+(Integer.parseInt(cfvo.getCs_court()) * 5))%(Integer.parseInt(cfvo.getCs_court())*10)==0){
+					jj=jj+(Integer.parseInt(cfvo.getCs_court()) * 5);
+					ii=ii+(Integer.parseInt(cfvo.getCs_court()) * 5);
+					System.out.println();
+				}
+			}
+			
+		}
+		System.out.println(rGameList2);
+		System.out.println("ii="+ii);
+		System.out.println(rGameList.size()%4);
+		System.out.println(rGameList.size()-ii);
+		for(int i = rGameList.size()-rGameList.size()%(Integer.parseInt(cfvo.getCs_court())*10) ; i<rGameList.size();i++){
+			Map<String, Object> newM = new HashMap<String, Object>();
+			newM = (Map<String, Object>) rGameList.get(i);
+			rGameList2.add(newM);
+		}
+		System.out.println("바뀐거 : "+rGameList2);
+		
+		int co = 1;
+		int order = 1;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		Date date = dateFormat.parse(cfvo.getCs_sTime());
+		cal.setTime(date);
+		for (int i = 0; i < rGameList2.size(); i++) {
+			if ((co - 1) == Integer.parseInt(cfvo.getCs_court())) {
+				co = 1;
+				order++;
+				cal.add(Calendar.MINUTE, Integer.parseInt(cfvo.getCs_time()));
+			}
+			Map<String, Object> newM = new HashMap<String, Object>();
+			newM = (Map<String, Object>) rGameList2.get(i);
+			newM.put("cs_u_court", co);
+			newM.put("cs_order", order);
+			newM.put("cs_w_date", dateFormat.format(cal.getTime()));
+			newM.put("cs_no", i + 1);
+			co++;
+		}
+		System.out.println(rGameList2);
+		System.out.println(rGameList.size());
+		Map<String, Object> cf_match = new HashMap<String, Object>();
+
+		cf_match.put("list", rGameList2);
+		cf_match.put("cs_idx", cs_idx);
+		cf_match.put("cs_status", "대기");
+
+		Map<String, Object> cf_match_end = new HashMap<String, Object>();
+
+		cf_match_end.put("list", endGameList);
+		cf_match_end.put("cs_idx", cs_idx);
+
+		int cs = gService.gameInsert(cf_match, cf_match_end);
+
+		System.out.println(rGameList2);
+		System.out.println(rGameList.size()%4);
+		System.out.println(rGameList.size());
+		System.out.println(rGameList2.size());
+		System.out.println(rGameList);
+		System.out.println(hae);
+		
+		if (cs > 0) {
+			map.put("cnt", 1);
+		} else {
+			map.put("cnt", 0);
+		}
+
+		return map;
+	}	
+	
+	
+	//개인리그등록
+			@RequestMapping("/Game/selfPrivateLeagueInsert.techni")
+			public Map<Object,Object> selfPrivateLeageInsert(HttpSession session) throws ParseException, java.text.ParseException{
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				
+				Map<Object, Object> mapr = new HashMap<Object, Object>();
+				
+				Map<Object, Object> map2 = new HashMap<Object, Object>();
+				
+				List<ClubMatchVO> list = gService.selfMatchKindList(cs_idx);
+				List<Object> allList = new ArrayList<Object>();
+				for(int i =0 ; i<list.size();i++) {
+					Map<String,String> map = new HashMap<String,String>();
+					List<Map<String, Object>> tList = new ArrayList<Map<String, Object>>();
+					int g = 0;
+					map.put("cs_idx", cs_idx);
+					map.put("cs_k_idx", list.get(i).getCs_k_idx());
+					List<Map<String, Object>> teamList = new ArrayList<Map<String, Object>>();
+					List<ClubMatchVO> list2 = gService.selfMatchPrivateList(map);
+					for(int j = 0 ;j<list2.size();j++) {
+						for(int k=j+1; k<list2.size();k++) {
+							Map<String, Object>map3 = new HashMap<String, Object>();
+							map3.put("team1", list2.get(j).getU_id());
+							map3.put("team2", list2.get(k).getU_id());
+							map3.put("cs_k_idx",list.get(i).getCs_k_idx());
+							map3.put("cs_idx",cs_idx);
+							map3.put("cs_gidx", list.get(i).getCs_k_idx()+"_"+g);
+							teamList.add(map3);
+							g++;
+						}
+					}
+					System.out.println(teamList);
+					if(teamList.isEmpty()) {
+						continue;
+					}
+					int e = 0;
+					System.out.println("돌아라1");
+					for(;;) {
+						String[] ar = new String[list2.size() * list.get(i).getCs_k_count()];
+						int v = 0;
+						int p = 0;
+						int q = 0;
+						if(e == 1) {
+							break;
+						}else {
+							
+							tList.clear();
+							
+							Collections.shuffle(teamList);
+					
+							for(int ii = 0; ii<teamList.size();ii++) {
+								int count = 0;
+								int count_1 = 0;
+								int count_2 = 0;
+								int count_3 = 0;
+								
+								Map<String, Object> newM = new HashMap<String, Object>();
+								newM = (Map<String, Object>) teamList.get(ii-q);
+								
+								
+								Map<String, Object> newM2 = new HashMap<String, Object>();
+								newM2 = (Map<String, Object>) teamList.get(teamList.size()-ii-1+p);
+								
+								
+								String team1 = (String) newM.get("team1");
+								String team2 = (String) newM.get("team2");
+								
+								String team1_1 = (String) newM2.get("team1");
+								String team2_1 = (String) newM2.get("team2");
+								
+								int a = 0;
+								int b = 0;
+								
+								for(int j = 0; j<ar.length;j++) {
+									if(ar[j] != null) {
+										if(ar[j].equals(team1)) {
+											count ++;
+										}
+										if(ar[j].equals(team2)) {
+											count_1 ++;
+										}
+									}
+								}
+								
+								if(team2 != team1_1 && team2 != team2_1&&team1 != team1_1 && team1 != team2_1 &&count < list.get(i).getCs_k_count() && count_1 < list.get(i).getCs_k_count()) {
+									ar[v] = team1;
+									ar[v+1] = team2;
+									a=1;
+								}
+								for(int j = 0; j<ar.length;j++) {
+									if(ar[j] != null) {
+										if(ar[j].equals(team1_1)) {
+											count_2 ++;
+										}
+										if(ar[j].equals(team2_1)) {
+											count_3 ++;
+										}
+									}
+								}
+								if(team1_1 != team2 && team1_1 != team2&&team2_1 != team1 && team2_1 != team2 &&count_2 < list.get(i).getCs_k_count() && count_3 < list.get(i).getCs_k_count()) {
+									ar[v+2] = team1_1;
+									ar[v+3] = team2_1;
+									b=1;
+								}
+								
+								if(count>= list.get(i).getCs_k_count() || count_1 >=list.get(i).getCs_k_count()) {
+									if(count_2 < list.get(i).getCs_k_count() && count_3 < list.get(i).getCs_k_count() ) {
+										p++;
+									}
+									
+								}
+								
+								if(count_2 >= list.get(i).getCs_k_count() || count_3 >= list.get(i).getCs_k_count()) {
+									if(count < list.get(i).getCs_k_count() || count_1 <list.get(i).getCs_k_count()) {
+										q++;	
+									}
+								}
+								
+								if(a == 1&&b==1) {
+									tList.add(newM);
+									tList.add(newM2);
+									v = v+4;
+								}else if(a==1&&b==0) {
+									ar[v] = "";
+									ar[v+1] ="";
+								}else if(a==0&&b==1) {
+									ar[v+2] = "";
+									ar[v+3] = "";
+								}
+								
+								if(tList.size()/2 == list2.size()*list.get(i).getCs_k_count()/4&&tList.size() > 1) {
+									e=1;
+									break;
+								}
+								
+							}
+						}
+					
+					}
+					List<Map<String, Object>> tList2 = new ArrayList<Map<String, Object>>();
+					
+					for(int z = 0 ; z<tList.size();z++){
+						Map<String, Object> newM = new HashMap<String, Object>();
+						newM = (Map<String, Object>) tList.get(z);
+						z++;
+						Map<String, Object> newM2 = new HashMap<String, Object>();
+						newM2 = (Map<String, Object>) tList.get(z);
+								Map<String, Object> M = new HashMap<String, Object>();
+								Map<String, Object> M2 = new HashMap<String, Object>();
+								M2.put("u_id_a",(String)newM.get("team1"));
+								M2.put("u_id_b",(String)newM.get("team2"));
+								M.put("team_a_user_a", (String)newM.get("team1"));
+								M.put("team_a_user_b", (String)newM.get("team2"));
+								M.put("team_b_user_a", (String)newM2.get("team1"));
+								M.put("team_b_user_b", (String)newM2.get("team2"));
+								M.put("cs_idx", cs_idx);
+								M.put("cs_k_idx", (String) newM.get("cs_k_idx"));
+								M.put("cs_gidx", (String) newM.get("cs_gidx"));
+								M.put("team_a_idx", (String) newM.get("cs_k_idx")+(String)newM.get("team1")+(String)newM.get("team2"));
+								M.put("team_b_idx", (String) newM.get("cs_k_idx")+(String)newM2.get("team1")+(String)newM2.get("team2"));
+								allList.add(M);
+								tList2.add(M2);
+					}
+					System.out.println("돌아라1");
+					System.out.println("총인원수*게임수 : " +list2.size() * list.get(i).getCs_k_count());
+					
+					Map<String,Object> tMap = new HashMap<String,Object>();
+					tMap.put("list", tList2);
+					tMap.put("cs_idx", cs_idx);
+					tMap.put("cs_k_idx", list.get(i).getCs_k_idx());
+					
+					int res = gService.selfMatchTeamDelete2(list.get(i).getCs_k_idx());
+					
+					int res2 = gService.selfMatchTeamInsert2(tMap);
+					if(res2 <=0) {
+						System.out.println("팀생성 실패");
+					}
+					
+					/*List<Object> aList = new ArrayList<Object>();
+					List<Object> bList = new ArrayList<Object>();
+					
+					for(int i = 0 ; i<allList.size();i++) {
+						
+						Map<String,Object> m = new  HashMap<String,Object>();
+						Map<String,Object> n = new  HashMap<String,Object>();
+						Map<String, Object> newM2 = new HashMap<String, Object>();
+						newM2 = (Map<String, Object>) allList.get(i);
+						m.put("u_id_a", (String)newM2.get("cm_a1_id"));
+						m.put("u_id_b", (String)newM2.get("cm_a2_id"));
+						n.put("u_id_a", (String)newM2.get("cm_b1_id"));
+						n.put("u_id_b", (String)newM2.get("cm_b2_id"));
+						aList.add(m);
+						bList.add(n);
+					}
+					Map<String,Object> tMap = new HashMap<String,Object>();
+					Map<String,Object> pMap = new HashMap<String,Object>();
+					tMap.put("list", aList);
+					tMap.put("cs_k_idx", list.get(i)getCs_k_idx());
+					tMap.put("cs_idx", cs_idx);
+					pMap.put("list", bList);
+					pMap.put("cs_k_idx", list.get(i)getCs_k_idx());
+					pMap.put("cs_idx", cs_idx);
+					
+					int res = gService.selfMatchTeamInsert2(tMap);
+					int res2 = gService.selfMatchTeamInsert2(pMap);*/
+					
+				}
+
+				System.out.println("총 게임 :" +allList);
+				System.out.println("총게임수 : " +allList.size());
+				
+				
+				
+				ClubMatchVO cfvo = gService.selfMatchDetail(cs_idx);
+				String[] ar = new String[Integer.parseInt(cfvo.getCs_court()) * 4];
+				// 배열 사이즈는 사용가능 코트수 *8
+				int va = 0;
+				int bl = 0;
+				System.out.println("게임리스트 ㅁㄴㅇㄹ"+allList);
+
+				List<Object> endGameList = new ArrayList<Object>();
+
+				for (int i = 0; i < allList.size(); i++) {
+					Map<String, Object> newM = new HashMap<String, Object>();
+					newM = (Map<String, Object>) allList.get(i);
+					int vv = 1;
+					Map<String, String> M = new HashMap<String, String>();
+					Map<String, String> M2 = new HashMap<String, String>();
+					Map<String, String> M3 = new HashMap<String, String>();
+					Map<String, String> M4 = new HashMap<String, String>();
+					M.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+					M.put("cs_gidx", (String) newM.get("cs_gidx"));
+					M.put("cs_k_idx", newM.get("cs_k_idx").toString());
+					M.put("cs_team_idx", (String) newM.get("team_a_idx"));
+					M.put("u_id", (String) newM.get("team_a_user_a"));
+					vv++;
+					M2.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+					M2.put("cs_gidx", (String) newM.get("cs_gidx"));
+					M2.put("cs_k_idx", newM.get("cs_k_idx").toString());
+					M2.put("cs_team_idx", (String) newM.get("team_a_idx"));
+					M2.put("u_id", (String) newM.get("team_a_user_b"));
+					vv++;
+					M3.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+					M3.put("cs_gidx", (String) newM.get("cs_gidx"));
+					M3.put("cs_k_idx", newM.get("cs_k_idx").toString());
+					M3.put("cs_team_idx", (String) newM.get("team_b_idx"));
+					M3.put("u_id", (String) newM.get("team_b_user_a"));
+					vv++;
+					M4.put("cs_e_gidx", (String) newM.get("cs_gidx") + "_" + vv);
+					M4.put("cs_gidx", (String) newM.get("cs_gidx"));
+					M4.put("cs_k_idx", newM.get("cs_k_idx").toString());
+					M4.put("cs_team_idx", (String) newM.get("team_b_idx"));
+					M4.put("u_id", (String) newM.get("team_b_user_b"));
+					endGameList.add(M);
+					endGameList.add(M2);
+					endGameList.add(M3);
+					endGameList.add(M4);
+
+				}
+
+				System.out.println("end게임" + endGameList);
+
+				List<Object> rGameList = new ArrayList<Object>();
+				for (int i = 0; i < allList.size() + 1; i++) {
+					Map<String, Object> newM = new HashMap<String, Object>();
+					System.out.println(i);
+					newM = (Map<String, Object>) allList.get(i);
+					int jjj = 0;
+
+					System.out.println(Arrays.asList(ar).toString());
+					System.out.println(i);
+					
+					if (jjj != 1 && !Arrays.asList(ar).contains((String) newM.get("team_a_user_a"))
+							&& !Arrays.asList(ar).contains((String) newM.get("team_a_user_b"))
+							&& !Arrays.asList(ar).contains((String) newM.get("team_b_user_a"))
+							&& !Arrays.asList(ar).contains((String) newM.get("team_b_user_b"))) {
+						ar[va] = (String) newM.get("team_a_user_a");
+						System.out.println((String) newM.get("team_a_user_a"));
+						ar[va + 1] = (String) newM.get("team_a_user_b");
+						ar[va + 2] = (String) newM.get("team_b_user_a");
+						ar[va + 3] = (String) newM.get("team_b_user_b");
+						va = va + 4;
+						System.out.println(Arrays.asList(ar).toString());
+						i = -1;
+
+						rGameList.add(newM);
+						allList.remove(newM);
+						if (allList.isEmpty()) {
+							break;
+						}
+					} else if (i + 1 == allList.size()) {
+						System.out.println(i);
+						System.out.println(allList.size());
+						ar[va] = ""; // 0 +4 = 4 4+4 = 8 8+4=12
+						ar[va + 1] = "";
+						ar[va + 2] = "";
+						ar[va + 3] = "";
+						va = va + 4;
+						i = -1;
+						Map<String, Object> nM = new HashMap<String, Object>();
+						nM.put("cs_gidx", cs_idx + "_blank" + bl);
+						nM.put("team_b_idx", null);
+						nM.put("team_a_idx", null);
+						nM.put("team_a_user_a", null);
+						nM.put("team_a_user_b", null);
+						nM.put("team_b_user_a", null);
+						nM.put("team_b_user_b", null);
+						nM.put("cs_g_idx", null);
+						rGameList.add(nM);
+						bl++;
+						if (allList.isEmpty()) {
+							break;
+						}
+					}
+					if (va == (Integer.parseInt(cfvo.getCs_court()) * 4)) {
+						// 여기서 23은 ar의 배열사이즈-1(배열은0부터시작이기때문)
+						// va+3==(Integer.parseInt(cfvo.getCf_court())*4)-1
+						for (int j = 0; j < Integer.parseInt(cfvo.getCs_court()) * 4; j++) {
+							// 여기서 반복 횟수는 사용 가능 코트수*4
+							ar[j] = "";
+						}
+						va = 0;
+					}
+				}
+				
+				/*  for(int ac = 0 ; ac<second.length;ac++){ for(int ad = 0 ;
+				 ad<second[ac].length;ad++){ System.out.println("2차원"+second[ac][ad]);
+				  } }*/
+				 
+				for (int i = 0; i < rGameList.size(); i++) {
+					Map<String, Object> nM = new HashMap<String, Object>();
+					nM = (Map<String, Object>) rGameList.get(i);
+					System.out.print(nM.get("team_a_user_a") + ",");
+					System.out.print(nM.get("team_a_user_b") + ",");
+					System.out.print(nM.get("team_b_user_a") + ",");
+					System.out.print(nM.get("team_b_user_b") + ",");
+					if (i + 1 % 4 == 0) {
+						System.out.println("");
+					}
+				}
+				System.out.println(allList);
+				System.out.println(allList.size());
+				System.out.println(rGameList);
+				System.out.println(rGameList.size());
+
+				List<Map<String, Object>> rGameList2 = new ArrayList<Map<String, Object>>();
+				int ii = 0;
+				int jj = 0;
+				int s = (rGameList.size() / (Integer.parseInt(cfvo.getCs_court())*10)) * 5;
+/*				if((rGameList.size() / Integer.parseInt(cfvo.getCs_court())) % 2 != 0){
+					s= s+1;
+				}*/
+				for (int i = 0; i < s; i++) {
+					Map<String, Object> newM = new HashMap<String, Object>();
+					for(int j = 0 ; j<Integer.parseInt(cfvo.getCs_court());j++){
+						newM = (Map<String, Object>) rGameList.get(ii);
+						rGameList2.add(newM);
+						ii++;
+					}
+					for(int j = 0 ; j<Integer.parseInt(cfvo.getCs_court());j++){
+						newM = (Map<String, Object>) rGameList.get(jj+(Integer.parseInt(cfvo.getCs_court()) * 5));
+						rGameList2.add(newM);
+						jj++;
+						if((jj+(Integer.parseInt(cfvo.getCs_court()) * 5))%(Integer.parseInt(cfvo.getCs_court())*10)==0){
+							jj=jj+(Integer.parseInt(cfvo.getCs_court()) * 5);
+							ii=ii+(Integer.parseInt(cfvo.getCs_court()) * 5);
+							System.out.println();
+						}
+					}
+					
+				}
+				System.out.println(rGameList2);
+				System.out.println("ii="+ii);
+				System.out.println(rGameList.size()%4);
+				System.out.println(rGameList.size()-ii);
+				for(int i = rGameList.size()-rGameList.size()%(Integer.parseInt(cfvo.getCs_court())*10) ; i<rGameList.size();i++){
+					Map<String, Object> newM = new HashMap<String, Object>();
+					newM = (Map<String, Object>) rGameList.get(i);
+					rGameList2.add(newM);
+				}
+				System.out.println("바뀐거 : "+rGameList2);
+				
+				int co = 1;
+				int order = 1;
+				SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+				Calendar cal = Calendar.getInstance();
+				Date date = dateFormat.parse(cfvo.getCs_sTime());
+				cal.setTime(date);
+				for (int i = 0; i < rGameList2.size(); i++) {
+					if ((co - 1) == Integer.parseInt(cfvo.getCs_court())) {
+						co = 1;
+						order++;
+						cal.add(Calendar.MINUTE, Integer.parseInt(cfvo.getCs_time()));
+					}
+					Map<String, Object> newM = new HashMap<String, Object>();
+					newM = (Map<String, Object>) rGameList2.get(i);
+					newM.put("cs_u_court", co);
+					newM.put("cs_order", order);
+					newM.put("cs_w_date", dateFormat.format(cal.getTime()));
+					newM.put("cs_no", i + 1);
+					co++;
+				}
+				System.out.println(rGameList2);
+				System.out.println(rGameList.size());
+				Map<String, Object> cf_match = new HashMap<String, Object>();
+
+				cf_match.put("list", rGameList2);
+				cf_match.put("cs_idx", cs_idx);
+				cf_match.put("cs_status", "대기");
+
+				Map<String, Object> cf_match_end = new HashMap<String, Object>();
+
+				cf_match_end.put("list", endGameList);
+				cf_match_end.put("cs_idx", cs_idx);
+
+				int cs = gService.gameInsert(cf_match, cf_match_end);
+
+				System.out.println(rGameList2);
+				System.out.println(rGameList.size()%4);
+				System.out.println(rGameList.size());
+				System.out.println(rGameList2.size());
+				System.out.println(rGameList);
+				
+				if (cs > 0) {
+					mapr.put("cnt", 1);
+				} else {
+					mapr.put("cnt", 0);
+				}
+				
+				
+				return mapr;
+			}
+			//종목리스트
+			@RequestMapping("/Game/selfMatchTypeList.techni")
+			public String selfMatchKindList(HttpSession session, Model model) {
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				Map<String, String> map = new HashMap<String, String>();
+
+				map.put("cs_idx", cs_idx);
+
+				List<ClubMatchVO> list = gService.kindMatchList(cs_idx);
+
+				model.addAttribute("list", list);
+
+				return "game/gameSelfMatchKindList.pag";
+			}	
+			@RequestMapping("/Game/selfMatchTimeList.techni")
+			public String timeMatchList(HttpSession session, Model model) {
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("cs_idx", cs_idx);
+				map.put("kind", "MGL_CSELF_W_DAT");
+
+				List<ClubMatchVO> list = gService.timeMatchList(cs_idx);
+				List<ClubMatchVO> list2 = gService.matchList(map);
+
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+
+				return "game/gameSelfMatchTimeList.pag";
+			}
+
+			@RequestMapping("/Game/selfMatchCourtList.techni")
+			public String courtMatchList(HttpSession session, Model model) {
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("cs_idx", cs_idx);
+				map.put("kind", "MGL_CSELF_COURT");
+
+				List<ClubMatchVO> list = gService.courtMatchList(cs_idx);
+				List<ClubMatchVO> list2 = gService.matchList(map);
+
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+
+				return "game/gameSelfMatchCourtList.pag";
+			}	
+			@RequestMapping("/Game/selfMatchMatchDetail.techni")
+			public String MatchDetail(HttpSession session, Model model, String cs_k_idx) {
+				
+				System.out.println(cs_k_idx);
+				List<ClubMatchVO> list = gService.kindMatchDetail(cs_k_idx);
+
+				String cs_idx = (String) session.getAttribute("cs_idx");
+
+				Map<String, String> map = new HashMap<String, String>();
+
+				map.put("cs_idx", cs_idx);
+				map.put("cs_k_idx", (String) cs_k_idx);
+
+				List<ClubMatchVO> list2 = gService.kindDetailList(map);
+
+				List<ClubMatchVO> list3 = gService.kindDetailRank(map);
+				session.setAttribute("cs_k_nm", list2.get(0).getCs_k_nm());
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+				model.addAttribute("list3", list3);
+
+				return "game/gameSelfMatchKindDetail.pag";
+			}	
+			
+			/////////////////////////////////////
+	
+			@RequestMapping("/Game/selfMatchEntryType.techni")
+			public String entryType(HttpSession session, Model model) {
+
+				String cs_idx = (String) session.getAttribute("cs_idx");
+
+				List<ClubMatchVO> list = gService.entryKindList(cs_idx);
+				List<ClubMatchVO> list2 = gService.entryKindDetail(cs_idx);
+
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+
+				return "game/gameSelfMatchEntryType.pag";
+			}	
+			@RequestMapping("/Game/selfMatchMyRank.techni")
+			public String myRank(HttpSession session, Model model) {
+
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				MemberVO mvo = (MemberVO) session.getAttribute("login");
+
+				Map<String, String> map = new HashMap<String, String>();
+
+				map.put("cs_idx", cs_idx);
+				map.put("u_id", mvo.getM_id());
+
+				List<ClubMatchVO> list = gService.myRank(map);
+				List<ClubMatchVO> list2 = gService.myKindList(map);
+
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+				model.addAttribute("u_id", mvo.getM_id());
+
+				return "game/gameSelfMatchMyRank.pag";
+			}
+
+			@RequestMapping("/Game/selfMatchTypeRank.techni")
+			public String typeRank(HttpSession session, Model model) {
+
+				String cs_idx = (String) session.getAttribute("cs_idx");
+
+				List<ClubMatchVO> list = gService.csKindList(cs_idx);
+				List<ClubMatchVO> list2 = gService.csKindRank(cs_idx);
+
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+
+				return "game/gameSelfMatchTypeRank.pag";
+			}
+			@RequestMapping("/Game/selfMatchReferee.techni")
+			public String referee(HttpSession session, Model model, @RequestParam(required = false) String cs_court) {
+
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				if (cs_court == null) {
+					cs_court = "1";
+				}
+				Map<String, String> map = new HashMap<String, String>();
+
+				map.put("cs_idx", cs_idx);
+				map.put("cs_court", cs_court + "");
+
+				List<ClubMatchVO> list = gService.referee(map);
+				
+				int court = gService.courtCount(cs_idx);
+				model.addAttribute("cf_court", cs_court);
+				model.addAttribute("court", court);
+				model.addAttribute("list", list);
+				
+				return "game/gameSelfMatchReferee.pag";
+			}	
+			@RequestMapping("/Game/selfMatchAllMatch.techni")
+			public String allMatch(HttpSession session, Model model){
+				String cs_idx = (String) session.getAttribute("cs_idx");
+				
+				List<ClubMatchVO> list = gService.all_court(cs_idx);
+				List<ClubMatchVO> list2 = gService.all_dat(cs_idx);
+				List<ClubMatchVO> list3 = gService.all_match(cs_idx);
+				
+				model.addAttribute("list", list);
+				model.addAttribute("list2", list2);
+				model.addAttribute("list3", list3);
+				
+				return "game/gameSelfMatchAllMatch.pag";
+			}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

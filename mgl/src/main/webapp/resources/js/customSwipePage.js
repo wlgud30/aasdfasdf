@@ -14,14 +14,14 @@ $(window).ready(height_cont).resize(height_cont);
     $( document ).one( "pagecreate", ".eventPage", function() {
         // Handler for navigating to the next page
         function navnext( next ) {
-            $( ":mobile-pagecontainer" ).pagecontainer( "change", next , {
+            $( ":mobile-pagecontainer" ).pagecontainer( "change", next + ".html", {
                 transition: "slide"
             });
         }
  
         // Handler for navigating to the previous page
         function navprev( prev ) {
-            $( ":mobile-pagecontainer" ).pagecontainer( "change", prev, {
+            $( ":mobile-pagecontainer" ).pagecontainer( "change", prev + ".html", {
                 transition: "slide",
                 reverse: true
             });
@@ -62,7 +62,7 @@ $( document ).on( "pagebeforeshow", ".eventPage", function() {
         prev = thePage.jqmData( "prev" );
     $( "header h1" ).text( title );
     if ( next ) {
-        $( ":mobile-pagecontainer" ).pagecontainer( "load", next );
+        $( ":mobile-pagecontainer" ).pagecontainer( "load", next + ".html" );
     }
     $( ".next.active_btn, .prev.active_btn" ).removeClass( "active_btn" );
     if ( ! next ) {

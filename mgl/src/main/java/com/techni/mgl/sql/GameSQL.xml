@@ -27,6 +27,51 @@
 		<result column="MGL_CLUB_TEAM_AB" property="teamAB"/>
 		<result column="MGL_STADIUM_COAT" property="cm_order"/>
 		<result column="MGL_CLUB_MATCH_DATE" property="cm_match_date"/>
+		<result column="MGL_CSELF_IDX" property="cs_idx"/>
+		<result column="MGL_CSELF_LOCATION" property="cs_location"/>
+		<result column="MGL_CSELF_START" property="cs_start"/>
+		<result column="MGL_CSELF_END" property="cs_end"/>
+		<result column="MGL_CSELF_STIME" property="cs_sTime"/>
+		<result column="MGL_CSELF_ETIME" property="cs_eTime"/>
+		<result column="MGL_CSELF_TIME" property="cs_time"/>
+		<result column="MGL_CSELF_POINT" property="cs_point"/>
+		<result column="MGL_CSELF_COURT" property="cs_court"/>
+		<result column="MGL_CSELF_MATCH_LIST" property="cs_match_list"/>
+		<result column="MGL_CSELF_KIND" property="cs_kind"/>
+		<result column="MGL_CSELF_CONTENT" property="cs_content"/>
+		<result column="MGL_CSELF_NM" property="cs_nm"/>
+		<result column="MGL_CSELF_STATUS" property="cs_status"/>
+		<result column="MGL_CSELF_CNM" property="cs_cnm"/>
+		<result column="MGL_CSELF_KIND_IDX" property="cs_k_idx"/>
+		<result column="MGL_CSELF_KIND_NM" property="cs_k_nm"/>
+		<result column="MGL_CSELF_KIND_NUM" property="cs_k_num"/>
+		<result column="MGL_CSELF_TEAM_IDX" property="cs_t_idx"/>
+		<result column="MGL_CSELF_TEAM_BW" property="cs_t_bw"/>
+		<result column="MGL_CSELF_W_DAT" property="cs_w_date"/>
+		<result column="MGL_CSELF_GIDX" property="cs_gidx"/>
+		<result column="MGL_CSELF_NO" property="cs_no"/>
+		<result column="MGL_CSELF_USER_A" property="cs_a_id"/>
+		<result column="MGL_CSELF_USER_B" property="cs_b_id"/>
+		<result column="MGL_USER_ID_A" property="cs_a_id"/>
+		<result column="MGL_USER_NM_A" property="cs_a_nm"/>
+		<result column="MGL_USER_PHOTO_A" property="cs_a_photo"/>
+		<result column="U_AGE_A" property="cs_a_age"/>
+		<result column="MGL_CLUB_GRADE_A" property="cs_a_grade"/>
+		<result column="MGL_USER_ID_B" property="cs_b_id"/>
+		<result column="MGL_USER_NM_B" property="cs_b_nm"/>
+		<result column="MGL_USER_PHOTO_B" property="cs_b_photo"/>
+		<result column="U_AGE_B" property="cs_b_age"/>
+		<result column="MGL_CLUB_GRADE_B" property="cs_b_grade"/>
+		<result column="MGL_CLUB_GRADE" property="u_club_gd"/>
+		<result column="MGL_CSELF_KIND_COUNT" property="cs_k_count"/>
+		<result column="MGL_CSELF_UEFFORT" property="ueffort"/>
+		<result column="MGL_CSELF_CNT_GAP" property="cnt_gap"/>
+		<result column="MGL_CSELF_TOTAL" property="total"/>
+		<result column="MGL_CSELF_WIN" property="win"/>
+		<result column="MGL_CSELF_GPTN" property="gptn"/>
+		<result column="MGL_CSELF_VPTN" property="vptn"/>
+		<result column="MGL_CSELF_PPTN" property="pptn"/>
+		<result column="MGL_CSELF_APTN" property="aptn"/>
 	</resultMap>
 	
 	<select	id="clubUseCourt" resultMap="ClubMatchVOMap">
@@ -337,7 +382,1808 @@
 		where 
 			mgl_club_gidx = #{c_gidx};
 	</delete>
+	
+	<!-- 자체대회 생성 -->
+	<insert id="selfMatchInsert">
+		INSERT 
+			INTO 
+				MGL_CSELF 
+					VALUES(
+								concat("CS",cast(date_format(now(),"%y%m") as char(4)),LPAD((SELECT * FROM(SELECT max(MGL_SELF_SEQ) FROM MGL_SEQ) NEXT),4,0)),
+								#{c_idx},
+								#{cs_location},
+								#{cs_start},
+								#{cs_end},
+								#{cs_sTime},
+								#{cs_eTime},
+								#{cs_time},
+								#{cs_point},
+								#{cs_court},
+								#{cs_kind},
+								#{cs_content},
+								#{cs_nm},
+								#{cs_cnm}
+							);		
+	</insert>
+	
+	<!-- 자체대회 시퀀스값 증가 -->
+	<update id="self_seq">
+		update mgl_seq set mgl_self_seq = mgl_self_seq+1
+	</update>
+	<!-- 자체대회 리스트 출력 -->
+	<select id="selfMatchList" resultMap="ClubMatchVOMap">
+		SELECT * FROM MGL_CSELF WHERE MGL_CLUB_IDX = #{c_idx}
+	</select>
+	
+	<!-- 자체대회 디테일 -->
+	<select id="selfMatchDetail" resultMap="ClubMatchVOMap">
+		SELECT * FROM MGL_CSELF WHERE MGL_CSELF_IDX = #{cs_idx}
+	</select>
+	
+	<!--자체대회 참석여부 0이면 불참 1이면 참석-->
+	<select id="selfMatchJoinYN" resultType="int">
+		select count(*) from mgl_cself_user where mgl_cself_idx = #{cs_idx} and mgl_user_id = #{u_id};
+	</select>
+	<!-- 자체대회 참석 -->
+	<insert id="selfMatchJoin">
+		INSERT INTO MGL_CSELF_USER
+		VALUES(
+			concat(cast(date_format(now(),"%y%m%d") as char(6)),#{cs_idx},#{u_id}),
+			#{u_id},
+			#{cs_idx},
+			<choose>
+				<when test="u_club_gd != null" >
+					#{u_club_gd},
+				</when>
+				<otherwise>
+					(SELECT MGL_UCLUB_GRADE_CD FROM MGL_UCLUB WHERE MGL_USER_ID = #{u_id} AND MGL_CLUB_IDX=#{c_idx}),
+				</otherwise>
+			</choose>
+			null
+		)
+	</insert>
+	<!-- 자체대회 불참 -->
+	<delete id="selfMatchExit">
+		DELETE FROM
+			MGL_CSELF_USER 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx} 
+		AND 
+			MGL_USER_ID = #{u_id}
+	</delete>
+	<!-- 자체대회 참가자 리스트(게스트포함) -->
+	<select id="selfMatchJoinList" resultMap="ClubMatchVOMap">
+		SELECT 
+			a.mgl_user_id,mgl_user_nm,mgl_club_grade as u_club_gd,mgl_user_sex,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_PHOTO  
+		FROM 
+			MGL_CSELF_USER a JOIN MGL_USER b using(mgl_user_id) 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx}
+		UNION
+		SELECT 
+			MGL_USER_ID,MGL_USER_NM,MGL_uCLUB_GRADE_cd,MGL_USER_SEX,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_PHOTO 
+		FROM 
+			MGL_USER
+		WHERE 
+			left(MGL_USER_ID,10) = #{cs_idx}
+		ORDER BY MGL_USER_NM
+	</select>
+	
+	<!-- 자체대회 미참가자 리스트(클럽회원) -->
+	<select id="selfMatchClubList" resultMap="ClubMatchVOMap">
+		SELECT 
+			A.MGL_USER_ID,A.MGL_UCLUB_GRADE_CD,MGL_UCLUB_MNG,MGL_USER_NM,MGL_USER_SEX,MGL_USER_PHOTO,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+		FROM 
+			MGL_UCLUB A 
+		JOIN 
+			MGL_USER 
+		USING(MGL_USER_ID) 
+		LEFT JOIN 
+			(SELECT * FROM MGL_CSELF_USER WHERE MGL_CSELF_IDX = #{cs_idx}) B 
+		ON 
+			A.MGL_USER_ID = B.MGL_USER_ID
+		WHERE 
+			MGL_CLUB_IDX = #{c_idx}
+		AND 
+			MGL_UCLUB_MNG != "가입대기"
+		AND 
+			MGL_UCLUB_MNG != "탈퇴대기"
+		AND 
+			B.MGL_USER_ID IS NULL
+	</select>
+	<!-- 다중 참가 -->
+	<insert id="selfMatchMultiJoin">
+		INSERT INTO MGL_CSELF_USER
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+				concat(cast(date_format(now(),"%y%m%d") as char(6)),#{cs_idx},#{item.u_id}),
+				#{item.u_id},
+				#{cs_idx},
+				(SELECT MGL_UCLUB_GRADE_CD FROM MGL_UCLUB WHERE MGL_USER_ID = #{item.u_id} AND MGL_CLUB_IDX=#{c_idx}),
+				null
+			)
+		</foreach>
+	</insert>
+	<delete id="selfMatchMultiUnJoin">
+		DELETE FROM
+			MGL_CSELF_USER
+		WHERE
+			MGL_CSELF_IDX = #{cs_idx}
+		AND
+			FIND_IN_SET(MGL_USER_ID,#{u_id})
+	</delete>
+	<!-- 자체대회 참가자 급수정렬 -->
+	<select id="selfMatchGD" resultMap="ClubMatchVOMap">
+		SELECT 
+			a.mgl_user_id,mgl_user_nm,mgl_club_grade as u_club_gd,mgl_user_sex,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_PHOTO  
+		FROM 
+			MGL_CSELF_USER a JOIN MGL_USER b using(mgl_user_id) 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx}
+		
+		UNION
+		
+		SELECT 
+			MGL_USER_ID,MGL_USER_NM,MGL_uCLUB_GRADE_cd,MGL_USER_SEX,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_PHOTO FROM MGL_USER
+		WHERE 
+			left(MGL_USER_ID,10) = #{cs_idx}
+		ORDER BY 
+			field(u_club_gd,'자강','A','B','C','D','초심','왕초') , mgl_user_nm
+	</select>
+	<!-- 자체대회 청백 업데이트 -->
+	<update id="BWUpdate">
+		UPDATE 
+			MGL_CSELF_USER
+		SET 
+			MGL_CSELF_TEAM_BW = #{bw}
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx}
+		AND 
+			FIND_IN_SET(MGL_USER_ID,#{u_id})
+	</update>
+	
+	<!-- 자체대회 종목 등록 -->
+	<insert id="selfMatchTypeInsert">
+		INSERT INTO MGL_CSELF_KIND
+		VALUES
+		<foreach collection="list" item="item" separator="," index="index">
+			(
+				concat("CS",cast(date_format(now(),"%y%m%d") as char(6)),LPAD(#{index},4,0)),
+				#{cs_idx},
+				#{item.type},
+				${item.no},
+				NULL
+			)
+		</foreach>
+	</insert>
+	<delete id="selfMatchKindDelete">
+		delete 
+		from 
+			mgl_cself_KIND
+		where 
+			MGL_CSELF_IDX = #{cs_idx};
+	</delete>
 
+	<!-- 자체대회 해당 종목에 참여한 팀들 -->	
+	<select id="selfMatchTeamList" resultMap="ClubMatchVOMap">
+		select 
+			* 
+		from
+			(
+				select 
+					AU.MGL_USER_ID AS MGL_USER_ID_A,MGL_USER_NM AS MGL_USER_NM_A, left(now(),4)-left(MGL_USER_BIRTH,4)+1 
+					as u_age_A,MGL_USER_PHOTO AS MGL_USER_PHOTO_a,MGL_CLUB_GRADE AS MGL_CLUB_GRADE_A,MGL_CSELF_TEAM_BW
+				from 
+					mgl_user AU 
+				RIGHT JOIN 
+					(
+						SELECT 
+							* 
+						FROM 
+							MGL_CSELF_USER 
+						WHERE 
+							MGL_CSELF_IDX=#{cs_idx}
+					) ACU 
+				ON 
+					AU.MGL_USER_ID=ACU.MGL_USER_ID
+			) c 
+		right join
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_CSELF_TEAM 
+				WHERE 
+					MGL_CSELF_KIND_IDX = #{cs_k_idx}
+			) a
+				on 
+					c.MGL_USER_ID_A = a.mgl_cself_user_A
+		LEFT join 
+			(
+				select 
+					BU.MGL_USER_ID AS MGL_USER_ID_B,MGL_USER_NM AS MGL_USER_NM_B, left(now(),4)-left(MGL_USER_BIRTH,4)+1 
+					as u_age_B,MGL_USER_PHOTO AS MGL_USER_PHOTO_B,MGL_CLUB_GRADE AS MGL_CLUB_GRADE_B
+				from 
+					mgl_user BU 
+				RIGHT JOIN 
+					(
+						SELECT 
+							* 
+						FROM 
+							MGL_cSELF_USER 
+						WHERE 
+							MGL_cSELF_IDX = #{cs_idx}
+					) BCU 
+					ON 
+						BU.MGL_USER_ID=BCU.MGL_USER_ID
+			) b
+			on 
+				a.mgl_cself_user_B = B.MGL_USER_ID_B
+	</select>
+	<!-- 개인리그 참가자들 -->
+	<select id="selfMatchPrivateList" resultMap="ClubMatchVOMap">
+		select 
+			* 
+		from
+			(
+				select 
+					AU.MGL_USER_ID ,MGL_USER_NM , left(now(),4)-left(MGL_USER_BIRTH,4)+1 
+					as u_age,MGL_USER_PHOTO ,MGL_CLUB_GRADE
+				from 
+					mgl_user AU 
+				RIGHT JOIN 
+					(
+						SELECT 
+							* 
+						FROM 
+							MGL_CSELF_USER 
+						WHERE 
+							MGL_CSELF_IDX=#{cs_idx}
+					) ACU 
+				ON 
+					AU.MGL_USER_ID=ACU.MGL_USER_ID
+			) c 
+		right join
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_CSELF_PRIVATE
+				WHERE 
+					MGL_CSELF_KIND_IDX = #{cs_k_idx}
+			) a
+				on 
+					c.MGL_USER_ID = a.mgl_cself_user
+		LEFT JOIN 
+			(
+				SELECT 
+					MGL_CSELF_KIND_COUNT,MGL_CSELF_KIND_IDX 
+				FROM 
+					MGL_CSELF_KIND 
+				WHERE 
+					MGL_CSELF_KIND_IDX = #{cs_k_idx}
+			) D 
+				ON 
+					A.MGL_CSELF_KIND_IDX = D.MGL_CSELF_KIND_IDX
+	 </select>
+	<!--  해당 종목에 참가하지 않은 자체대회 참가자들 -->
+	<select id="selfMatchNotKindJoinList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			(
+				select 
+					a.*,B.MGL_USER_NM,MGL_USER_PHOTO,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+				from 
+					MGL_CSELF_USER a 
+				left join 
+					mgl_user b 
+				on 
+					a.mgl_user_id=b.mgl_user_id 
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) a
+		where 
+			MGL_USER_ID 
+				not in 
+					(
+						SELECT 
+							mgl_cself_user_a 
+						FROM 
+							MGL_cSELF_TEAM 
+						WHERE 
+							MGL_cSELF_IDX = #{cs_idx} 
+						AND 
+							MGL_CSELF_KIND_IDX=#{cs_k_idx}
+					)
+		AND 
+			MGL_USER_ID 
+				not in 
+					(
+						SELECT 
+							mgl_cself_user_b 
+						FROM 
+							MGL_cSELF_TEAM 
+						WHERE 
+							MGL_cSELF_IDX = #{cs_idx} 
+						AND 
+							MGL_CSELF_KIND_IDX= #{cs_k_idx}
+					)
+	</select>
+	<!--  해당 종목에 참가하지 않은 자체대회 개인참가자들 -->
+	<select id="selfMatchPrivateNotKindJoinList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			(
+				select 
+					a.*,B.MGL_USER_NM,MGL_USER_PHOTO,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+				from 
+					MGL_CSELF_USER a 
+				left join 
+					mgl_user b 
+				on 
+					a.mgl_user_id=b.mgl_user_id 
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) a
+		where 
+			MGL_USER_ID 
+				not in 
+					(
+						SELECT 
+							mgl_cself_user
+						FROM 
+							MGL_cSELF_PRIVATE
+						WHERE 
+							MGL_cSELF_IDX = #{cs_idx} 
+						AND 
+							MGL_CSELF_KIND_IDX=#{cs_k_idx}
+					)
+	</select>
+	<!-- 게임 참가인원총원,자체대회 인원총원 -->
+	<select id="selfMatchGameCount" resultMap="ClubMatchVOMap">
+		SELECT 
+			COUNT(*) as c_t_count,c_count 
+		FROM
+			(
+				SELECT 
+					MGL_CSELF_USER_A 
+				FROM 
+					MGL_CSELF_TEAM
+				WHERE 
+					MGL_CSELF_IDX = #{cs_idx}
+		
+			UNION
+		
+				SELECT 
+					MGL_CSELF_USER_B 
+				FROM 
+					MGL_CSELF_TEAM
+				WHERE 
+					MGL_CSELF_IDX = #{cs_idx}
+			) C_T_COUNT,
+			(
+				select 
+					count(*) as c_count 
+				from 
+					mgl_cself_user 
+				where 
+					mgl_Cself_idx = #{cs_idx}
+			) c
+	</select>
+	
+	<!-- 자체대회 팀생성 -->
+	<insert id="selfMatchTeamInsert">
+		INSERT INTO MGL_CSELF_TEAM
+		VALUES
+			(
+				CONCAT(#{cs_k_idx},#{u_id_a},#{u_id_b}),
+				#{cs_k_idx},
+				#{cs_idx},
+				#{u_id_a},
+				#{u_id_b},
+				#{bw}
+			)
+	</insert>
+	<!-- 자체대회 팀다중생성(개인리그용) -->
+	<insert id="selfMatchTeamInsert2">
+		INSERT INTO MGL_CSELF_TEAM
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+				CONCAT(#{cs_k_idx},#{item.u_id_a},#{item.u_id_b}),
+				#{cs_k_idx},
+				#{cs_idx},
+				#{item.u_id_a},
+				#{item.u_id_b},
+				NULL
+			)
+		</foreach>
+	</insert>
+	<!-- 팀인덱스 업데이트 -->
+	<update id="cs_teamSeq">
+		update mgl_seq set mgl_CSELF_TEAM_seq = mgl_CSELF_TEAM_seq+1
+	</update>
+	<!-- 팀 삭제 -->
+	<delete id="selfMatchTeamDelete">
+		delete 
+		from 
+			mgl_cself_team
+		where 
+			MGL_CSELF_TEAM_IDX = #{cs_t_idx};
+	</delete>
+	<!-- 팀삭제(개인리그용) -->
+	<delete id="selfMatchTeamDelete2">
+		delete 
+		from 
+			mgl_cself_team
+		where 
+			MGL_CSELF_KIND_IDX = #{cs_k_idx};
+	</delete>
+	<!-- 자체대회 개인생성 -->
+	<insert id="selfMatchPrivateInsert">
+		INSERT INTO MGL_CSELF_PRIVATE
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+				CONCAT(#{cs_k_idx},#{item.u_id}),
+				#{cs_k_idx},
+				#{cs_idx},
+				#{item.u_id}
+			)
+		</foreach>
+	</insert>
+	<!-- 개인인덱스 업데이트 -->
+	<update id="cs_PrivateSeq">
+		update mgl_seq set mgl_CSELF_PRIVATE_seq = mgl_CSELF_PRIVATE_seq+1
+	</update>
+	<!-- 개인 삭제 -->
+	<delete id="selfMatchPrivateDelete">
+		delete 
+		from 
+			mgl_cself_PRIVATE
+		where 
+			MGL_CSELF_KIND_IDX = #{cs_k_idx}
+		AND
+			MGL_CSELF_IDX =#{cs_idx};
+	</delete>
+	<!-- 종목 리스트 -->
+	<select id="selfMatchKindList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			MGL_CSELF_KIND 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx} 
+		ORDER BY 
+			MGL_CSELF_KIND_NUM
+	</select>
+	<!-- 카운트 업데이트 -->
+	<update id="selfMatchCount">
+		UPDATE MGL_CSELF_KIND SET MGL_CSELF_KIND_COUNT =#{count}
+		WHERE MGL_CSELF_KIND_IDX = #{cs_k_idx}
+	</update>
+	
+	<!-- 개인리그 유저와 게임수를 가져온다 -->
+	<select id="selfMatchPrivateUserList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			MGL_CSELF_PRIVATE a 
+		left join 
+			MGL_CSELF_KIND B 
+		ON 
+			A.MGL_CSELF_KIND_IDX = B.MGL_CSELF_KIND_IDX 
+		WHERE 
+			A.MGL_CSELF_KInD_IDX = #{cs_k_idx}
+		AND
+			A.MGL_CSELF_IDX = #{cs_idx}	
+	</select>
+	<!-- 백팀 정보 -->
+	<select id="selectWhiteTeam" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_CSELF_USER 
+				WHERE 
+					MGL_CSELF_TEAM_BW = 'W' 
+				AND 
+					MGL_CSELF_IDX = #{cs_idx}
+			)A
+		LEFT JOIN 
+			(
+				SELECT 
+					MGL_USER_PHOTO,MGL_USER_ID,MGL_USER_NM,MGL_USER_SEX,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+				FROM 
+					MGL_USER
+			) B
+		ON A.MGL_USER_ID = B.MGL_USER_ID
+		ORDER BY field(MGL_CLUB_GRADE,'자강','A','B','C','D','초심','왕초') , mgl_user_nm;
+	</select>
+	<!-- 청팀 정보 -->
+	<select id="selectBlueTeam" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_CSELF_USER 
+				WHERE 
+					MGL_CSELF_TEAM_BW = 'B' 
+				AND 
+					MGL_CSELF_IDX = #{cs_idx}
+			)A
+		LEFT JOIN 
+			(
+				SELECT 
+					MGL_USER_PHOTO,MGL_USER_ID,MGL_USER_NM,MGL_USER_SEX,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age 
+				FROM 
+					MGL_USER
+			) B
+		ON A.MGL_USER_ID = B.MGL_USER_ID
+		ORDER BY field(MGL_CLUB_GRADE,'자강','A','B','C','D','초심','왕초') , mgl_user_nm;
+	</select>
+<!-- 매치 테이블 인서트(대진표) -->
+	<insert id="gameInsert">
+		Insert into
+			MGL_CSELF_WAIT VALUES
+			<foreach collection="list" item="item" separator=",">
+			(
+			#{item.cs_gidx},
+			#{cs_idx},
+			#{item.cs_w_date},
+			#{cs_status},
+			#{item.cs_order},
+			#{item.cs_no},
+			#{item.cs_u_court},
+			#{item.team_a_user_a},
+			#{item.team_a_user_b},
+			#{item.team_b_user_a},
+			#{item.team_b_user_b},
+			#{item.team_a_idx},
+			#{item.team_b_idx}
+			)
+			</foreach>
+	</insert>	
+	<update id="matchListYN">
+		update mgl_CSELF set mgl_cSELF_MATCH_LIST = "Y" WHERE MGL_CSELF_IDX = #{cs_idx}
+	</update>
+<!-- 엔드 매치 인서트 -->
+	<insert id="endGameInsert">
+		Insert into
+			MGL_CSELF_MATCH_END VALUES
+			<foreach collection="list" item="item" separator=",">
+			(
+			#{item.cs_e_gidx},
+			#{item.cs_gidx},
+			#{cs_idx},
+			#{item.cs_k_idx},
+			#{item.cs_team_idx},
+			#{item.u_id},
+			#{item.cs_w_date},
+			(
+				SELECT 
+					MGL_CLUB_GRADE 
+				FROM 
+					MGL_CSELF_USER 
+				WHERE 
+					MGL_USER_ID = #{item.u_id} 
+				AND
+					MGL_CSELF_IDX = #{cs_idx}
+			),
+			(
+				SELECT 
+					concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") 
+				FROM 
+					MGL_USER 
+				WHERE 
+					MGL_USER_ID = #{item.u_id}
+			),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+			)
+			</foreach>
+	</insert>
+	
+	<!-- 냐의 대진표 -->
+	<select id="myMatchList" resultMap="ClubMatchVOMap">
+		SELECT 
+			A.MGL_CSELF_NM,B.* 
+		FROM
+			(
+				SELECT 
+					MGL_CSELF_NM,MGL_CSELF_IDX 
+				FROM 
+					MGL_CSELF WHERE MGL_CSELF_IDX = #{cs_idx}		
+			) A
+		RIGHT JOIN
+		(
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					MGL_CSELF_WAIT A
+				JOIN 
+					( 
+						select 
+							mgl_cSELF_kind_idx as f_idx,mgl_cSELF_kind_idx,mgl_cSELF_kind_nm 
+						from 
+							MGL_CSELF_kind 
+					) F 
+				ON 
+					substr(a.mgl_cSELF_gidx,1,12) = f.f_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_a_idx 
+						FROM 
+							MGL_CSELF_TEAM q 
+					) B 
+				ON 
+					A.MGL_CSELF_A_TEAM_IDX = B.team_a_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_b_idx 
+						FROM 
+							MGL_CSELF_TEAM q 
+					) C 
+				ON 
+					A.MGL_CSELF_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_a_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) Z
+				ON 
+					A.MGL_CSELF_GIDX = Z.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_A_TEAM_IDX = Z.MGL_CSELF_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_b_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) S
+				ON 
+					A.MGL_CSELF_GIDX = S.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_B_TEAM_IDX = S.MGL_CSELF_TEAM_IDX
+				WHERE 
+					MGL_CSELF_AT_ID1 = #{u_id} 
+				OR 
+					MGL_CSELF_AT_ID2 = #{u_id} 
+				OR 
+					MGL_CSELF_BT_ID1 = #{u_id} 
+				OR 
+					MGL_CSELF_BT_ID2 = #{u_id}
+				and 
+					a.MGL_CSELF_IDX = #{cs_idx} 
+				GROUP BY 
+					A.MGL_CSELF_GIDX 
+			) JA
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a1,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JB
+			ON 
+				JA.MGL_CSELF_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a2,MGL_USER_NM as a2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a2_age,MGL_CLUB_GRADE as a2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JC
+			ON 
+				JA.MGL_CSELF_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b1,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JD
+			ON 
+				JA.MGL_CSELF_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b2,MGL_USER_NM as b2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b2_age,MGL_CLUB_GRADE as b2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JE
+			ON 
+				JA.MGL_CSELF_BT_ID2 = JE.b2
+			GROUP BY 
+				MGL_CSELF_GIDX
+			ORDER BY 
+				MGL_CSELF_W_DAT
+		) B
+		ON 
+			A.MGL_CSELF_IDX = B.MGL_CSELF_IDX	
+	
+	</select>
+<!-- 시간별로 대진표 -->
+	<select id="timeMatchList" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_cSELF_NM,MGL_cSELF_W_DAT FROM MGL_cSELF_WAIT A
+		LEFT JOIN 
+			MGL_cSELF B
+		ON 
+			A.MGL_cSELF_IDX = B.MGL_cSELF_IDX
+		WHERE 
+			A.MGL_cSELF_IDX = #{cs_idx}
+		GROUP BY 
+			MGL_cSELF_W_DAT
+		ORDER BY 
+			MGL_cSELF_W_DAT
+	</select>	
+<!-- 코트별로 대진표 -->
+	<select id="courtMatchList" resultMap="ClubMatchVOMap">
+		SELECT 
+			A.MGL_cSELF_COURT,MGL_CSELF_NM 
+		FROM 
+			MGL_CSELF_WAIT A
+		LEFT 
+			JOIN MGL_CSELF B
+		ON 
+			A.MGL_CSELF_IDX = B.MGL_CSELF_IDX
+		WHERE 
+			A.MGL_cSELF_IDX = #{cs_idx}
+		GROUP BY 
+			MGL_CSELF_COURT
+		ORDER BY 
+			MGL_CSELF_COURT
+	</select>
+	<!-- 코트나 시간으로대진표 출력 -->
+	<select id="matchList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					MGL_CSELF_WAIT A
+				JOIN 
+					( 
+						select 
+							mgl_cSELF_kind_idx as f_idx,mgl_cSELF_kind_idx,mgl_cSELF_kind_nm 
+						from 
+							MGL_CSELF_kind 
+					) F 
+				ON 
+					substr(a.mgl_cSELF_gidx,1,12) = f.f_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_a_idx 
+						FROM 
+							MGL_CSELF_TEAM q 
+					) B 
+				ON 
+					A.MGL_CSELF_A_TEAM_IDX = B.team_a_idx 
+				left JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_b_idx 
+						FROM 
+							MGL_CSELF_TEAM q 
+					) C 
+				ON 
+					A.MGL_CSELF_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_a_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) Z
+				ON 
+					A.MGL_CSELF_GIDX = Z.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_A_TEAM_IDX = Z.MGL_CSELF_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_b_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) S
+				ON 
+					A.MGL_CSELF_GIDX = S.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_B_TEAM_IDX = S.MGL_CSELF_TEAM_IDX
+				WHERE
+					a.MGL_CSELF_IDX = #{cs_idx} 
+				GROUP BY 
+					A.MGL_CSELF_GIDX 
+			) JA
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a1,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JB
+			ON 
+				JA.MGL_CSELF_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a2,MGL_USER_NM as a2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a2_age,MGL_CLUB_GRADE as a2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JC
+			ON 
+				JA.MGL_CSELF_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b1,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JD
+			ON 
+				JA.MGL_CSELF_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b2,MGL_USER_NM as b2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b2_age,MGL_CLUB_GRADE as b2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JE
+			ON 
+				JA.MGL_CSELF_BT_ID2 = JE.b2
+			GROUP BY 
+				MGL_CSELF_GIDX
+			ORDER BY 
+				${kind},MGL_CSELF_NO
+	</select>
+	<select id="kindMatchList" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_NM,MGL_CSELF_kind_NM,kind_count,MGL_CSELF_GIDX
+		FROM 
+			MGL_CSELF_WAIT a 
+		left join 
+			mgl_cSELF_kind b
+		ON 
+			substr(a.mgl_cSELF_gidx,1,12) = b.mgl_cSELF_kind_idx 
+		left join 
+			(
+				select 
+					count(*) as kind_count,mgl_cSELF_kind_idx 
+				from 
+					mgl_cSELF_team
+				group by 
+					mgl_cSELF_kind_idx
+			) c
+		on 
+			b.mgl_cSELF_kind_idx = c.mgl_cSELF_kind_idx
+		left join 
+			mgl_cSELF d
+		on 
+			a.MGL_CSELF_IDX=d.mgl_cSELF_idx
+		WHERE 
+			A.MGL_CSELF_IDX =#{cs_idx}
+		AND 
+			B.MGL_CSELF_IDX=#{cs_idx}
+		GROUP BY 
+			MGL_CSELF_kind_NM
+		ORDER BY 
+			MGL_CSELF_kind_NM
+	</select>
+	<!-- 종목 대진표 디테일 -->
+	<select id="kindMatchDetail" resultMap="ClubMatchVOMap">
+		select 
+			* 
+		from
+			(
+				SELECT 
+					A.*,B.*,D.*,Z.team_a_score,s.team_b_score
+				FROM 
+					(
+						SELECT 
+							* 
+						FROM MGL_CSELF_WAIT
+					) A
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TEAM_IDX as a_idx 
+						FROM 
+							MGL_CSELF_TEAM
+					) B
+				ON 
+					A.MGL_CSELF_A_TEAM_IDX = B.a_idx
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TEAM_IDX as b_idx 
+						FROM 
+							MGL_CSELF_TEAM 
+					) D
+				ON 
+					A.MGL_CSELF_B_TEAM_IDX = D.b_idx
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_a_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) Z
+				ON 
+					A.MGL_CSELF_GIDX = Z.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_A_TEAM_IDX = Z.MGL_CSELF_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_b_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) S
+				ON 
+					A.MGL_CSELF_GIDX = S.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_B_TEAM_IDX = S.MGL_CSELF_TEAM_IDX
+				WHERE 
+					substr(A.MGL_CSELF_GIDX,1,10) = #{cs_k_idx}
+				GROUP BY 
+					A.MGL_CSELF_GIDX
+			) ja
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a1,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JB
+			ON 
+				JA.MGL_CSELF_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a2,MGL_USER_NM as a2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a2_age,MGL_CLUB_GRADE as a2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JC
+			ON 
+				JA.MGL_CSELF_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b1,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JD
+			ON 
+				JA.MGL_CSELF_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b2,MGL_USER_NM as b2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b2_age,MGL_CLUB_GRADE as b2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JE
+			ON 
+				JA.MGL_CSELF_BT_ID2 = JE.b2
+			group by 
+				mgl_cSELF_gidx
+			order by 
+				mgl_cSELF_gidx
+	</select>
+	<!-- 참가자 보기 (종목리스트) -->
+	<select id="entryKindList" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_NM,A.MGL_CSELF_kind_IDX,MGL_CSELF_kind_NM,group_count 
+		FROM 
+			MGL_CSELF_kind A
+		LEFT JOIN 
+			(
+				select 
+					count(*) AS GROUP_COUNT,MGL_CSELF_kind_IDX 
+				from 
+					mgl_cSELF_team 
+				where 
+					mgl_cSELF_idx =#{cs_idx} 
+				group by 
+					mgl_CSELF_kind_IDX
+			) B
+		ON 
+			A.MGL_CSELF_kind_IDX = B.MGL_CSELF_kind_IDX
+		LEFT JOIN 
+			MGL_CSELF C 
+		ON 
+			A.MGL_CSELF_IDX = C.MGL_CSELF_IDX 
+		WHERE 
+			A.MGL_CSELF_IDX = #{cs_idx}
+	</select>
+	<!-- 참가자 보기 (종목 디테일) -->
+	<select id="entryKindDetail" resultMap="ClubMatchVOMap">
+		SELECT 
+			JA.MGL_CSELF_KIND_IDX,MGL_CSELF_USER_A,MGL_cSELF_USER_B,JBA.MGL_USER_NM AS a1_nm,concat(left(left(now(),4)-left(JBA.MGL_USER_BIRTH,4)+1,1),"0대")  as a1_age,
+			jb.mgl_CLUB_gRAdE as a1_gd ,JcA.MGL_USER_NM AS b1_nm,concat(left(left(now(),4)-left(JCA.MGL_USER_BIRTH,4)+1,1),"0대")  as b1_age,
+			jc.mgl_CLUB_gRAdE as b1_gd 
+		FROM
+			(
+				SELECT 
+					MGL_CSELF_KIND_IDX,MGL_CSELF_TEAM_IDX,MGL_CSELF_USER_A,MGL_CSELF_USER_B
+				FROM 
+					MGL_CSELF_TEAM A 
+				WHERE 
+					a.MGL_CSELF_IDX = #{cs_idx}
+			) JA 
+		LEFT JOIN 
+			MGL_CSELF_USER JB
+		ON 
+			JA.MGL_CSELF_USER_A = JB.MGL_USER_ID
+		LEFT JOIN
+			MGL_USER JBA
+		ON
+			JB.MGL_USER_ID = JBA.MGL_USER_ID
+		LEFT JOIN 
+			MGL_CSELF_USER JC
+		ON 
+			JA.MGL_CSELF_USER_B = JC.MGL_USER_ID
+		LEFT JOIN
+			MGL_USER JCA
+		ON		
+			JC.MGL_USER_ID = JCA.MGL_USER_ID
+		WHERE 
+			JB.MGL_CSELF_IDX = #{cs_idx}
+		AND 
+			JC.MGL_CSELF_IDX = #{cs_idx}
+		GROUP BY 
+			MGL_CSELF_TEAM_IDX
+	</select>
+
+	<!-- 참가자 보기 (클럽리스트)       보류-->  
+	<select id="entryClubList" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_NM,MGL_CLUB_NM,b.MGL_CLUB_IDX,group_count 
+		FROM 
+			MGL_CSELF_YN a 
+		JOIN 
+			MGL_CLUB b 
+		USING(MGL_CLUB_IDX) 
+		left join 
+			(
+				select 
+					count(*) as group_count,mgl_club_idx 
+				from
+					mgl_cSELF_team 
+				where 
+					mgl_cSELF_idx = #{cs_idx} 
+				group 
+					by mgl_club_idx
+			) c
+		on 
+			b.mgl_club_idx COLLATE utf8mb4_general_ci = c.mgl_club_idx
+		LEFT JOIN 
+			MGL_CSELF D 
+		ON 
+			A.MGL_CSELF_IDX = D.MGL_CSELF_IDX
+		WHERE 
+			A.MGL_CSELF_IDX = #{cs_idx}
+	</select>
+
+
+<!-- 종목 디테일에 일정리스트 -->
+	<select id="kindDetailList" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			( 
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					MGL_CSELF_WAIT A
+				JOIN 
+					( 
+						select 
+							mgl_cSELF_kind_idx as f_idx,mgl_cSELF_kind_idx,mgl_cSELF_kind_nm 
+						from 
+							MGL_CSELF_kind 
+					) F 
+				ON 
+					substr(a.mgl_cSELF_gidx,1,12) = f.f_idx 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_a_idx 
+						FROM 
+							MGL_CSELF_TEAM 
+					) B 
+				ON 
+					A.MGL_CSELF_A_TEAM_IDX = B.team_a_idx 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_b_idx 
+						FROM 
+							MGL_CSELF_TEAM 
+					) C 
+				ON 
+					A.MGL_CSELF_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_a_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) Z
+				ON 
+					A.MGL_CSELF_GIDX = Z.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_A_TEAM_IDX = Z.MGL_CSELF_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CSELF_TOTAL as team_b_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END
+					) S
+				ON 
+					A.MGL_CSELF_GIDX = S.MGL_CSELF_GIDX
+				AND 
+					A.MGL_CSELF_B_TEAM_IDX = S.MGL_CSELF_TEAM_IDX
+				WHERE
+					a.MGL_CSELF_IDX = #{cs_idx} 
+				GROUP BY 
+					A.MGL_CSELF_GIDX 
+			) JA 
+				LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a1,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JB
+			ON 
+				JA.MGL_CSELF_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a2,MGL_USER_NM as a2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a2_age,MGL_CLUB_GRADE as a2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JC
+			ON 
+				JA.MGL_CSELF_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b1,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JD
+			ON 
+				JA.MGL_CSELF_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b2,MGL_USER_NM as b2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b2_age,MGL_CLUB_GRADE as b2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JE
+			ON 
+				JA.MGL_CSELF_BT_ID2 = JE.b2
+				WHERE 
+					MGL_CSELF_KIND_IDX= #{cs_k_idx}
+				GROUP BY 
+					MGL_CSELF_GIDX 
+				ORDER BY 
+					MGL_CSELF_W_DAT , MGL_CSELF_GIDX
+	</select>
+
+	<!-- 대진표 디테일 랭킹 -->
+	<select id="kindDetailRank" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM
+		(
+			SELECT 
+				MGL_cSELF_TEAM_IDX,MGL_CSELF_USER_A,MGL_CSELF_USER_B 
+			FROM 
+				MGL_cSELF_TEAM 
+			WHERE 
+				MGL_CSELF_KIND_IDX= #{cs_k_idx}
+		) JA
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CSELF_TEAM_IDX,SUM(MGL_CSELF_TOTAL)as total_sum,SUM(MGL_CSELF_CNT_GAP)as gap_sum,COUNT(CASE WHEN MGL_CSELF_WIN = "승" THEN 1 END) as win_count,COUNT(CASE WHEN MGL_CSELF_WIN = "패" THEN 1 END)as lose_count 
+					FROM 
+						MGL_CSELF_MATCH_END
+					WHERE 
+						substr(mgl_cSELF_gidx,1,12)= #{cs_k_idx}
+					GROUP BY 
+						MGL_CSELF_TEAM_IDX
+				)JB
+			ON 
+				JA.MGL_CSELF_TEAM_IDX = JB.MGL_CSELF_TEAM_IDX
+			LEFT JOIN 	
+				( 
+					SELECT 
+						cU.MGL_USER_ID,MGL_USER_NM as a1_id 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+					WHERE 
+						MGL_CSELF_IDX = #{cs_idx}
+				) JC 
+			ON 
+				JA.MGL_CSELF_USER_A = JC.MGL_USER_ID
+			LEFT JOIN 
+				( 
+					SELECT 
+						cU.MGL_USER_ID,MGL_USER_NM as b1_id 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+					WHERE 
+						MGL_CSELF_IDX = #{cs_idx}
+				) JD
+			ON 
+				JA.MGL_CSELF_USER_B = JD.MGL_USER_ID
+			group by 
+				ja.mgl_cSELF_Team_idx
+			ORDER BY 
+				WIN_COUNT DESC ,TOTAL_SUM DESC
+	</select>
+	<!-- 코트갯수 -->
+	<select id="courtCount" resultType="int">
+		SELECT 
+			MGL_CSELF_COURT 
+		FROM 
+			MGL_CSELF WHERE MGL_CSELF_IDX = #{cs_idx}
+	</select>
+	<!-- 심판화면 -->
+	<select id="referee" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			( 
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					MGL_CSELF_WAIT A 
+				JOIN 
+					( 
+						select 
+							mgl_cSELF_kind_idx as f_idx,mgl_cSELF_kind_idx,mgl_cSELF_kind_nm 
+						from 
+							MGL_CSELF_kind 
+					) F 
+				ON 
+					substr(a.mgl_cSELF_gidx,1,12) = f.f_idx 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_a_idx 
+						FROM 
+							MGL_CSELF_TEAM 
+					) B 
+				ON 
+					A.MGL_CSELF_A_TEAM_IDX = B.team_a_idx 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TEAM_IDX as team_b_idx 
+						FROM 
+							MGL_CSELF_TEAM
+					) C 
+				ON 
+					A.MGL_CSELF_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TOTAL as team_a_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END 
+					) Z 
+				ON 
+					A.MGL_CSELF_GIDX = Z.MGL_CSELF_GIDX 
+				AND 
+					A.MGL_CSELF_A_TEAM_IDX = Z.MGL_CSELF_TEAM_IDX 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CSELF_TOTAL as team_b_score,MGL_CSELF_TEAM_IDX,MGL_CSELF_GIDX 
+						FROM 
+							MGL_CSELF_MATCH_END 
+					) S 
+				ON 
+					A.MGL_CSELF_GIDX = S.MGL_CSELF_GIDX 
+				AND 
+					A.MGL_CSELF_B_TEAM_IDX = S.MGL_CSELF_TEAM_IDX 
+				WHERE 
+					a.MGL_CSELF_IDX =#{cs_idx} 
+				GROUP BY 
+					A.MGL_CSELF_GIDX 
+			) JA 
+		LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a1,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JB
+			ON 
+				JA.MGL_CSELF_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as a2,MGL_USER_NM as a2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a2_age,MGL_CLUB_GRADE as a2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JC
+			ON 
+				JA.MGL_CSELF_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b1,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JD
+			ON 
+				JA.MGL_CSELF_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						cU.MGL_USER_ID as b2,MGL_USER_NM as b2_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b2_age,MGL_CLUB_GRADE as b2_gd 
+					FROM 
+						MGL_CSELF_USER cU
+					LEFT JOIN
+						MGL_USER U
+					ON
+						cU.MGL_USER_ID = U.MGL_USER_ID
+				) JE
+			ON 
+				JA.MGL_CSELF_BT_ID2 = JE.b2
+		WHERE 
+			MGL_CSELF_COURT = #{cs_court}
+		AND 
+			MGL_CSELF_STATUS = "대기"
+		GROUP BY 
+			MGL_CSELF_GIDX 
+		ORDER BY 
+			MGL_CSELF_COURT,MGL_CSELF_NO 
+	</select>
+	<!-- 나의 순위 -->
+	<select id="myRank" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			(
+				SELECT 
+					A.MGL_CSELF_kind_IDX,MGL_CSELF_kind_NM 
+				FROM 
+					MGL_CSELF_TEAM A 
+				LEFT 
+					JOIN MGL_CSELF_kind B 
+				ON 
+					A.MGL_CSELF_kind_IDX=B.MGL_CSELF_kind_IDX 
+				WHERE 
+					A.MGL_CSELF_IDX = #{cs_idx}
+				AND 
+					MGL_CSELF_USER_A = #{u_id} 
+				OR 
+					MGL_CSELF_USER_B = #{u_id}
+			) JA
+		LEFT JOIN
+			(
+				SELECT 
+					MGL_CSELF_kind_IDX,MGL_CSELF_TEAM_IDX,SUM(MGL_CSELF_APTN) as sum_aptn
+				FROM 
+					MGL_CSELF_MATCH_END
+				GROUP BY 
+					MGL_CSELF_TEAM_IDX
+			) JB
+		ON 
+			JA.MGL_CSELF_kind_IDX = JB.MGL_CSELF_kind_IDX
+		LEFT JOIN
+			( 
+				SELECT 
+					MGL_CSELF_TEAM_IDX,MGL_CSELF_USER_A,MGL_CSELF_USER_B 
+				FROM 
+					MGL_CSELF_TEAM 
+				WHERE 
+					MGL_CSELF_IDX = #{cs_idx}
+			) JC
+		ON 
+			JC.MGL_CSELF_TEAM_IDX = JB.MGL_CSELF_TEAM_IDX
+		LEFT JOIN 
+			( 
+				SELECT 
+					cU.MGL_USER_ID,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+				FROM 
+					MGL_CSELF_USER cU
+				LEFT JOIN
+					MGL_USER U
+				ON
+					cU.MGL_USER_ID = U.MGL_USER_ID
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) JD 
+		ON 
+			JC.MGL_CSELF_USER_A = JD.MGL_USER_ID
+		LEFT JOIN 
+			( 
+				SELECT 
+					cU.MGL_USER_ID,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+				FROM 
+					MGL_CSELF_USER cU
+				LEFT JOIN
+					MGL_USER U
+				ON
+					cU.MGL_USER_ID = U.MGL_USER_ID
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) JE 
+		ON 
+			JC.MGL_CSELF_USER_B = JE.MGL_USER_ID
+		where 
+			jc.mgl_cself_team_idx is not null 
+		group by 
+			jc.mgl_cSELF_team_idx 
+		ORDER BY 
+			JA.MGL_CSELF_kind_IDX ,sum_aptn
+	</select>
+
+	<!-- 내 종목 리스트 -->
+	<select id="myKindList" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_NM,A.MGL_CSELF_kind_IDX,MGL_CSELF_kind_NM 
+		FROM 
+			(
+				SELECT 
+					* 
+				FROM 
+					MGL_CSELF_TEAM 
+				WHERE 
+					MGL_CSELF_IDX= #{cs_idx}
+			)A 
+		LEFT JOIN 
+			MGL_CSELF_kind B 
+		ON 
+			A.MGL_CSELF_kind_IDX=B.MGL_CSELF_kind_IDX 
+		LEFT JOIN 
+			MGL_CSELF C 
+		ON 
+			A.MGL_CSELF_IDX = C.MGL_CSELF_IDX
+		WHERE 
+			MGL_CSELF_USER_A = #{u_id} 
+		OR 
+			MGL_CSELF_USER_B = #{u_id} 
+		AND
+			A.MGL_CSELF_IDX = #{cs_idx} 
+		group by 
+			mgl_cself_kind_idx
+	</select>
+	<!-- 대항전 종목 리스트 -->
+	<select id="csKindList" resultMap="ClubMatchVOMap">
+	SELECT 
+		MGL_CSELF_NM,A.MGL_CSELF_kind_IDX,MGL_CSELF_kind_NM 
+	FROM 
+		MGL_CSELF_TEAM A 
+	LEFT JOIN 
+		MGL_CSELF_kind B 
+	ON 
+		A.MGL_CSELF_kind_IDX=B.MGL_CSELF_kind_IDX 
+	LEFT JOIN 
+		MGL_CSELF C 
+	ON 
+		A.MGL_CSELF_IDX = C.MGL_CSELF_IDX
+	WHERE 
+		A.MGL_CSELF_IDX = #{cs_idx} 
+	GROUP BY 
+		MGL_CSELF_kind_IDX 
+	order by 
+		MGL_CSELF_kind_IDX
+	</select>
+	<!-- 대항전 종목 순위 -->
+	<select id="csKindRank" resultMap="ClubMatchVOMap">
+		SELECT 
+			* 
+		FROM 
+			( 
+				SELECT 
+					A.MGL_CSELF_kind_IDX,MGL_CSELF_kind_NM 
+				FROM 
+					MGL_CSELF_TEAM A 
+				LEFT JOIN 
+					MGL_CSELF_kind B 
+				ON 
+					A.MGL_CSELF_kind_IDX=B.MGL_CSELF_kind_IDX 
+				WHERE 
+					A.MGL_CSELF_IDX = #{cs_idx}
+			) JA 
+		LEFT JOIN 
+			( 
+				SELECT 
+					MGL_CSELF_kind_IDX,MGL_CSELF_TEAM_IDX,SUM(MGL_CSELF_APTN) as sum_aptn 
+				FROM 
+					MGL_CSELF_MATCH_END A 
+				GROUP BY 
+					MGL_CSELF_TEAM_IDX 
+			) JB 
+		ON 
+			JA.MGL_CSELF_kind_IDX = JB.MGL_CSELF_kind_IDX 
+		Right JOIN 
+			( 
+				SELECT 
+					MGL_CSELF_TEAM_IDX,MGL_CSELF_USER_A,MGL_CSELF_USER_B 
+				FROM 
+					MGL_CSELF_TEAM 
+				WHERE 
+					MGL_CSELF_IDX = #{cs_idx} 
+			) JC 
+		ON 
+			JC.MGL_CSELF_TEAM_IDX = JB.MGL_CSELF_TEAM_IDX 
+		LEFT JOIN 
+			( 
+				SELECT 
+					cU.MGL_USER_ID ,MGL_USER_NM as a1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as a1_age,MGL_CLUB_GRADE as a1_gd 
+				FROM 
+					MGL_CSELF_USER cU
+				LEFT JOIN
+					MGL_USER U
+				ON
+					cU.MGL_USER_ID = U.MGL_USER_ID
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) JD 
+		ON 
+			JC.MGL_CSELF_USER_A = JD.MGL_USER_ID 
+		LEFT JOIN 
+			( 
+				SELECT 
+					cU.MGL_USER_ID,MGL_USER_NM as b1_id,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as b1_age,MGL_CLUB_GRADE as b1_gd 
+				FROM 
+					MGL_CSELF_USER cU
+				LEFT JOIN
+					MGL_USER U
+				ON
+					cU.MGL_USER_ID = U.MGL_USER_ID
+				WHERE 
+					MGL_CSELF_IDX=#{cs_idx}
+			) JE 
+		ON 
+			JC.MGL_CSELF_USER_B = JE.MGL_USER_ID 
+		where 
+			jc.mgl_cself_team_idx is not null 
+		group by 
+			jb.mgl_cSELF_team_idx
+		order by 
+			JA.MGL_CSELF_kind_IDX ,sum_aptn desc 
+	</select>
+	<!-- 손실공력 계산을 위한 유저정보 -->
+	<select id="pointUser2" resultMap="ClubMatchVOMap">
+		SELECT 
+			cU.MGL_USER_ID,MGL_USER_SEX,MGL_CLUB_GRADE,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") as u_age
+		FROM
+			MGL_CSELF_USER cU
+		LEFT JOIN
+			MGL_USER U
+		ON
+			cU.MGL_USER_ID = U.MGL_USER_ID
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx}
+		AND 
+			MGL_CSELF_USER_ID = #{a1_id}
+		OR 
+			MGL_CSELF_USER_ID = #{a2_id}
+		OR 
+			MGL_CSELF_USER_ID = #{b1_id}
+		OR 
+			MGL_CSELF_USER_ID = #{b2_id}
+		GROUP BY 
+			MGL_CSELF_USER_ID
+		ORDER BY FIELD
+			(MGL_CSELF_USER_ID,#{a1_id},#{a2_id},#{b1_id},#{b2_id})
+		
+	</select>
+	<!-- 점수입력후 포인트계산 -->
+	<update id="pointUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				MGL_CSELF_MATCH_END
+			SET
+				MGL_CSELF_UEFFORT = #{list.ueffort},
+				MGL_CSELF_TOTAL = #{list.total},
+				MGL_CSELF_CNT_GAP = #{list.cnt_gap},
+				MGL_CSELF_WIN = #{list.win},
+				MGL_CSELF_GPTN = #{list.gptn},
+				MGL_CSELF_VPTN = #{list.vptn},
+				MGL_CSELF_PPTN = #{list.pptn},
+				MGL_CSELF_APTN = #{list.aptn},
+				MGL_CSELF_END = sysdate(),
+				MGL_CSELF_W_DAT = (SELECT MGL_CSELF_W_DAT FROM MGL_CSELF_WAIT WHERE MGL_CSELF_GIDX = #{cs_gidx})
+			WHERE 
+				MGL_CSELF_GIDX = #{cs_gidx}
+			AND
+				MGL_CSELF_USER_ID = #{list.u_id}
+		</foreach>
+	</update>
+	<!-- 게임 상태 변경 -->
+	<update id="endUpdate">
+		UPDATE 
+			MGL_CSELF_WAIT
+		SET
+			MGL_CSELF_STATUS = "종료"
+		WHERE 
+			MGL_CSELF_GIDX = #{cs_gidx}
+	</update>	
+		<select id="all_court" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_COURT 
+		FROM 
+			MGL_CSELF_WAIT 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx} 
+		GROUP BY 
+			MGL_CSELF_COURT 
+		ORDER BY 
+			MGL_CSELF_COURT
+	</select>
+	<select id="all_dat" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_W_DAT,MGL_CSELF_NM 
+		FROM 
+			MGL_CSELF_WAIT A
+		LEFT JOIN 
+			MGL_CSELF B 
+		ON 
+			A.MGL_CSELF_IDX = B.MGL_CSELF_IDX 
+		WHERE 
+			A.MGL_CSELF_IDX = #{cs_idx}
+		GROUP BY 
+			MGL_CSELF_W_DAT 
+	</select>
+	<select id="all_match" resultMap="ClubMatchVOMap">
+		SELECT 
+			MGL_CSELF_W_DAT,MGL_CSELF_STATUS,MGL_CSELF_COURT 
+		FROM 
+			MGL_CSELF_WAIT 
+		WHERE 
+			MGL_CSELF_IDX = #{cs_idx} 
+		ORDER BY 
+			MGL_CSELF_W_DAT,MGL_CSELF_COURT
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- -->
 	<select id="getClubStadiumCoatList" resultType="cstVO" parameterType="map">
 		SELECT 

@@ -94,7 +94,8 @@
 								break;
 							default:
 								_menuList.find('ul').hide();
-						}					
+						}
+						/*_menuList.removeClass('active_tab');			*/			
 						
 					}
 				}
