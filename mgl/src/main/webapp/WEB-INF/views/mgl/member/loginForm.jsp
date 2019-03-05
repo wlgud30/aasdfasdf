@@ -6,7 +6,7 @@
 <!doctype html>
 <html>
 <head>
-<title>MGL</title>
+<title>민턴in</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="stylesheet" href="/resources/css/login.css?ver4" type="text/css"/>
@@ -51,7 +51,7 @@
 		<div id="login_area">
 			<div id="login_form">
 				<div id="login_cont">
-					<img src="/resources/img/logo_img.png" class="logo_img" alt="MGL">
+					<img src="/resources/img/logo.svg" class="logo_img" alt="민턴in">
 					<!--div class="logo_box">  ' 리마크 함
 						<h4>My Good Life</h4>
 					</div-->

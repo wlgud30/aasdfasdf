@@ -119,15 +119,19 @@
 			if(team=="a1"){
 				a1 = 0;
 				ach--
+				$("#a1_").attr("class","photo_name popwin_btn1")
 			}else if(team=="a2"){
 				a2 = 0;
 				ach--
+				$("#a2_").attr("class","photo_name popwin_btn1")
 			}else if(team =="b1"){
 				b1 = 0;
 				bch--
+				$("#b1_").attr("class","photo_name popwin_btn1")
 			}else{
 				b2 = 0;
 				bch--
+				$("#b2_").attr("class","photo_name popwin_btn1")
 			}
 			
 			divNone();
@@ -678,7 +682,7 @@
 			}
 		}
 </script>
-		<%-- <header>
+<%-- <header>
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
@@ -695,8 +699,8 @@
 			</div>
 			<!-- head_top end -->
 		</header> --%>
-			<!-- InstanceBeginEditable name="container" -->
-			<script>
+<!-- InstanceBeginEditable name="container" -->
+<script>
 				$(document).ready(function() {
 					var aa = $(location).attr('pathname').slice(-8, -7);
 					$('.tab_btn_b').navi_depth({
@@ -704,322 +708,315 @@
 					})
 				});
 			</script>
-			<div class="tab_btn_b_area">
-				<ul class="tab_btn_b">
-					<li class="active_tab"><span
-						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임등록</span></li>
-					<li><span onClick="location.href='/Game/GameState.techni'">게임현황</span>
-						<span onClick="location.href='#'" class="sm_font">Live</span></li>
-					<li><span onClick="location.href='/Game/EndGame.techni '">종료게임</span></li>
-				</ul>
-			</div>
-			<div class="tab_bt_area white_bg">
-				<div>
-					<ul class="tabs_cont">
-						<li><span onClick="location.href='/UClub/GamePrivateStateInfo.techni'">개인리그</span>
-						</li>
-						<li><span
-							onClick="location.href='/UClub/GameTeamStateInfo.techni'">팀리그</span>
-						</li>
-						<li class="active_tab"><span
-							onClick="location.href='/UClub/GameOKList.techni'">한
-								게임</span></li>
-					</ul>
-				</div>
-			</div>
-			<div class="content white_bg">
-				<form action="/Game/GameRegistProc.techni" id="frm" method='post'>
-					<input type="hidden" id="a1" name="cm_a1_id" value="" /> <input
-						type="hidden" id="a2" name="cm_a2_id" value="" /> <input
-						type="hidden" id="b1" name="cm_b1_id" value="" /> <input
-						type="hidden" id="b2" name="cm_b2_id" value="" /> <input
-						type="hidden" id="pa1" value="" /> <input type="hidden" id="pa2"
-						value="" /> <input type="hidden" id="pb1" value="" /> <input
-						type="hidden" id="pb2" value="" /> <input type="hidden" id="date"
-						name="date" value="<%=Today%>" />
-					<table class="game_td box_td">
-						<tr>
-							<td class="td_tie">A팀</td>
-							<td>
-								<ul class="col_21 stand_li" id="Ateam">
-									<li class="a1"><input type="hidden" id="a1_id">
-										<div class="photo_name popwin_btn1">
-											<div class="thum_area">
-												<div id="a1_photo" class="thum"></div>
-											</div>
-											<div class="text_area">
-												<span id="a1_nm" class="name3"></span> <span id="a1_age_gd"
-													class="age_rank"></span>
-											</div>
-										</div>
-										<div id="a1_bar" class="circle_i_area">
-											<i class="dark_circle_i bteam_icon"
-												onclick="changeTeamB('a1')" title="Bteam move"></i> <i
-												class="light_circle_i delete_icon" onclick="vacate('a1')"
-												title="delete"></i>
-										</div></li>
-									<li class="a2"><input type="hidden" id="a2_id">
-										<div class="photo_name popwin_btn1">
-											<div class="thum_area">
-												<div id="a2_photo" class="thum"></div>
-											</div>
-											<div class="text_area">
-												<span id="a2_nm" class="name3"></span> <span id="a2_age_gd"
-													class="age_rank"></span>
-											</div>
-										</div>
-										<div id="a2_bar" class="circle_i_area">
-											<i class="dark_circle_i bteam_icon"
-												onclick="changeTeamB('a2')" title="Bteam move"></i> <i
-												class="light_circle_i delete_icon" onclick="vacate('a2')"
-												title="delete"></i>
-										</div></li>
-								</ul>
-							</td>
-						</tr>
-						<tr>
-							<td class="td_tie">B 팀</td>
-							<td>
-								<ul class="col_21 stand_li" id="Bteam">
-									<li class="b1"><input type="hidden" id="b1_id">
-										<div class="photo_name popwin_btn1">
-											<div class="thum_area">
-												<div id="b1_photo" class="thum"></div>
-											</div>
-											<div class="text_area">
-												<span id="b1_nm" class="name3"></span> <span id="b1_age_gd"
-													class="age_rank"></span>
-											</div>
-										</div>
-										<div id="b1_bar" class="circle_i_area">
-											<i class="dark_circle_i ateam_icon"
-												onclick="changeTeamA('b1')" title="Ateam move"></i> <i
-												class="light_circle_i delete_icon" onclick="vacate('b1')"
-												title="delete"></i>
-										</div></li>
-									<li class="b2"><input type="hidden" id="a2_id">
-										<div class="photo_name popwin_btn1">
-											<div class="thum_area">
-												<div id="b2_photo" class="thum"></div>
-											</div>
-											<div class="text_area">
-												<span id="b2_nm" class="name3"></span> <span id="b2_age_gd"
-													class="age_rank"></span>
-											</div>
-										</div>
-										<div id="b2_bar" class="circle_i_area">
-											<i class="dark_circle_i ateam_icon"
-												onclick="changeTeamA('b2')" title="Ateam move"></i> <i
-												class="light_circle_i delete_icon" onclick="vacate('b2')"
-												title="delete"></i>
-										</div></li>
-								</ul>
-							</td>
-						</tr>
-					</table>
-					<div class="td_st td4 btn_full">
-						<div>
-							<span class="btn_st btn_colorg popwin_btn1" onclick="location.href='#;'">게스트 등록</span>
-						</div>
-						<div class="bin_space"></div>
-						<div class="bin_space"></div>
-						<div>
-							<span class="btn_st" onClick="onSubmit()">게임등록</span>
-						</div>
-					</div>
-				</form>
-			</div>
-			<!-- content end -->
-			<c:if test="${list2[0].u_nm ne null}">
-				<div class="content white_bg acd_area">
-					<div class="acd-head">
-						<h4 class="title_s">
-							<b>출전선수 구분</b><b id="st"></b>
-						</h4>
-					</div>
-					<!-- acd-head end-->
-					<div class="acd-cont">
-						<ul class="list_check">
-							<li><input type="radio" class="check_circle" id="check_all"
-								name="option_add" checked="checked" onclick="allShow()">
-								<label for="check_all">전체</label></li>
-							<li><input type="radio" class="check_circle"
-								id="check_detail" name="option_add"> <label
-								for="check_detail">상세</label></li>
-						</ul>
-						<div class="check_ul_area">
-							<table class="table_form line_no" id="ckTable">
-								<tr>
-									<td class="td_ti"><b>성별</b></td>
-									<td><ul class="list_check li_lot">
-											<li><input type="checkbox" class="li_check"
-												id="check_man" onclick="checkV()" value="M"> <label
-												for="check_man">남</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_woman" onclick="checkV()" value="F"> <label
-												for="check_woman">여</label></li>
-										</ul></td>
-								</tr>
-								<tr>
-									<td class="td_ti"><b>급수</b></td>
-									<td><ul class="list_check li_lot">
-											<li><input type="checkbox" class="li_check"
-												id="check_1_1" value="자강" onclick="checkV()"> <label
-												for="check_1_1">자강</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_2" value="A" onclick="checkV()"> <label
-												for="check_1_2">A</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_3" value="B" onclick="checkV()"> <label
-												for="check_1_3">B</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_4" value="C" onclick="checkV()"> <label
-												for="check_1_4">C</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_5" value="D" onclick="checkV()"> <label
-												for="check_1_5">D</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_6" value="초심" onclick="checkV()"> <label
-												for="check_1_6">초심</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_1_7" value="왕초" onclick="checkV()"> <label
-												for="check_1_7">왕초</label></li>
-										</ul></td>
-								</tr>
-								<tr>
-									<td class="td_ti"><b>나이</b></td>
-									<td><ul class="list_check li_lot">
-											<li><input type="checkbox" class="li_check"
-												id="check_10" value="10" onclick="checkV()"> <label
-												for="check_10">10대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_20" value="20" onclick="checkV()"> <label
-												for="check_20">20대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_30" value="30" onclick="checkV()"> <label
-												for="check_30">30대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_40" value="40" onclick="checkV()"> <label
-												for="check_40">40대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_50" value="50" onclick="checkV()"> <label
-												for="check_50">50대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_60" value="60" onclick="checkV()"> <label
-												for="check_60">60대</label></li>
-											<li><input type="checkbox" class="li_check"
-												id="check_70" value="70" onclick="checkV()"> <label
-												for="check_70">70대</label></li>
-										</ul></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<!-- acd cont end-->
-				</div>
-				<div id="v_all" class="content white_bg">
-					<ul id="s" class="col_21 stand_li">
-						<c:forEach var="canData" items="${list2}">
-							<li id="${canData.u_id }"
-								class="v_all ${canData.u_sex } ${fn:substring(canData.u_age,0,1)}0 ${canData.u_club_gd }">
-								<div class="photo_name">
-									<div class="thum_area">
-										<div class="thum"
-											style="background-image: url(${canData.u_photo});"></div>
-									</div>
-									<div class="text_area">
-										<span class="name">${canData.u_nm }<c:choose>
-												<c:when test="${canData.end_count ne 0}">(${canData.end_count })</c:when>
-												<c:when test="${canData.wait_count > 0 }">(0)</c:when>
-												<c:otherwise></c:otherwise>
-											</c:choose>
-										</span> <span class="age_rank">(${fn:substring(canData.u_age,0,1)}0대
-											${canData.u_club_gd })</span>
-									</div>
-								</div> <!--photo_name end-->
-								<div class="btns_box" id="divide">
-									<span
-										onClick="teamA('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }' ,'${canData.u_push }')"
-										id="ateam">A팀</span> <span
-										onClick="teamB('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }','${canData.u_push }')"
-										id="bteam">B팀</span>
+<div class="tab_btn_b_area">
+	<ul class="tab_btn_b">
+		<li class="active_tab"><span
+			onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임짜기</span></li>
+		<li><span onClick="location.href='/Game/GameState.techni'">진행게임</span>
+		<li><span onClick="location.href='/Game/EndGame.techni '">끝난게임</span></li>
+	</ul>
+</div>
+<div class="tab_bt_area white_bg">
+	<div>
+		<ul class="tabs_cont">
+			<li><span
+				onClick="location.href='/UClub/GamePrivateStateInfo.techni'">개인리그</span>
+			</li>
+			<li><span
+				onClick="location.href='/UClub/GameTeamStateInfo.techni'">팀리그</span>
+			</li>
+			<li class="active_tab"><span
+				onClick="location.href='/UClub/GameOKList.techni'">한 게임</span></li>
+		</ul>
+	</div>
+</div>
+<div class="content white_bg">
+	<form action="/Game/GameRegistProc.techni" id="frm" method='post'>
+		<input type="hidden" id="a1" name="cm_a1_id" value="" /> <input
+			type="hidden" id="a2" name="cm_a2_id" value="" /> <input
+			type="hidden" id="b1" name="cm_b1_id" value="" /> <input
+			type="hidden" id="b2" name="cm_b2_id" value="" /> <input
+			type="hidden" id="pa1" value="" /> <input type="hidden" id="pa2"
+			value="" /> <input type="hidden" id="pb1" value="" /> <input
+			type="hidden" id="pb2" value="" /> <input type="hidden" id="date"
+			name="date" value="<%=Today%>" />
+		<table class="game_td box_td">
+			<tr>
+				<td class="td_tie">A팀</td>
+				<td>
+					<ul class="col_21 stand_li" id="Ateam">
+						<li class="a1"><input type="hidden" id="a1_id">
+							<div class="photo_name popwin_btn1" onclick="ctest('a1')" id="a1_">
+								<div class="thum_area">
+									<div id="a1_photo" class="thum"></div>
 								</div>
-							</li>
-						</c:forEach>
+								<div class="text_area">
+									<span id="a1_nm" class="name3"></span> <span id="a1_age_gd"
+										class="age_rank"></span>
+								</div>
+							</div>
+							<div id="a1_bar" class="circle_i_area">
+								<i class="dark_circle_i bteam_icon" onclick="changeTeamB('a1')"
+									title="Bteam move"></i> <i class="light_circle_i delete_icon"
+									onclick="vacate('a1')" title="delete"></i>
+							</div></li>
+						<li class="a2"><input type="hidden" id="a2_id">
+							<div class="photo_name popwin_btn1" onclick="ctest('a2')" id="a2_">
+								<div class="thum_area">
+									<div id="a2_photo" class="thum"></div>
+								</div>
+								<div class="text_area">
+									<span id="a2_nm" class="name3"></span> <span id="a2_age_gd"
+										class="age_rank"></span>
+								</div>
+							</div>
+							<div id="a2_bar" class="circle_i_area">
+								<i class="dark_circle_i bteam_icon" onclick="changeTeamB('a2')"
+									title="Bteam move"></i> <i class="light_circle_i delete_icon"
+									onclick="vacate('a2')" title="delete"></i>
+							</div></li>
 					</ul>
-				</div>
-			</c:if>
-			<!-- content end -->
-			<div id="popwin_wrap">
-			<div class="popwin_size white_bg wsize-300">
-				<div class="head_top title_popup">
-					<div class="tit_top">
-						<h1 class="game_title">게스트 등록</h1>
-					</div>
-					<div class="bt_top">
-						<span class="btn_i la la-close" onclick="location.href='#'"></span>
-					</div>
-				</div>
-				<!-- title_popupp end -->
-				<div class="popup_body">
-					<table class="table_form mb_m">
-						<tr>
-							<td><input type="text" placeholder="이름(실명)" id="g_id"></td>
-						</tr>
-						<tr>
-							<td><ul class="list_check">
-									<li><input type="radio" name="choice" class="check_circle"
-										id="check_1" value="m"> <label for="check_1">남자</label>
-									</li>
-									<li><input type="radio" name="choice" class="check_circle"
-										id="check_2" value="f"> <label for="check_2">여자</label>
-									</li>
-								</ul></td>
-						</tr>
-						<tr>
-							<td><div class="col_2input">
-									<div>
-										<select id="g_age">
-											<option value="연령" selected="selected">연령</option>
-											<option value="10">10대</option>
-											<option value="20">20대</option>
-											<option value="30">30대</option>
-											<option value="40">40대</option>
-											<option value="50">50대</option>
-											<option value="50">60대</option>
-											<option value="50">70대</option>
-										</select>
-									</div>
-									<div>
-										<select name="select" id="g_gd">
-											<option value="급수" selected="selected">급수</option>
-											<option value="자강">자강</option>
-											<option value="A">A</option>
-											<option value="B">B</option>
-											<option value="C">C</option>
-											<option value="D">D</option>
-											<option value="초심">초심</option>
-											<option value="왕초">왕초</option>
-										</select>
-									</div>
-								</div></td>
-						</tr>
-					</table>
-					<hr class="line_both">
-					<div class="btn_full col2_lay">
-						<div>
-							<span class="btn_st btn_colorg close_popup " onclick="">취소</span>
-						</div>
-						<div>
-							<span class="btn_st close_popup" onClick="guestInsert();">등록</span>
-						</div>
-					</div>
-					<!-- col2_lay end -->
-				</div>
-				<!-- popup_body end-->
+				</td>
+			</tr>
+			<tr>
+				<td class="td_tie">B 팀</td>
+				<td>
+					<ul class="col_21 stand_li" id="Bteam">
+						<li class="b1"><input type="hidden" id="b1_id">
+							<div class="photo_name popwin_btn1" onclick="ctest('b1')" id="b1_">
+								<div class="thum_area">
+									<div id="b1_photo" class="thum"></div>
+								</div>
+								<div class="text_area">
+									<span id="b1_nm" class="name3"></span> <span id="b1_age_gd"
+										class="age_rank"></span>
+								</div>
+							</div>
+							<div id="b1_bar" class="circle_i_area">
+								<i class="dark_circle_i ateam_icon" onclick="changeTeamA('b1')"
+									title="Ateam move"></i> <i class="light_circle_i delete_icon"
+									onclick="vacate('b1')" title="delete"></i>
+							</div></li>
+						<li class="b2"><input type="hidden" id="a2_id">
+							<div class="photo_name popwin_btn1" onclick="ctest('b2')" id="b2_">
+								<div class="thum_area">
+									<div id="b2_photo" class="thum"></div>
+								</div>
+								<div class="text_area">
+									<span id="b2_nm" class="name3"></span> <span id="b2_age_gd"
+										class="age_rank"></span>
+								</div>
+							</div>
+							<div id="b2_bar" class="circle_i_area">
+								<i class="dark_circle_i ateam_icon" onclick="changeTeamA('b2')"
+									title="Ateam move"></i> <i class="light_circle_i delete_icon"
+									onclick="vacate('b2')" title="delete"></i>
+							</div></li>
+					</ul>
+				</td>
+			</tr>
+		</table>
+		<div class="td_st td4 btn_full">
+			<div>
+				<span class="btn_st btn_colorg popwin_btn2"
+					onclick="location.href='#;'">게스트 등록</span>
+			</div>
+			<div class="bin_space"></div>
+			<div class="bin_space"></div>
+			<div>
+				<span class="btn_st" onClick="onSubmit()">게임등록</span>
 			</div>
 		</div>
-			<%-- <div class="content white_bg">
+	</form>
+</div>
+<!-- content end -->
+<c:if test="${list2[0].u_nm ne null}">
+	<div class="content white_bg acd_area">
+		<div class="acd-head">
+			<h4 class="title_s">
+				<b>출전선수 구분</b><b id="st"></b>
+			</h4>
+		</div>
+		<!-- acd-head end-->
+		<div class="acd-cont">
+			<ul class="list_check">
+				<li><input type="radio" class="check_circle" id="check_all"
+					name="option_add" checked="checked" onclick="allShow()"> <label
+					for="check_all">전체</label></li>
+				<li><input type="radio" class="check_circle" id="check_detail"
+					name="option_add"> <label for="check_detail">상세</label></li>
+			</ul>
+			<div class="check_ul_area">
+				<table class="table_form line_no" id="ckTable">
+					<tr>
+						<td class="td_ti"><b>성별</b></td>
+						<td><ul class="list_check li_lot">
+								<li><input type="checkbox" class="li_check" id="check_man"
+									onclick="checkV()" value="M"> <label for="check_man">남</label></li>
+								<li><input type="checkbox" class="li_check"
+									id="check_woman" onclick="checkV()" value="F"> <label
+									for="check_woman">여</label></li>
+							</ul></td>
+					</tr>
+					<tr>
+						<td class="td_ti"><b>급수</b></td>
+						<td><ul class="list_check li_lot">
+								<li><input type="checkbox" class="li_check" id="check_1_1"
+									value="자강" onclick="checkV()"> <label for="check_1_1">자강</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_2"
+									value="A" onclick="checkV()"> <label for="check_1_2">A</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_3"
+									value="B" onclick="checkV()"> <label for="check_1_3">B</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_4"
+									value="C" onclick="checkV()"> <label for="check_1_4">C</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_5"
+									value="D" onclick="checkV()"> <label for="check_1_5">D</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_6"
+									value="초심" onclick="checkV()"> <label for="check_1_6">초심</label></li>
+								<li><input type="checkbox" class="li_check" id="check_1_7"
+									value="왕초" onclick="checkV()"> <label for="check_1_7">왕초</label></li>
+							</ul></td>
+					</tr>
+					<tr>
+						<td class="td_ti"><b>나이</b></td>
+						<td><ul class="list_check li_lot">
+								<li><input type="checkbox" class="li_check" id="check_10"
+									value="10" onclick="checkV()"> <label for="check_10">10대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_20"
+									value="20" onclick="checkV()"> <label for="check_20">20대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_30"
+									value="30" onclick="checkV()"> <label for="check_30">30대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_40"
+									value="40" onclick="checkV()"> <label for="check_40">40대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_50"
+									value="50" onclick="checkV()"> <label for="check_50">50대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_60"
+									value="60" onclick="checkV()"> <label for="check_60">60대</label></li>
+								<li><input type="checkbox" class="li_check" id="check_70"
+									value="70" onclick="checkV()"> <label for="check_70">70대</label></li>
+							</ul></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- acd cont end-->
+	</div>
+	<div id="v_all" class="content white_bg">
+		<ul id="s" class="col_21 stand_li">
+			<c:forEach var="canData" items="${list2}">
+				<li id="${canData.u_id }"
+					class="v_all ${canData.u_sex } ${fn:substring(canData.u_age,0,1)}0 ${canData.u_club_gd }">
+					<div class="photo_name">
+						<div class="thum_area">
+							<div class="thum"
+								style="background-image: url(${canData.u_photo});"></div>
+						</div>
+						<div class="text_area">
+							<span class="name3">${canData.u_nm }</span> <c:choose>
+									<c:when test="${canData.end_count ne 0}"><em class="game_nb-tiny">${canData.end_count }</em></c:when>
+									<c:when test="${canData.wait_count > 0 }"><em class="game_nb-tiny">0</em></c:when>
+									<c:otherwise></c:otherwise>
+								</c:choose>
+							<span class="age_rank">(${fn:substring(canData.u_age,0,1)}0대
+								${canData.u_club_gd })</span>
+						</div>
+					</div> <!--photo_name end-->
+					<div class="btns_box" id="divide">
+						<span
+							onClick="teamA('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }' ,'${canData.u_push }')"
+							id="ateam">A팀</span> <span
+							onClick="teamB('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }','${canData.u_push }')"
+							id="bteam">B팀</span>
+					</div>
+				</li>
+			</c:forEach>
+		</ul>
+	</div>
+</c:if>
+<!-- content end -->
+<div class="popwin_size white_bg wsize-300">
+	<div class="head_top title_popup">
+		<div class="tit_top">
+			<h1 class="game_title">선수 선택</h1>
+		</div>
+		<div class="bt_top">
+			<span class="btn_i la la-close" onclick="location.href='#'"></span>
+		</div>
+	</div>
+	<!-- title_popupp end -->
+	<div class="scroll_wrap ht-5">
+		<ul class="li_name line_tno" id="ctest">
+		</ul>
+	</div>
+	<!--scroll_wrap end-->
+</div>
+<div class="popwin_size white_bg wsize-300">
+	<div class="head_top title_popup">
+		<div class="tit_top">
+			<h1 class="game_title">게스트 등록</h1>
+		</div>
+		<div class="bt_top">
+			<span class="btn_i la la-close" onclick="location.href='#'"></span>
+		</div>
+	</div>
+	<!-- title_popupp end -->
+	<div class="popup_body">
+		<table class="table_form mb_m">
+			<tr>
+				<td><input type="text" placeholder="이름(실명)" id="g_id"></td>
+			</tr>
+			<tr>
+				<td><ul class="list_check">
+						<li><input type="radio" name="choice" class="check_circle"
+							id="check_1" value="m"> <label for="check_1">남자</label></li>
+						<li><input type="radio" name="choice" class="check_circle"
+							id="check_2" value="f"> <label for="check_2">여자</label></li>
+					</ul></td>
+			</tr>
+			<tr>
+				<td><div class="col_2input">
+						<div>
+							<select id="g_age">
+								<option value="연령" selected="selected">연령</option>
+								<option value="10">10대</option>
+								<option value="20">20대</option>
+								<option value="30">30대</option>
+								<option value="40">40대</option>
+								<option value="50">50대</option>
+								<option value="50">60대</option>
+								<option value="50">70대</option>
+							</select>
+						</div>
+						<div>
+							<select name="select" id="g_gd">
+								<option value="급수" selected="selected">급수</option>
+								<option value="자강">자강</option>
+								<option value="A">A</option>
+								<option value="B">B</option>
+								<option value="C">C</option>
+								<option value="D">D</option>
+								<option value="초심">초심</option>
+								<option value="왕초">왕초</option>
+							</select>
+						</div>
+					</div></td>
+			</tr>
+		</table>
+		<hr class="line_both">
+		<div class="btn_full col2_lay">
+			<div>
+				<span class="btn_st btn_colorg close_popup " onclick="">취소</span>
+			</div>
+			<div>
+				<span class="btn_st close_popup" onClick="guestInsert();">등록</span>
+			</div>
+		</div>
+		<!-- col2_lay end -->
+	</div>
+	<!-- popup_body end-->
+</div>
+
+<%-- <div class="content white_bg">
 				<ul class="col_21 stand_li">
 					<c:forEach var="dontData" items="${list }">
 					<li>
@@ -1037,24 +1034,93 @@
 					</c:forEach>
 				</ul>
 			</div> --%>
-			<!-- content end -->
-			<!-- InstanceEndEditable -->
-		<!-- container end -->
-		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_tag" -->
-			<!-- InstanceEndEditable -->
-			<script>	
+<!-- content end -->
+<!-- InstanceEndEditable -->
+<!-- container end -->
+<div id="ft_area">
+	<!-- InstanceBeginEditable name="ft_tag" -->
+	<!-- InstanceEndEditable -->
+	<script>	
     $(document).ready(function(){	
     var aa = $(location).attr('pathname').slice(-6, -5); 
 	$('.ft_menu').navi_depth({pageNum:aa})
      });
+    function ctest(n){
+    	$("#ctest li").each(function(){
+    		$(this).remove();
+    	})
+    	$("#s li").each(function(){
+    		var c = $(this).clone();
+    		var o = c.find("div.btns_box").find("span").attr("onclick");
+    		c.find("div.photo_name").attr("onclick",n+"_"+o)
+    		c.find("div.btns_box").remove();
+    		c.appendTo($("#ctest"));
+    	})
+    	$('.la-close').click();
+    }
+    function a1_teamA(id,nm,photo,gd,age,push){
+		a1 = 1;
+		$("#a1_nm").text(nm)
+		$("#a1_photo").attr("style","background-image: url("+photo+")");
+		$("#a1_age_gd").text("("+age+" 세"+gd+")");
+		$("#a1").val(id);
+		$("#pa1").val(push);
+		$("#a1_bar").attr("style","display:''");
+		ach++
+		$("#a1_").attr("class","photo_name")
+		$("#"+id).hide();
+		divDisplay();
+		$('.la-close').click();
+    }
+    function a2_teamA(id,nm,photo,gd,age,push){
+    	a2=1;
+		$("#a2_nm").text(nm)
+		$("#a2_photo").attr("style","background-image: url("+photo+")");
+		$("#a2_age_gd").text("("+age+" 세"+gd+")");
+		$("#a2").val(id);
+		$("#pa2").val(push);
+		$("#a2_bar").attr("style","display:''");
+		ach++
+		$("#a2_").attr("class","photo_name")
+		$("#"+id).hide();
+		divDisplay();
+		$('.la-close').click();
+    }
+	function b1_teamA(id,nm,photo,gd,age,push){
+		b1 = 1;
+		$("#b1_nm").text(nm)
+		$("#b1_photo").attr("style","background-image: url("+photo+")");
+		$("#b1_age_gd").text("("+age+"세  "+gd+")");
+		$("#b1").val(id)
+		$("#pb1").val(push);
+		$("#b1_bar").attr("style","display:''");
+		bch++
+		$("#b1_").attr("class","photo_name")
+		$("#"+id).hide();
+		divDisplay();
+		$('.la-close').click();
+	}
+	function b2_teamA(id,nm,photo,gd,age,push){
+		b2=1;
+		$("#b2_nm").text(nm)
+		$("#b2_photo").attr("style","background-image: url("+photo+")");
+		$("#b2_age_gd").text("("+age+"세 "+gd+")");
+		$("#b2").val(id)
+		$("#pb2").val(push);
+		$("#b2_bar").attr("style","display:''");
+		bch++
+		$("#b2_").attr("class","photo_name")
+		$("#"+id).hide();
+		divDisplay();
+		$('.la-close').click();	
+	}
     </script>
-			<ul class="ft_menu">
-				<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
-				<li class="active_tab"
-					onClick="location.href='/UClub/GamePrivateStateInfo.techni'"><span>게임</span></li>
-				<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
-				<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
-			</ul>
+	<ul class="ft_menu">
+		<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
+		<li class="active_tab"
+			onClick="location.href='/UClub/GamePrivateStateInfo.techni'"><span>게임</span></li>
+		<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
+		<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
+	</ul>
 
-		</div>
+</div>

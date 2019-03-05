@@ -336,6 +336,9 @@ public class GameDAO {
 		public List<ClubMatchVO> all_match(String cs_idx){
 			return sqlSession.selectList(nameSpace+"all_match", cs_idx);
 		}
+	public List<ClubMatchVO> pointAllDetail(Map<String,String> map){
+		return sqlSession.selectList(nameSpace + "pointAllDetail", map);
+	}
 	public ArrayList<CStadiumVO> getClubStadiumCoatList(HashMap map) {
 		return (ArrayList) sqlSession.selectList("mgl.Game.getClubStadiumCoatList", map);
 	}

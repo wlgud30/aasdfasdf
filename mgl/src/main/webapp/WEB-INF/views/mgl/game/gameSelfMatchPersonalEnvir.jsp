@@ -102,7 +102,7 @@
 							<td class="no_td">4</td>
 							<td class="ga_title"><input type="text"
 								placeholder="구분(종목) 입력"></td>
-							<td class="score_nol_td"><input type="text" placeholder="00"
+							<td class="score_nol_td"><input type="number" placeholder="00"
 								class="cet_lay"></td>
 							<td>10</td>
 							<td>15</td>

@@ -175,6 +175,10 @@ public class UClubDAO {
 	public int userMngGd(Map<String, String> map) {
 		return sqlSession.update("mgl.UClub.userMngGd", map);
 	}
+	// 급수 업데이트
+	public int userGd(Map<String,String> map) {
+		return sqlSession.update("mgl.UClub.userGd", map);
+	}
 
 	// 클럽탈퇴
 	public int clubOut(Map<String, String> map) {
@@ -214,10 +218,40 @@ public class UClubDAO {
 	public int clubCount(String c_idx) {
 		return sqlSession.selectOne("mgl.UClub.clubCount", c_idx);
 	}
+	//개인화면 월별게임
+	public List<UClubVO> monthGame(String u_id){
+		return sqlSession.selectList("mgl.UClub.monthGame", u_id);
+	}
 	
 	public int representCheck(String u_id) {
 		return sqlSession.selectOne("mgl.UClub.representCheck", u_id);
 	}
+	//대항전 개인순위
+	public List<UClubVO> competitionRank(String u_id){
+		return sqlSession.selectList("mgl.UClub.competitionRank", u_id);
+	}
+	//전국 같은급수 개인순위
+	public List<UClubVO> sameAllGdRank(String u_id){
+		return sqlSession.selectList("mgl.UClub.sameAllGdRank", u_id);
+	}
+	//전국 같은급수 연령별 개인순위
+	public List<UClubVO> sameAgeGdRank(String u_id){
+		return sqlSession.selectList("mgl.UClub.sameAgeGdRank", u_id);
+	}	
+	//전국 같은급수 성별 개인순위
+	public List<UClubVO> sameSexGdRank(String u_id){
+		return sqlSession.selectList("mgl.UClub.sameSexGdRank", u_id);
+	}	
+	//클럽 같은급수 개인순위
+	public List<UClubVO> sameClubGdRank(String u_id){
+		return sqlSession.selectList("mgl.UClub.sameClubGdRank", u_id);
+	}	
+	
+	
+	
+	
+	
+	
 
 	public ArrayList<ClubVO> getUClubList(String id) {
 		return (ArrayList) sqlSession.selectList("mgl.UClub.getUClubList", id);

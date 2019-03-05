@@ -25,10 +25,10 @@
 	</div>
       <div class="logo_top" id="main_logo"><img src="/resources/img/logo1.svg"  alt="Minton-in" class="logo" onClick="location.href='/Board/BoardList.techni'"></div>
       <div class="bt_top">
-        <div class="alarm" onClick="location.href='06-03_member_list3.html'">
+        <!-- <div class="alarm" onClick="location.href='06-03_member_list3.html'">
           <span class="icon-bell btn_i" ></span>
           <span class="notice_ub">!</span>
-        </div>
+        </div> -->
         <div class="btn_more"> <i class="more_menu la la-ellipsis-v"></i>
           <ul class="me_ul">
      	<li onClick="location.href='#;'">사용법</li>

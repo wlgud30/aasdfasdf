@@ -38,20 +38,20 @@
 						<td><div class="col_2input">
 								<div>
 									<p class="guide_text">대회일자</p>
-									<input type="text" placeholder="YYYY" class="date1_input"
+									<input type="number" placeholder="YYYY" class="date1_input"
 										maxlength="4"><span class="date_dot_i"></span><input
-										type="text" placeholder="MM" class="date2_input" maxlength="2"><span
-										class="date_dot_i"></span><input type="text" placeholder="DD"
+										type="number" placeholder="MM" class="date2_input" maxlength="2"><span
+										class="date_dot_i"></span><input type="number" placeholder="DD"
 										class="date2_input" maxlength="2">
 								</div>
 								<div>
 									<p class="guide_text">대회시간</p>
-									<input type="text" class="time_input" placeholder="00"
+									<input type="number" class="time_input" placeholder="00"
 										maxlength="2"><span class="second_i"></span><input
-										type="text" class="time_input" placeholder="00" maxlength="2"><span
-										class="time_line_i"></span><input type="text"
+										type="number" class="time_input" placeholder="00" maxlength="2"><span
+										class="time_line_i"></span><input type="number"
 										class="time_input" placeholder="00" maxlength="2"><span
-										class="second_i"></span><input type="text" class="time_input"
+										class="second_i"></span><input type="number" class="time_input"
 										placeholder="00" maxlength="2">
 								</div>
 							</div></td>
@@ -70,12 +70,12 @@
 					<tr>
 						<td><div class="col_2input wauto">
 								<div>
-									<span class="guide_text left_guide">점수</span><input type="text"
+									<span class="guide_text left_guide">점수</span><input type="number"
 										class="time_input" placeholder="00" maxlength="2">
 								</div>
 								<div>
 									<span class="guide_text left_guide">소요분</span><input
-										type="text" class="time_input" placeholder="00" maxlength="2">
+										type="number" class="time_input" placeholder="00" maxlength="2">
 								</div>
 							</div></td>
 					</tr>

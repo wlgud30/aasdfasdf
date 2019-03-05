@@ -81,18 +81,18 @@ function clubAttend(nm,idx){
 						<td><div class="col_2input">
 								<div>
 									<p class="guide_text">대회일자</p>
-									<input type="text" class="date_pick" name="cf_start" id="cf_start">
+									<input type="number" class="date_pick" name="cf_start" id="cf_start">
 									<span class="date_icon_btn" onclick="location.href='#;'"></span>
 								</div>
 								<div>
 									<p class="guide_text">대회시간</p>
-									<input type="text" name="cf_sTime1" id="cf_sTime1" class="time_input" placeholder="00" maxlength="2">
+									<input type="number" name="cf_sTime1" id="cf_sTime1" class="time_input" placeholder="00" maxlength="2">
 									<span class="second_i"></span>
-									<input type="text" name="cf_sTime2" id="cf_sTime2"class="time_input" placeholder="00" maxlength="2">
+									<input type="number" name="cf_sTime2" id="cf_sTime2"class="time_input" placeholder="00" maxlength="2">
 									<span class="time_line_i"></span>
-									<input type="text" name="cf_eTime1" id="cf_eTime1"class="time_input" placeholder="00" maxlength="2">
+									<input type="number" name="cf_eTime1" id="cf_eTime1"class="time_input" placeholder="00" maxlength="2">
 									<span class="second_i"></span>
-									<input type="text" name="cf_eTime2" id="cf_eTime2"class="time_input" placeholder="00" maxlength="2">
+									<input type="number" name="cf_eTime2" id="cf_eTime2"class="time_input" placeholder="00" maxlength="2">
 								</div>
 							</div></td>
 					</tr>
@@ -100,17 +100,17 @@ function clubAttend(nm,idx){
 						<td><div class="col_2input wauto">
 								<div>
 									<span class="guide_text left_guide">점수</span>
-									<input type="text" name="cf_point" id="cf_point"class="time_input" placeholder="00" maxlength="2">
+									<input type="number" name="cf_point" id="cf_point"class="time_input" placeholder="00" maxlength="2">
 								</div>
 								<div>
 									<span class="guide_text left_guide">소요분</span>
-									<input name="cf_time" id="cf_time"type="text" class="time_input" placeholder="00" maxlength="2">
+									<input name="cf_time" id="cf_time"type="number" class="time_input" placeholder="00" maxlength="2">
 								</div>
 							</div></td>
 					</tr>
 					<tr>
 						<td><span class="guide_text left_guide">등록마감</span>
-						<input type="text" name="cf_end" id="cf_end" class="date_pick">
+						<input type="number" name="cf_end" id="cf_end" class="date_pick">
 						<span class="date_icon_btn" onclick="location.href='#;'"></span></td>
 					</tr>
 					<tr>
@@ -187,7 +187,7 @@ function clubAttend(nm,idx){
 					</thead>
 					<tbody id="trAppend">
 						<tr id="abcd_1">
-							<td class="no_td"><input type="text" class='no cet_lay' value="1" name="no" id="no_1"></td>
+							<td class="no_td"><input type="number" class='no cet_lay' value="1" name="no" id="no_1"></td>
 							<td class="ga_title"><input type="text" class='type' placeholder="구분(종목) 입력" id="type_1"name="type"></td>
 							<td class="score_nol_td">
 								<select class= "kind" name="kind" id="kind_1">

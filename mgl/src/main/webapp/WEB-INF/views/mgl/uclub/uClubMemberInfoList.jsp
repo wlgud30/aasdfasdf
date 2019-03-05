@@ -150,7 +150,14 @@
 										<td class="rowspan-a td_1">${list.my_win }</td>
           								<td class="rowspan-a td_1">${list.my_lose }</td>
           								<td class="rowspan-a td_2">${list.my_gap }</td>
-          								<td rowspan="2" class="btn_td"><span id="span_${list.u_id }" class="btn_st btn_wh_color1 btn_row2" onclick="rank('${list.u_id })">상대<br>전적</span></td>
+          								<td rowspan="2" class="btn_td"><c:choose>
+          								<c:when test="${list.u_id eq u_id }">
+          									<span class="btn_st btn_tiny btn_rd" onclick="location.href='/UClub/UClubMemberDetail.techni'">프로필</span>
+          								</c:when>
+          								<c:otherwise>
+          									<span class="btn_st btn_wh_color1 btn_row2" onclick="rank('${list.u_id })">상대<br>전적</span>
+          								</c:otherwise>
+          							</c:choose></td>
 										<%-- <td class="phone-date_td">
 											<ul class="li_dot_item">
 												<li>

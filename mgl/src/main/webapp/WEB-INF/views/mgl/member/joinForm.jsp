@@ -390,19 +390,19 @@ function ymdFocus(){
 								</tr>
 								<tr>
 									<td>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'YYYY'"onkeyup="ymdFocus()" type="text" name="m_birth" id="date1" placeholder="YYYY" class="date1_input" maxlength="4">
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'YYYY'"onkeyup="ymdFocus()" type="number" name="m_birth" id="date1" placeholder="YYYY" class="date1_input" maxlength="4">
 										<span class="date_dot_i"></span>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'MM'"onkeyup="ymdFocus()" type="text" name="m_birth" id="date2" placeholder="MM" class="date2_input" maxlength="2">
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'MM'"onkeyup="ymdFocus()" type="number" name="m_birth" id="date2" placeholder="MM" class="date2_input" maxlength="2">
 										<span class="date_dot_i"></span>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'DD'"type="text" name="m_birth" id="date3" placeholder="DD" class="date2_input" maxlength="2">
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = 'DD'"type="number" name="m_birth" id="date3" placeholder="DD" class="date2_input" maxlength="2">
 										<span class="guide_text">(생년월일)</span>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '000'"type="text" name="m_tel" id="phone1" class="phone_input" placeholder="000" onkeypress="onlyNumber();" maxlength="3" onkeyup="phoneFocus()"><span class="line_i"></span>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '0000'"type="text" name="m_tel" id="phone2" class="phone_input" placeholder="0000" onkeypress="onlyNumber();" maxlength="4" onkeyup="phoneFocus()"><span class="line_i"></span>
-										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '0000'"type="text" name="m_tel" id="phone3" class="phone_input" placeholder="0000" onkeypress="onlyNumber();" maxlength="4"><span class="guide_text">(휴대전화)</span>
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '000'"type="number" name="m_tel" id="phone1" class="phone_input" placeholder="000" onkeypress="onlyNumber();" maxlength="3" onkeyup="phoneFocus()"><span class="line_i"></span>
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '0000'"type="number" name="m_tel" id="phone2" class="phone_input" placeholder="0000" onkeypress="onlyNumber();" maxlength="4" onkeyup="phoneFocus()"><span class="line_i"></span>
+										<input onfocus="this.placeholder = ''" onblur="this.placeholder = '0000'"type="number" name="m_tel" id="phone3" class="phone_input" placeholder="0000" onkeypress="onlyNumber();" maxlength="4"><span class="guide_text">(휴대전화)</span>
 									</td>
 								</tr>
 								<tr>

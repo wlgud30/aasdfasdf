@@ -448,6 +448,11 @@ public class GameService {
 	public List<ClubMatchVO> all_match(String cs_idx){
 		return gDAO.all_match(cs_idx);
 	}	
+	//개인화면 월별게임디테일
+	@Transactional
+	public List<ClubMatchVO> pointAllDetail(Map<String,String> map){
+		return gDAO.pointAllDetail(map);
+	}
 	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||

@@ -90,7 +90,7 @@ function bun(){
 								<td>${list.cf_t_kind }</td>
 								<td id="count_${i}">${list.t_count }<c:if test="${list.t_count eq null }">0</c:if></td>
 								<td>
-									<input id="tCount_${i}" type="text"  class="cet_lay">
+									<input id="tCount_${i}" type="number"  class="cet_lay">
 									<input id="idx_${i}" type="hidden" value="${list.cf_t_idx}">
 								</td>
 							</tr>

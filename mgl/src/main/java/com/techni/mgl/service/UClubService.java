@@ -190,6 +190,11 @@ public class UClubService {
 	public int userMngGd(Map<String,String> map){
 		return ucDAO.userMngGd(map);
 	}
+	//급수 업데이트
+	@Transactional
+	public int userGd(Map<String,String> map){
+		return ucDAO.userGd(map);
+	}
 	//클럽사용자 탈퇴
 	@Transactional
 	public int clubOut(Map<String,String>map){
@@ -229,6 +234,36 @@ public class UClubService {
 	public int clubCount(String c_idx) {
 		return ucDAO.clubCount(c_idx);
 	}
+	//개인화면 월별게임
+	@Transactional
+	public List<UClubVO> monthGame(String u_id){
+		return ucDAO.monthGame(u_id);
+	}
+	//대항전 개인순위
+	@Transactional
+	public List<UClubVO> competitionRank(String u_id){
+		return ucDAO.competitionRank(u_id);
+	}
+	//전국 같은급수 개인순위
+	@Transactional
+	public List<UClubVO> sameAllGdRank(String u_id){
+		return ucDAO.sameAllGdRank(u_id);
+	}
+	//전국 같은급수 연령별 개인순위
+	@Transactional
+	public List<UClubVO> sameAgeGdRank(String u_id){
+		return ucDAO.sameAgeGdRank(u_id);
+	}	
+	//전국 같은급수 성별 개인순위
+	@Transactional
+	public List<UClubVO> sameSexGdRank(String u_id){
+		return ucDAO.sameSexGdRank(u_id);
+	}	
+	//클럽 같은급수 개인순위
+	@Transactional
+	public List<UClubVO> sameClubGdRank(String u_id){
+		return ucDAO.sameClubGdRank(u_id);
+	}		
 	
 	
 	

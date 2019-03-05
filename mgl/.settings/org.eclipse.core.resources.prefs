@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/techni/mgl/controller/UClubController.java=UTF-8
 encoding//src/main/webapp/WEB-INF/tiles/header.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/tiles/header_2.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/mgl/game/gameRegist.jsp=UTF-8

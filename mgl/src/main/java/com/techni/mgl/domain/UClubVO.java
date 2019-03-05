@@ -40,12 +40,44 @@ public class UClubVO {
 	public String push_url;
 	public int wait_count;
 	public int end_count;
+	public String cf_nm;
+	public String cf_start;
+	public String cf_t_nm;
 	
 	
 	
 	
 	
-	
+	public String getCf_nm() {
+		return cf_nm;
+	}
+
+
+	public void setCf_nm(String cf_nm) {
+		this.cf_nm = cf_nm;
+	}
+
+
+	public String getCf_start() {
+		return cf_start;
+	}
+
+
+	public void setCf_start(String cf_start) {
+		this.cf_start = cf_start;
+	}
+
+
+	public String getCf_t_nm() {
+		return cf_t_nm;
+	}
+
+
+	public void setCf_t_nm(String cf_t_nm) {
+		this.cf_t_nm = cf_t_nm;
+	}
+
+
 	public int getWait_count() {
 		return wait_count;
 	}
@@ -198,6 +230,8 @@ public class UClubVO {
 	public String you_nm;
 	public String you_gd;
 	public String you_gr;
+	public int rnum;
+	public int team_count;
 	
 	
 	
@@ -206,6 +240,26 @@ public class UClubVO {
 	
 	
 	
+
+
+	public int getRnum() {
+		return rnum;
+	}
+
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+
+
+	public int getTeam_count() {
+		return team_count;
+	}
+
+
+	public void setTeam_count(int team_count) {
+		this.team_count = team_count;
+	}
 
 
 	public String getMy_age() {
@@ -736,19 +790,28 @@ public class UClubVO {
 
 	@Override
 	public String toString() {
-		return "UClubVO [uc_idx=" + uc_idx + ", c_idx=" + c_idx + ", u_id=" + u_id + "u_status"+u_status+", u_club_gd=" + u_club_gd
+		return "UClubVO [uc_idx=" + uc_idx + ", c_idx=" + c_idx + ", u_id=" + u_id + ", u_club_gd=" + u_club_gd
 				+ ", uc_mng=" + uc_mng + ", u_nm=" + u_nm + ", u_age=" + u_age + ", u_photo=" + u_photo + ", uc_mCount="
 				+ uc_mCount + ", u_tel=" + u_tel + ", u_join_date=" + u_join_date + ", u_email=" + u_email
-				+ ", c_count=" + c_count + ", c_nm=" + c_nm + ", c_info=" + c_info + ", cu_cnt=" + cu_cnt
-				+ ", c_location=" + c_location + ", getC_count()=" + getC_count() + ", getU_email()=" + getU_email()
-				+ ", getU_join_date()=" + getU_join_date() + ", getU_tel()=" + getU_tel() + ", getUc_mCount()="
-				+ getUc_mCount() + ", getU_nm()=" + getU_nm() + ", getU_age()=" + getU_age() + ", getU_photo()="
-				+ getU_photo() + ", getU_club_gd()=" + getU_club_gd() + ", getC_location()=" + getC_location()
-				+ ", getCu_cnt()=" + getCu_cnt() + ", getC_info()=" + getC_info() + ", getC_nm()=" + getC_nm()
-				+ ", getUc_idx()=" + getUc_idx() + ", getC_idx()=" + getC_idx() + ", getU_id()=" + getU_id()
-				+ ", getUc_mng()=" + getUc_mng() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
+				+ ", c_count=" + c_count + ", u_tsize=" + u_tsize + ", u_birth=" + u_birth + ", lastDate=" + lastDate
+				+ ", u_status=" + u_status + ", c_court_su=" + c_court_su + ", c_court_sa=" + c_court_sa
+				+ ", cm_p_total=" + cm_p_total + ", ym=" + ym + ", uc_mngYN=" + uc_mngYN + ", u_sex=" + u_sex
+				+ ", u_c_indat=" + u_c_indat + ", uc_joinYN=" + uc_joinYN + ", cst_nm=" + cst_nm + ", c_photo="
+				+ c_photo + ", c_mm=" + c_mm + ", c_gameC=" + c_gameC + ", c_cnt=" + c_cnt + ", u_push=" + u_push
+				+ ", age=" + age + ", push_ment=" + push_ment + ", push_date=" + push_date + ", push_send=" + push_send
+				+ ", push_url=" + push_url + ", wait_count=" + wait_count + ", end_count=" + end_count + ", cf_nm="
+				+ cf_nm + ", cf_start=" + cf_start + ", cf_t_nm=" + cf_t_nm + ", my_cm_p_total=" + my_cm_p_total
+				+ ", my_cm_p_total_m=" + my_cm_p_total_m + ", my_age=" + my_age + ", my_win=" + my_win + ", my_lose="
+				+ my_lose + ", my_ap=" + my_ap + ", my_pp=" + my_pp + ", my_gap=" + my_gap + ", my_id=" + my_id
+				+ ", my_nm=" + my_nm + ", my_gd=" + my_gd + ", my_gr=" + my_gr + ", you_cm_p_total=" + you_cm_p_total
+				+ ", you_cm_p_total_m=" + you_cm_p_total_m + ", you_age=" + you_age + ", you_ap=" + you_ap + ", you_pp="
+				+ you_pp + ", you_gap=" + you_gap + ", you_id=" + you_id + ", you_nm=" + you_nm + ", you_gd=" + you_gd
+				+ ", you_gr=" + you_gr + ", rnum=" + rnum + ", team_count=" + team_count + ", c_nm=" + c_nm
+				+ ", c_info=" + c_info + ", cu_cnt=" + cu_cnt + ", c_location=" + c_location + "]";
 	}
+
+
+	
 	
 	
 }

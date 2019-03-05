@@ -135,7 +135,7 @@ function pSubmit(){
 									</li>
 								</ul>
 								<div class="score_input_area">
-									<input type="text" placeholder="00" class="box_input cet_lay" id ="aScore" maxlength="2" onkeypress="onlyNumber();" >
+									<input type="number" placeholder="00" class="box_input cet_lay" id ="aScore" maxlength="2" onkeypress="onlyNumber();" >
 								</div>
 								</td>
 							<td class="score2_td"><span class="sign-round color3">진행</span>
@@ -146,7 +146,7 @@ function pSubmit(){
 									<li><span class="name3">${list.b2_id }</span> <span class="age_rank">(${list.b2_age }-${list.b2_gd })</span></li>
 								</ul>
 								<div class="score_input_area">
-									<input type="text" placeholder="00" class="box_input cet_lay" id ="bScore" maxlength="2" onkeypress="onlyNumber();">
+									<input type="number" placeholder="00" class="box_input cet_lay" id ="bScore" maxlength="2" onkeypress="onlyNumber();">
 								</div>
 								</td>
 						</tr>

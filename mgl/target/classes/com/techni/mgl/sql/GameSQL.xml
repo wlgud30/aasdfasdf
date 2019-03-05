@@ -3,6 +3,7 @@
 <mapper namespace="mgl.Game">
 	<resultMap type="com.techni.mgl.domain.ClubMatchVO" id="ClubMatchVOMap">
 		<result column="MGL_CLUB_COURT_SU" property="c_court_su"/>
+		<result column="MGL_CLUB_IDX" property="c_idx"/>
 		<result column="MGL_CLUB_COURT_SA" property="c_court_sa"/>
 		<result column="MGL_CLUB_NM" property="c_nm"/>
 		<result column="MGL_CLUB_MATCH_ORDER" property="cm_order"/>
@@ -352,6 +353,18 @@
 			MID(MGL_CLUB_MATCH_IDX,2,4) =  #{ym}	
 		AND 
 			MGL_CLUB_IDX = #{c_idx}
+		ORDER BY MGL_CLUB_MATCH_DATE desc,MGL_CLUB_MATCH_END desc
+	</select>
+	<!-- 개인화면 포인트 -->
+	<select id="pointAllDetail" resultMap="ClubMatchVOMap">	
+		SELECT 
+			MGL_CLUB_IDX,MGL_CLUB_MATCH_END,MGL_CLUB_GIDX,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_DATE,MGL_CLUB_MATCH_IDX,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_APTN FROM MGL_CLUB_MATCH
+		WHERE 
+			MGL_USER_ID = #{u_id}
+		AND 
+			MGL_CLUB_MATCH_APTN IS NOT NULL	
+		AND 
+			MID(MGL_CLUB_MATCH_IDX,2,4) =  #{ym}	
 		ORDER BY MGL_CLUB_MATCH_DATE desc,MGL_CLUB_MATCH_END desc
 	</select>
 	<!-- 포인트 통합 -->

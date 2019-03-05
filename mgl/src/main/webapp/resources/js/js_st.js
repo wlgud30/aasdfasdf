@@ -371,44 +371,8 @@
         $(this).parent().addClass('noti_btn_is');
     });
 
-    //팝업(읽는 맴버,게스트등록,선수등록)
-    var popup_wrap = document.getElementsByClassName('popwin_wrap'),
-        popup_s = document.getElementsByClassName('popwin_size'),
-        pop_btn = $("[class*='popwin_btn']");
-
-    $(pop_btn).on('click', function() {
-        var pop_nb = $(this).attr('class').slice(-1) - 1,
-            $popup_nb = $(popup_s).eq(pop_nb),
-            $popup_wp = $($popup_nb).parent('.popwin_wrap');
-        if (!$($popup_nb).parent().is($popup_wp)) {
-            $($popup_nb).wrap('<div class="popwin_wrap view-popu"></div>');
-        }
-        $(window).on('load resize', function() {
-            var popup_cont_h = $($popup_nb).outerHeight(),
-                popup_scrollwrap = $($popup_nb).find('.scroll_wrap');
-            if (popup_scrollwrap.outerHeight() < $(window).height() / 2) {
-                $(popup_scrollwrap).css('height', 50 + 'vh');
-            }
-            $($popup_nb).css('top', 'calc(50% - ' + popup_cont_h / 2 + 'px)');
-        }).trigger('resize');
-        $('.view-popu').click(function() {
-            if ($(this).children().parent().is(popup_wrap)) {
-                $(this).children().unwrap();
-            }
-
-        });
-
-        $('.view-popu').find('.popwin_size').on('click', function(e) {
-            e.stopPropagation();
-        });
-
-        $(".view-popu .la-close, .close_popup").click(function() {
-            if ($($popup_nb).parent().is(popup_wrap)) {
-                $($popup_nb).unwrap();
-            }
-        });
-
-    });
+  
+    
 
     // 게시판 텍스트 말줄임	
     var notiBody = document.getElementsByClassName('notiBody');
@@ -500,3 +464,44 @@
         });
     }
 });
+//팝업(읽는 맴버,게스트등록,선수등록)
+function clickEv(){ 
+	  var popup_wrap = document.getElementsByClassName('popwin_wrap'),
+      popup_s = document.getElementsByClassName('popwin_size'),
+      pop_btn = $("[class*='popwin_btn']");
+	   $('.popwin_btn1').on('click', function() {
+ 	
+ 	 
+     var pop_nb = $(this).attr('class').slice(-1) - 1,
+         $popup_nb = $(popup_s).eq(pop_nb),
+         $popup_wp = $($popup_nb).parent('.popwin_wrap');
+     if (!$($popup_nb).parent().is($popup_wp)) {
+         $($popup_nb).wrap('<div class="popwin_wrap view-popu"></div>');
+     }
+     $(window).on('load resize', function() {
+         var popup_cont_h = $($popup_nb).outerHeight(),
+             popup_scrollwrap = $($popup_nb).find('.scroll_wrap');
+         if (popup_scrollwrap.outerHeight() < $(window).height() / 2) {
+             $(popup_scrollwrap).css('height', 50 + 'vh');
+         }
+         $($popup_nb).css('top', 'calc(50% - ' + popup_cont_h / 2 + 'px)');
+     }).trigger('resize');
+     $('.view-popu').click(function() {
+         if ($(this).children().parent().is(popup_wrap)) {
+             $(this).children().unwrap();
+         }
+
+     });
+
+     $('.view-popu').find('.popwin_size').on('click', function(e) {
+         e.stopPropagation();
+     });
+
+     $(".view-popu .la-close, .close_popup").click(function() {
+         if ($($popup_nb).parent().is(popup_wrap)) {
+             $($popup_nb).unwrap();
+         }
+     });
+
+ }); 
+}

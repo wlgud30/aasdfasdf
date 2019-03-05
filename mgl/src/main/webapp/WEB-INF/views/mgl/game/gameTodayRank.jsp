@@ -32,10 +32,9 @@
 			<div class="tab_btn_b_area">
 				<ul class="tab_btn_b">
 					<li><span
-						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임등록</span></li>
-					<li><span onClick="location.href='/Game/GameState.techni'">게임현황</span>
-						<span onClick="location.href='#'" class="sm_font">Live</span></li>
-					<li  class="active_tab"><span onClick="location.href='/Game/EndGame.techni '">종료게임</span></li>
+						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임짜기</span></li>
+					<li><span onClick="location.href='/Game/GameState.techni'">진행게임</span>
+					<li  class="active_tab"><span onClick="location.href='/Game/EndGame.techni '">끝난게임</span></li>
 				</ul>
 			</div>
 			<div class="tab_bt_area white_bg">

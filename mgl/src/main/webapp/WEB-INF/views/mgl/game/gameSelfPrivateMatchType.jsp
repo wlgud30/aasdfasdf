@@ -31,7 +31,7 @@
 					<c:forEach items="${list}" var="list">
 						<c:set var="i" value="${i+1}" />
 						<tr id="abcd_${i}">
-							<td class="no_td"><input type="text" class='no cet_lay'  name="no" id="no_${i}" value="${list.cs_k_num }"></td>
+							<td class="no_td"><input type="number" class='no cet_lay'  name="no" id="no_${i}" value="${list.cs_k_num }"></td>
 							<td class="ga_title"><input type="text" class='type'
 								placeholder="구분(종목) 입력" id="type_${i}" name="type" value="${list.cs_k_nm }"></td>
 							<td class="i_btn_td"><span id="ad_${i}" onclick="minus(this,${i})"
@@ -39,7 +39,7 @@
 						</tr>
 					</c:forEach>
 						<tr id="abcd_${i+1}">
-							<td class="no_td"><input type="text" class='no cet_lay'
+							<td class="no_td"><input type="number" class='no cet_lay'
 								value="${i+1}" name="no" id="no_${i+1}"></td>
 							<td class="ga_title"><input type="text" class='type'
 								placeholder="구분(종목) 입력" id="type_${i+1}" name="type"></td>
@@ -60,7 +60,7 @@
 					</thead>
 					<tbody id="trAppend">
 						<tr id="abcd_1">
-							<td class="no_td"><input type="text" class='no cet_lay'
+							<td class="no_td"><input type="number" class='no cet_lay'
 								value="1" name="no" id="no_1"></td>
 							<td class="ga_title"><input type="text" class='type'
 								placeholder="구분(종목) 입력" id="type_1" name="type"></td>

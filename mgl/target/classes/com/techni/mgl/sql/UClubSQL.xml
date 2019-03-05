@@ -31,6 +31,9 @@
 		<result column="MGL_PUSH_URL" property="push_url"/>
 		<result column="MGL_PUSH_MENT" property="push_ment"/>
 		<result column="MGL_PUSH_SEND" property="push_send"/>
+		<result column="MGL_CFIGHT_NM" property="cf_nm"/>
+		<result column="MGL_CFIGHT_TYPE_NM" property="cf_t_nm"/>
+		<result column="MGL_CFIGHT_START" property="cf_start"/>
 	</resultMap>
 	
 	<resultMap type="com.techni.mgl.domain.ClubVO" id="clubVO">
@@ -58,7 +61,7 @@
 						AND MGL_UCLUB_MNG != "가입대기" 
 						AND MGL_UCLUB_MNG != "탈퇴"
 				) B ,
-				(SELECT COUNT(mgl_user_id) as cu_cnt,mgl_club_idx
+				(SELECT COUNT(mgl_user_id) as cu_cnt,mgl_club_idx,MGL_UCLUB_GRADE_CD
 					FROM MGL_UCLUB  
 						WHERE MGL_UCLUB_MNG != "가입대기" 
 						AND MGL_UCLUB_MNG != "탈퇴"
@@ -605,6 +608,19 @@
 			MID(MGL_CLUB_MATCH_IDX,2,2) = date_format(now(),"%y")
 		GROUP BY c_mm
 	</select>
+	<!-- 개인화면 월별게임 -->
+	<select id="monthGame" resultMap="uClubVO">
+		SELECT 
+			sum(MGL_CLUB_MATCH_APTN)as cm_p_total,
+			COUNT(*) as c_gameC,MID(MGL_CLUB_MATCH_IDX,2,4) AS c_mm,
+			COUNT(case when mgl_club_match_win="승" then 1 end) as my_win,
+			COUNT(case when mgl_club_match_win="패" then 1 end) as my_lose
+		FROM 
+			MGL_CLUB_MATCH 
+		WHERE 
+			MGL_USER_ID = #{u_id}
+		GROUP BY c_mm
+	</select>
 	<!-- 클럽사용자 탈퇴 -->
 	<update id="clubOut">
 		UPDATE 
@@ -711,7 +727,16 @@
 		and 
 			mgl_club_idx = #{c_idx}
 	</update>
-	
+	<update id="userGd">
+		update 
+			mgl_uclub
+		set 
+			mgl_uclub_grade_cd = #{u_club_gd}
+		where 
+			mgl_user_id = #{u_id}
+		and 
+			mgl_club_idx = #{c_idx}
+	</update>
 	<!-- 개인순위 -->
 	<select id="todayRank" resultMap="uClubVO">
 	SELECT * FROM
@@ -952,6 +977,535 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 	ORDER BY END_COUNT DESC,WAIT_COUNT DESC,MGL_USER_NM
 	</select>
 	
+	<!-- 프로필화면 대회 순위 -->
+	<select id="competitionRank" resultMap="uClubVO">
+		SELECT 
+			* 
+		FROM 
+			(
+				select 
+					* 
+				from 
+					(
+						select 
+							t.* , (CASE @vjob WHEN t.MGL_CFIGHT_TYPE_IDX COLLATE utf8mb4_general_ci THEN (case @aptn when t.sum_aptn then @rownum:=@rownum ELSE @rownum:=@rownum+1 END) ELSE @rownum:=1 END) rnum,(@vjob:=t.MGL_CFIGHT_TYPE_IDX) vjob,(@aptn:=t.sum_aptn) aptn 
+						FROM
+							(
+								SELECT 
+									JA.MGL_CFIGHT_NM,JA.MGL_CFIGHT_START,ja.MGL_CFIGHT_TYPE_NM,jb.*,jc.MGL_CFIGHT_USER_A,jc.MGL_CFIGHT_USER_B,JD.a1_id,jd.a1_age,jd.a1_gd,JE.* 
+								FROM 
+									( 
+										SELECT 
+											MGL_CFIGHT_START,B.MGL_CFIGHT_IDX,A.MGL_CFIGHT_TYPE_IDX,MGL_CFIGHT_TYPE_NM,MGL_CFIGHT_NM 
+										FROM 
+											MGL_CFIGHT_TEAM A 
+										LEFT JOIN 
+											MGL_CFIGHT_TYPE B 
+										ON 
+											A.MGL_CFIGHT_TYPE_IDX=B.MGL_CFIGHT_TYPE_IDX 
+										JOIN 
+											MGL_CFIGHT C 
+										ON 
+											B.MGL_CFIGHT_IDX = C.MGL_CFIGHT_IDX 
+										WHERE 
+											MGL_CFIGHT_USER_A = #{u_id}
+										OR 
+											MGL_CFIGHT_USER_B = #{u_id}
+				 					) JA 
+				 		LEFT JOIN 
+				 			( 
+				 				SELECT 
+				 					MGL_CFIGHT_TYPE_IDX,MGL_CFIGHT_TEAM_IDX,ifnull(SUM(MGL_CFIGHT_APTN),0) as sum_aptn,MGL_CLUB_NM 
+								FROM 
+									MGL_CFIGHT_MATCH_END A 
+								LEFT JOIN 
+									MGL_CLUB B 
+								ON 
+									A.MGL_CLUB_IDX COLLATE utf8mb4_general_ci= B.MGL_CLUB_IDX GROUP BY MGL_CFIGHT_TEAM_IDX 
+							) JB 
+						ON 
+							JA.MGL_CFIGHT_TYPE_IDX = JB.MGL_CFIGHT_TYPE_IDX 
+						LEFT JOIN 
+							( 
+								SELECT 
+									MGL_CFIGHT_TEAM_IDX,MGL_CFIGHT_USER_A,MGL_CFIGHT_USER_B 
+								FROM 
+									MGL_CFIGHT_TEAM 
+							) JC 
+						ON 
+							JC.MGL_CFIGHT_TEAM_IDX = JB.MGL_CFIGHT_TEAM_IDX 
+						LEFT JOIN 
+							( 
+								SELECT 
+									MGL_CFIGHT_USER_ID,MGL_CFIGHT_USER_NM as a1_id,MGL_CFIGHT_USER_AGE as a1_age,MGL_CFIGHT_USER_GD as a1_gd 
+								FROM 
+									MGL_CFIGHT_USER 
+							) JD 
+						ON 
+							JC.MGL_CFIGHT_USER_A = JD.MGL_CFIGHT_USER_ID 
+						LEFT JOIN 
+							( 
+								SELECT 
+									MGL_CFIGHT_USER_ID,MGL_CFIGHT_USER_NM as b1_id,MGL_CFIGHT_USER_AGE as b1_age,MGL_CFIGHT_USER_GD as b1_gd 
+								FROM 
+									MGL_CFIGHT_USER 
+							) JE 
+						ON 
+							JC.MGL_CFIGHT_USER_B = JE.MGL_CFIGHT_USER_ID 
+						group by 
+							jc.mgl_cfight_team_idx 
+						ORDER BY 
+							JA.MGL_CFIGHT_TYPE_IDX ,sum_aptn desc
+						) t, 
+						(
+							SELECT 
+								@vjob:='',@aptn:=0, @rownum:=0 
+							FROM 
+								DUAL
+						) b
+				 	ORDER BY 
+				 		t.MGL_CFIGHT_TYPE_IDX, t.sum_aptn desc
+					)C 
+						WHERE 
+							MGL_CFIGHT_USER_A = #{u_id} or MGL_CFIGHT_USER_B = #{u_id}
+				)A 
+			LEFT JOIN 
+				(
+					select 
+						count(mgl_cfight_type_idx) AS team_count,a.* 
+					from
+						(
+							SELECT 
+								MGL_CFIGHT_TYPE_IDX,MGL_CFIGHT_TEAM_IDX
+							FROM 
+								MGL_CFIGHT_MATCH_END 
+							GROUP BY 
+								MGL_CFIGHT_TEAM_IDX
+						) a 
+					group by 
+						mgl_cfight_type_idx
+				)B
+			ON 
+				A.MGL_CFIGHT_TYPE_IDX = B.MGL_CFIGHT_TYPE_IDX
+	</select>
+	
+	<!-- 전국에서 같은급수 랭킹 -->
+	<select id="sameAllGdRank" resultMap="uClubVO">
+		SELECT 
+			A.*,(case @aptn when a.sum_aptn then @rownum:=@rownum ELSE @rownum:=@rownum+1 END) RNUM,(@aptn:=A.sum_aptn) aptn 
+		FROM
+			(
+				SELECT 
+					TA.U_GD,TA.MGL_USER_ID,TA.MGL_UCLUB_GRADE_CD,TA.MGL_CLUB_IDX,ifnull(sum(sum_aptn+sum_aptn2+sum_aptn3),0) as sum_aptn 
+				FROM 
+					(
+						SELECT 
+							B.MGL_UCLUB_GRADE_CD AS U_GD,B.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD,MGL_CLUB_IDX,ifnull(SUM(MGL_CLUB_MATCH_APTN),0) AS sum_aptn 
+						FROM 
+							(
+								SELECT 
+									MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_CLUB_MATCH_APTN,MGL_CLUB_MATCH_IDX
+								FROM 
+									MGL_CLUB_MATCH
+							) A
+						RIGHT join
+							(
+								SELECT 
+									A.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD
+								FROM 
+									MGL_USER A 
+								LEFT JOIN 
+									MGL_UCLUB B 
+								ON 
+									A.MGL_REPRESENT_CLUB = B.MGL_CLUB_IDX 
+								AND 
+									A.MGL_USER_ID = B.MGL_USER_ID
+								RIGHT JOIN 
+									(
+										SELECT 
+											a.MGL_USER_ID,b.mgl_UCLUB_GRADE_CD 
+										FROM 
+											(
+												SELECT 
+													* 
+												FROM 
+													MGL_USER 
+												WHERE 
+													MGL_USER_ID = #{u_id}
+											) a 
+										LEFT JOIN 
+											mgl_uclub b 
+										ON 
+											a.mgl_represent_club = b.mgl_club_idx 
+										AND 
+											A.MGL_USER_ID  = B.MGL_USER_ID
+									) C
+								ON 
+									B.MGL_UCLUB_GRADE_CD = C.MGL_UCLUB_GRADE_CD
+							) B
+						ON 
+							A.MGL_USER_ID = B.MGL_USER_ID
+						GROUP BY 
+							B.MGL_USER_ID
+					) TA 
+				LEFT JOIN
+					(
+						select 
+							mgl_cfight_user_id as MGL_USER_ID,mgl_cfight_user_gd ,mgl_club_idx,ifnull(sum(mgl_cfight_aptn),0) as sum_aptn2
+						from 
+							mgl_cfight_match_end
+						group by mgl_cfight_user_id
+					) TB
+				ON 
+					TA.MGL_USER_ID = TB.MGL_USER_ID
+				LEFT JOIN
+				(
+					select 
+						a.mgl_cself_user_id as MGL_USER_ID,a.mgl_cself_user_gd,mgl_club_idx,ifnull(sum(mgl_cself_aptn),0) as sum_aptn3 
+					from 
+						mgl_cself_match_end a 
+					left join 
+						mgl_cself b
+					on 
+						a.mgl_cself_idx = b.mgl_cself_idx
+					group by 
+						mgl_cself_user_id
+				) TC
+				ON 
+					TB.MGL_USER_ID = TC.MGL_USER_ID
+				WHERE 
+					MGL_UCLUB_GRADE_CD = U_GD
+				GROUP BY 
+					TA.MGL_USER_ID
+				order by 
+					sum_aptn desc
+			)A,
+			(
+				SELECT 
+					@aptn:=0,@rownum:=0
+			) B
+	</select>
+	<!-- 전국에서 같은급수,같은성별 랭킹 -->
+	<select id="sameSexGdRank" resultMap="uClubVO">
+		SELECT 
+			A.*,(case @aptn when a.sum_aptn then @rownum:=@rownum ELSE @rownum:=@rownum+1 END) RNUM,(@aptn:=A.sum_aptn) aptn 
+		FROM
+			(
+				SELECT 
+					TA.U_GD,TA.MGL_USER_ID,TA.MGL_UCLUB_GRADE_CD,TA.MGL_CLUB_IDX,ifnull(sum(sum_aptn+sum_aptn2+sum_aptn3),0) as sum_aptn 
+				FROM 
+					(
+						SELECT 
+							B.MGL_UCLUB_GRADE_CD AS U_GD,B.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD,MGL_CLUB_IDX,ifnull(SUM(MGL_CLUB_MATCH_APTN),0) AS sum_aptn 
+						FROM 
+							(
+								SELECT 
+									MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_CLUB_MATCH_APTN,MGL_CLUB_MATCH_IDX
+								FROM 
+									MGL_CLUB_MATCH
+							) A
+						RIGHT join
+							(
+								SELECT 
+									A.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD
+								FROM 
+									MGL_USER A 
+								LEFT JOIN 
+									MGL_UCLUB B 
+								ON 
+									A.MGL_REPRESENT_CLUB = B.MGL_CLUB_IDX 
+								AND 
+									A.MGL_USER_ID = B.MGL_USER_ID
+								LEFT JOIN 
+									(
+										SELECT 
+											MGL_USER_SEX,a.MGL_USER_ID,b.mgl_UCLUB_GRADE_CD 
+										FROM 
+											(
+												SELECT 
+													* 
+												FROM 
+													MGL_USER 
+												WHERE 
+													MGL_USER_ID = #{u_id}
+											) a 
+										LEFT JOIN 
+											mgl_uclub b 
+										ON 
+											a.mgl_represent_club = b.mgl_club_idx 
+										AND 
+											A.MGL_USER_ID  = B.MGL_USER_ID
+									) C
+								ON 
+									A.MGL_USER_SEX = C.MGL_USER_SEX
+								WHERE 
+									A.MGL_USER_SEX = C.MGL_USER_SEX
+								AND 
+									B.MGL_UCLUB_GRADE_CD = C.MGL_UCLUB_GRADE_CD
+							) B
+						ON 
+						
+							A.MGL_USER_ID = B.MGL_USER_ID
+						GROUP BY 
+							B.MGL_USER_ID
+					) TA 
+					LEFT JOIN
+						(
+							select 
+								mgl_cfight_user_id as MGL_USER_ID,mgl_cfight_user_gd ,mgl_club_idx,ifnull(sum(mgl_cfight_aptn),0) as sum_aptn2 
+							from 
+								mgl_cfight_match_end
+							group by 
+								mgl_cfight_user_id
+						) TB
+					ON 
+						TA.MGL_USER_ID = TB.MGL_USER_ID
+					LEFT JOIN
+						(
+							select 
+								a.mgl_cself_user_id as MGL_USER_ID,a.mgl_cself_user_gd,mgl_club_idx,ifnull(sum(mgl_cself_aptn),0) as sum_aptn3 
+							from 
+								mgl_cself_match_end a 
+							left join 
+								mgl_cself b
+							on 
+								a.mgl_cself_idx = b.mgl_cself_idx
+							group by 
+								mgl_cself_user_id
+						) TC
+					ON 
+						TB.MGL_USER_ID = TC.MGL_USER_ID
+					WHERE 
+						MGL_UCLUB_GRADE_CD = U_GD
+					GROUP BY 
+						TA.MGL_USER_ID
+					order by 
+						sum_aptn desc
+				)A,
+				(
+					SELECT 
+						@aptn:=0,@rownum:=0
+				) B
+	</select>
+	<!-- 전국에서 같은급수,같은연령대 랭킹 -->
+	<select id="sameAgeGdRank" resultMap="uClubVO">
+		SELECT 
+			A.*,(case @aptn when a.sum_aptn then @rownum:=@rownum ELSE @rownum:=@rownum+1 END) RNUM,(@aptn:=A.sum_aptn) aptn 
+		FROM
+			(
+				SELECT 
+					TA.U_GD,TA.MGL_USER_ID,TA.MGL_UCLUB_GRADE_CD,TA.MGL_CLUB_IDX,ifnull(sum(sum_aptn+sum_aptn2+sum_aptn3),0) as sum_aptn 
+				FROM 
+					(
+						SELECT 
+							B.MGL_UCLUB_GRADE_CD AS U_GD,B.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD,MGL_CLUB_IDX,ifnull(SUM(MGL_CLUB_MATCH_APTN),0) AS sum_aptn 
+						FROM 
+							(
+								SELECT 
+									MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_CLUB_MATCH_APTN,MGL_CLUB_MATCH_IDX
+								FROM MGL_CLUB_MATCH
+							) A
+						RIGHT join
+							(
+								SELECT 
+									A.MGL_USER_ID,B.MGL_UCLUB_GRADE_CD,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") ,u_age
+								FROM 
+									MGL_USER A 
+								LEFT JOIN 
+									MGL_UCLUB B 
+								ON 
+									A.MGL_REPRESENT_CLUB = B.MGL_CLUB_IDX 
+								AND 
+									A.MGL_USER_ID = B.MGL_USER_ID
+								right JOIN 
+									(
+										SELECT 
+											concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대")AS u_age,MGL_USER_SEX,a.MGL_USER_ID,b.mgl_UCLUB_GRADE_CD 
+										FROM 
+											(
+												SELECT 
+													* 
+												FROM 
+													MGL_USER 
+												WHERE 
+													MGL_USER_ID = #{u_id}
+											) a 
+										LEFT JOIN 
+											mgl_uclub b 
+										ON 
+											a.mgl_represent_club = b.mgl_club_idx 
+										AND 
+											A.MGL_USER_ID  = B.MGL_USER_ID
+									) C
+								ON 
+									concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대")  = u_age
+								WHERE 
+									B.MGL_UCLUB_GRADE_CD = C.MGL_UCLUB_GRADE_CD
+							) B
+						ON 
+							A.MGL_USER_ID = B.MGL_USER_ID
+						GROUP BY 
+							B.MGL_USER_ID
+					) TA 
+					LEFT JOIN
+						(
+							select 
+								mgl_cfight_user_id as MGL_USER_ID,mgl_cfight_user_gd ,mgl_club_idx,ifnull(sum(mgl_cfight_aptn),0) as sum_aptn2 
+							from 
+								mgl_cfight_match_end
+							group by 
+								mgl_cfight_user_id
+						) TB
+					ON 
+						TA.MGL_USER_ID = TB.MGL_USER_ID
+					LEFT JOIN
+						(
+							select 
+								a.mgl_cself_user_id as MGL_USER_ID,a.mgl_cself_user_gd,mgl_club_idx,ifnull(sum(mgl_cself_aptn),0) as sum_aptn3 
+							from 
+								mgl_cself_match_end a 
+							left join 
+								mgl_cself b
+							on 
+								a.mgl_cself_idx = b.mgl_cself_idx
+							group by 
+								mgl_cself_user_id
+						) TC
+					ON 
+						TB.MGL_USER_ID = TC.MGL_USER_ID
+					WHERE 
+						MGL_UCLUB_GRADE_CD = U_GD
+					GROUP BY 
+						TA.MGL_USER_ID
+					order by 
+						sum_aptn desc
+			)A,
+			(
+				SELECT 
+					@aptn:=0,@rownum:=0
+			) B
+		
+	</select>
+	<!-- 클럽에서 같은급수 랭킹 -->
+	<select id="sameClubGdRank" resultMap="uClubVO">
+		SELECT 
+			A.*,(case @aptn when a.sum_aptn then @rownum:=@rownum ELSE @rownum:=@rownum+1 END) RNUM,(@aptn:=A.sum_aptn) aptn 
+		FROM
+			(
+				SELECT 
+					MGL_CLUB_NM,TA.U_GD,TA.MGL_USER_ID,TA.MGL_UCLUB_GRADE_CD,TA.MGL_CLUB_IDX,ifnull(sum(sum_aptn+sum_aptn2+sum_aptn3),0) as sum_aptn 
+				FROM 
+					(
+						SELECT 
+							MGL_CLUB_NM,B.MGL_UCLUB_GRADE_CD AS U_GD,A.MGL_USER_ID,A.MGL_UCLUB_GRADE_CD,MGL_CLUB_IDX,ifnull(SUM(MGL_CLUB_MATCH_APTN),0) AS sum_aptn 
+						FROM 
+							(
+								SELECT 
+									MGL_CLUB_NM,A.MGL_CLUB_IDX,A.MGL_USER_ID,A.MGL_UCLUB_GRADE_CD,MGL_CLUB_MATCH_APTN,MGL_CLUB_MATCH_IDX
+								FROM 
+									(
+										SELECT 
+											* 
+										FROM 
+											MGL_UCLUB A 
+										RIGHT JOIN 
+											(
+												SELECT 
+													MGL_REPRESENT_CLUB,MGL_CLUB_NM
+												FROM 
+													MGL_USER A 
+												RIGHT JOIN 
+													MGL_CLUB B 
+												ON 
+													MGL_REPRESENT_CLUB = MGL_CLUB_IDX
+												WHERE 
+													MGL_USER_ID = #{u_id}
+											) B 
+										ON 
+											A.MGL_CLUB_IDX = B.MGL_REPRESENT_CLUB
+									) A
+								LEFT JOIN 
+									(
+										SELECT 
+											* 
+										FROM 
+											MGL_CLUB_MATCH
+									) B
+								ON 
+									A.MGL_CLUB_IDX = B.MGL_CLUB_IDX
+								AND 
+									A.MGL_USER_ID = B.MGL_USER_ID
+							) A
+						LEFT join
+							(
+								SELECT 
+									MGL_REPRESENT_CLUB,AA.MGL_USER_ID,MGL_UCLUB_GRADE_CD 
+								FROM 
+									(
+										SELECT 
+											MGL_USER_ID,MGL_REPRESENT_CLUB 
+										FROM 
+											MGL_USER 
+										WHERE 
+											MGL_USER_ID=#{u_id}
+									) AA 
+								LEFT JOIN 
+									(
+										SELECT 
+											* 
+										FROM 
+											MGL_UCLUB 
+										WHERE 
+											MGL_USER_ID = #{u_id}
+									) BB 
+								ON 
+									AA.MGL_REPRESENT_CLUB=BB.MGL_CLUB_IDX 
+								WHERE 
+									AA.MGL_USER_ID = #{u_id}
+							)b 
+						ON 
+							A.MGL_CLUB_IDX = B.MGL_REPRESENT_CLUB
+						GROUP BY 
+							A.MGL_USER_ID
+					) TA 
+				LEFT JOIN
+					(
+						select 
+							mgl_cfight_user_id as MGL_USER_ID,mgl_cfight_user_gd ,mgl_club_idx,ifnull(sum(mgl_cfight_aptn),0) as sum_aptn2 
+						from 
+							mgl_cfight_match_end
+						group by 
+							mgl_cfight_user_id
+					) TB
+				ON 
+					TA.MGL_USER_ID = TB.MGL_USER_ID
+				LEFT JOIN
+					(
+						select 
+							a.mgl_cself_user_id as MGL_USER_ID,a.mgl_cself_user_gd,mgl_club_idx,ifnull(sum(mgl_cself_aptn),0) as sum_aptn3 
+						from 
+							mgl_cself_match_end a 
+						left join 
+							mgl_cself b
+						on 
+							a.mgl_cself_idx = b.mgl_cself_idx
+						group by 
+							mgl_cself_user_id
+					) TC
+				ON 
+					TB.MGL_USER_ID = TC.MGL_USER_ID
+				WHERE 
+					MGL_UCLUB_GRADE_CD = U_GD
+				GROUP BY 
+					TA.MGL_USER_ID
+				order by 
+					sum_aptn desc
+			)A,
+			(
+				SELECT 
+					@aptn:=0,@rownum:=0
+			) B
+	</select>
 	
 	<!-- 
 	 ( SELECT ifnull(END_COUNT,0)as END_COUNT,WAIT_COUNT,D.MGL_CLUB_IDX,MGL_USER_ID,b.mgl_uclub_grade_cd,left(now(),4)-left(MGL_USER_BIRTH,4)+1 

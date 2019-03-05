@@ -174,11 +174,11 @@ function onlyNumber(){
 					<tr>
 						<td>
 							<i class="icon-f i_font icon-mobile"></i>
-							<input type="text" id="phone1" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,0,3) }" onkeypress="onlyNumber();" maxlength="3">
+							<input type="number" id="phone1" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,0,3) }" onkeypress="onlyNumber();" maxlength="3">
 							<span class="line_i"></span>
-							<input type="text" id="phone2" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,3,7) }" onkeypress="onlyNumber();" maxlength="4" >
+							<input type="number" id="phone2" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,3,7) }" onkeypress="onlyNumber();" maxlength="4" >
 							<span class="line_i"></span>
-							<input type="text" id="phone3" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,7,11) }" onkeypress="onlyNumber();" maxlength="4" >
+							<input type="number" id="phone3" name="u_tel" class="phone_input"  value = "${fn:substring(uvo.u_tel,7,11) }" onkeypress="onlyNumber();" maxlength="4" >
 						</td>
 						<td class="w10"><i class="icon-f i_font icon-class"></i><select id="gd" name="u_club_gd">
 									<option value="클럽 급수">클럽 급수</option>

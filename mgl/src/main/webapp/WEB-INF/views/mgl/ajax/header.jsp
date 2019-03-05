@@ -11,10 +11,10 @@
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="msapplication-TileImage" content="/resources/img/favicon_144.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/resources/css/css.css?ver8" type="text/css" />
+<link rel="stylesheet" href="/resources/css/css.css?ver1" type="text/css" />
 <link rel="stylesheet" href="/resources/css/swiper.css">
 <script src="/resources/js/jquery-3.3.1.min.js"></script>
-<script src="/resources/js/js_st.js?ver2"></script>
+<script src="/resources/js/js_st.js?ver8"></script>
 <script src="/resources/js/jquery.form.min.js"></script>
 <script src="/resources/js/Navi.js?ver2"></script>
 <script src="/resources/js/sweetalert.min.js?ver2"></script>

@@ -246,7 +246,13 @@ public class MemberController {
 			System.out.println(map);
 			session.setAttribute("login", mvo);
 			session.setAttribute("c_idx", c_idx);
-			
+			if(mService.todayLogin(m_id) == 0) {
+				int res = mService.todayLoginInsert(m_id);
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
 			return "redirect:/Game/GameState.techni";
 			
 		}else{
@@ -271,7 +277,13 @@ public class MemberController {
 			System.out.println("로그인");
 			session.setAttribute("login", mvo);
 			session.setAttribute("c_idx", c_idx);
-			
+			if(mService.todayLogin(m_id) == 0) {
+				int res = mService.todayLoginInsert(m_id);
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
 			return "redirect:/Board/BoardList.techni";
 			
 		}else{

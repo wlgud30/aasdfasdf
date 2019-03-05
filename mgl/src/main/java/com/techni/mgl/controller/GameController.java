@@ -1527,7 +1527,7 @@ public class GameController {
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		String cs_idx = (String) session.getAttribute("cs_idx");
 
-		if(kind.isEmpty()) {
+		if(kind == null) {
 			kind = "팀리그전";
 		}
 		

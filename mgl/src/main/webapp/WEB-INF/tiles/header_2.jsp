@@ -175,6 +175,12 @@ $(document).ready(function(){
 		$("#sub_title_2").text("");
 		$("#sub_title_2").removeAttr("class");
 		$("#sub_title_3").removeAttr("class");
+	}else if(lo.includes("/UClub/UClubMemberDetail.techni")){
+		$("#sub_title").text("내 정보");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick='history.back()'></div>");
 	}
 });
 function game_kind(){

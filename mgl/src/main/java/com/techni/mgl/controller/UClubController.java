@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.spi.LoggerFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,10 +43,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.techni.mgl.domain.BoardVO;
+import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.dto.UClubViewDTO;
+import com.techni.mgl.service.GameService;
 import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
@@ -63,6 +64,8 @@ public class UClubController {
 	public UClubService ucService;
 	@Autowired
 	public MemberService mService;
+	@Autowired
+	public GameService gService;
 
 	@RequestMapping(value = "/upload/uploadForm.techni", method = RequestMethod.GET)
 	public void uplodaForm() {
@@ -863,17 +866,127 @@ public class UClubController {
 		map.put("c_idx", c_idx);
 		map.put("u_id", u_id);
 		map.put("u_pw", u_pw);
-
+		
 		UClubVO uvo = ucService.selectOne(map);
 		List<UClubVO> list = ucService.gameCount(map);
-
-		System.out.println(uvo);
-
+		List<ClubVO> list2 = ucService.selectAll(mvo.getM_id());
+		List<UClubVO> list3 = ucService.monthGame(u_id);
+		List<UClubVO> list4 = ucService.competitionRank(u_id);
+		List<UClubVO> allList = ucService.sameAllGdRank(u_id);
+		List<UClubVO> allAgeList = ucService.sameAgeGdRank(u_id);
+		List<UClubVO> allSexList = ucService.sameSexGdRank(u_id);
+		List<UClubVO> clubList = ucService.sameClubGdRank(u_id);
+		
+		List<UClubVO> sList = new ArrayList<UClubVO>();
+		
+		for (UClubVO i : allList) {
+			if (i.getU_id().equals(u_id)) {
+				i.setTeam_count(allList.size());
+				sList.add(i);
+			}
+		}
+		for (UClubVO i : allAgeList) {
+			if (i.getU_id().equals(u_id)) {
+				i.setTeam_count(allAgeList.size());
+				sList.add(i);
+			}
+		}
+		for (UClubVO i : allSexList) {
+			if (i.getU_id().equals(u_id)) {
+				i.setTeam_count(allSexList.size());
+				sList.add(i);
+			}
+		}
+		for (UClubVO i : clubList) {
+			if (i.getU_id().equals(u_id)) {
+				i.setTeam_count(clubList.size());
+				sList.add(i);
+			}
+		}
+				
 		model.addAttribute("uvo", uvo);
 		model.addAttribute("list", list);
-		return "uclub/uClubMemberDetail.page";
+		model.addAttribute("list2",list2);
+		model.addAttribute("list3",list3);
+		model.addAttribute("list4",list4);
+		model.addAttribute("list5",sList);
+		System.out.println(sList);
+		
+		return "uclub/uClubMemberDetail.pag";
 	}
-
+	//클럽 등급 변경
+	@RequestMapping("/UClub/gdChange.techni")
+	@ResponseBody
+	public Map<String,Object> gdCahnge(HttpSession session,@RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		JSONParser parser = new JSONParser();
+		JSONObject json2 = (JSONObject) parser.parse(json);
+		
+		String c_idx = (String) json2.get("c_idx");
+		String u_club_gd = (String) json2.get("u_club_gd");
+		
+		Map<String,String> map2 = new HashMap<String,String>();
+		map2.put("c_idx", c_idx);
+		map2.put("u_id", mvo.getM_id());
+		map2.put("u_club_gd",u_club_gd);
+		
+		int cnt = ucService.userGd(map2);
+	
+		map.put("cnt", cnt);
+		
+		return map;
+	}
+	//월별 게임
+	@RequestMapping("/UClub/UClubMemberDetail2.techni")
+	@ResponseBody
+	public Map<String,Object> UClubMemberDetail2(HttpSession session,@RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		JSONParser parser = new JSONParser();
+		JSONObject json2 = (JSONObject) parser.parse(json);
+		
+		String kind = (String) json2.get("kind");
+		if(kind.equals("월별디테일")) {
+			String ym = (String) json2.get("ym");
+			
+			Map<String,String> map2 = new HashMap<String,String>();
+			map2.put("u_id", mvo.getM_id());
+			map2.put("ym",ym);
+				
+			List<ClubMatchVO> list = gService.pointAllDetail(map2);
+			
+			map.put("list",list);
+			
+			if(list.isEmpty()){
+				map.put("cnt",0);
+			}else {
+				map.put("cnt",1);
+			}
+		}else if(kind.equals("매치디테일")) {
+			String c_gidx = (String) json2.get("c_gidx");
+			String c_idx = (String) json2.get("c_idx");
+			
+			Map<String,String> map2 = new HashMap<String,String>();
+			map2.put("u_id", mvo.getM_id());
+			map2.put("c_gidx",c_gidx);
+			map2.put("c_idx",c_idx);
+				
+			List<ClubMatchVO> list = gService.gameResult(map2);
+			
+			map.put("list",list);
+			
+			if(list.isEmpty()){
+				map.put("cnt",0);
+			}else {
+				map.put("cnt",1);
+			}
+		}
+		return map;
+		
+	}
 	// 회원정보 > 회원정보 수정폼 호출
 	@RequestMapping("/UClub/UClubMemberUpdate.techni")
 	public String getUClubMemberUpdateForm(HttpSession session, Model model) {

@@ -100,7 +100,8 @@
 						NULL,
 						#{m_push},
 						NULL,
-						NULL
+						NULL,
+						"N"
 				)	
 	</insert>
 	

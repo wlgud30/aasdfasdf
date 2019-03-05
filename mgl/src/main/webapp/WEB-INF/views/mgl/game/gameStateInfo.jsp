@@ -256,10 +256,9 @@
 			<div class="tab_btn_b_area">
 				<ul class="tab_btn_b">
 					<li><span
-						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임등록</span></li>
-					<li class="active_tab"><span onClick="location.href='/Game/GameState.techni'">게임현황</span>
-						<span onClick="location.href='#'" class="sm_font">Live</span></li>
-					<li><span onClick="location.href='/Game/EndGame.techni '">종료게임</span></li>
+						onClick="location.href='/UClub/GamePrivateStateInfo.techni'">게임짜기</span></li>
+					<li class="active_tab"><span onClick="location.href='/Game/GameState.techni'">진행게임</span>
+					<li><span onClick="location.href='/Game/EndGame.techni '">끝난게임</span></li>
 				</ul>
 			</div>
 			
@@ -326,7 +325,6 @@
 								<td class="ga_btn_s">
 										<span class="line_btn vet_btn sub1_color" onclick="gameEnd('${list.c_gidx}','${list.cm_a1_id }','${list.cm_a2_id }','${list.cm_b1_id }','${list.cm_b2_id }','${list.cm_order }')">점수</span>
 										<span class="line_btn vet_btn" onclick="deleteW('${list.c_gidx }','${list.cm_a1_id}','${list.cm_a2_id}','${list.cm_b1_id}','${list.cm_b2_id}')">취소</span>
-
 								</td>
 							</tr>
 						</c:forEach>
