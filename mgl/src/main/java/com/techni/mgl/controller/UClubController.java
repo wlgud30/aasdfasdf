@@ -2,6 +2,7 @@ package com.techni.mgl.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -19,7 +20,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,6 +56,7 @@ import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.dto.UClubViewDTO;
+import com.techni.mgl.service.ClubService;
 import com.techni.mgl.service.GameService;
 import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
@@ -64,6 +73,8 @@ public class UClubController {
 	public UClubService ucService;
 	@Autowired
 	public MemberService mService;
+	@Autowired
+	public ClubService cService;
 	@Autowired
 	public GameService gService;
 
@@ -190,7 +201,11 @@ public class UClubController {
 			model.addAttribute("nm", mvo.getM_nm());
 			model.addAttribute("pw",mvo.getM_pw());
 			MemberVO mvo2 = mService.represent(mvo.getM_id());
-			model.addAttribute("represent", mvo2.getM_represent());
+			if(mvo2 == null) {
+				
+			}else {
+				model.addAttribute("represent", mvo2.getM_represent());
+			}
 
 			return "uclub/uClubList.page";
 
@@ -247,7 +262,7 @@ public class UClubController {
 
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 
-		UClubVO uVO = new UClubVO(c_idx, mvo.getM_id(), mvo.getM_club_gd());
+		UClubVO uVO = new UClubVO(c_idx, mvo.getM_id(), mvo.getM_club_gd(),"가입대기");
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("c_idx", c_idx);
@@ -256,34 +271,14 @@ public class UClubController {
 		int res = ucService.user_insert(uVO);
 		int res1 = ucService.uc_seq();
 		if (res > 0 && res1 > 0) {
-			model.addAttribute("가입신청", "클럽(모임) 가입 신청이 완료되었습니다." );
-			List<ClubVO> list = ucService.selectAll(mvo.getM_id());
-			model.addAttribute("list", list);
-			model.addAttribute("u_push", u_push);
-			model.addAttribute("u_nm", mvo.getM_nm());
-			model.addAttribute("c_idx", c_idx);
-			
-			MemberController mc = new MemberController();
-			MultiValueMap<String,String> param1 = new LinkedMultiValueMap<>();
-			
-				param1.clear();
-				param1.add("sendtype", "push");
-				param1.add("appcode", "techni_mglb");
-				param1.add("notitype", "noti");
-				param1.add("oscode", "a");
-				param1.add("token", u_push);
-				param1.add("title", "MGL");
-				param1.add("desc", mvo.getM_nm()+"님이 가입을 신청하였습니다.");
-				param1.add("dataval", "http://mgl.techni.co.kr:8081/UClub/UclubMUserList.techni?c_idx="+c_idx);
-				mc.token(param1);
-				Map<String,String> map2 = new HashMap<String,String>();
-				map2.put("push_id", u_push);
-				map2.put("push_ment", mvo.getM_nm()+"님이 가입을 신청하였습니다.");
-				map2.put("push_url", "http://mgl.techni.co.kr:8081/UClub/UclubMUserList.techni?c_idx="+c_idx);
-				map2.put("u_nm", mvo.getM_nm());
-				ucService.pushInsert(map2);
-			
-			return "uclub/uClubList";
+			Map<String,Object> param = new HashMap<String,Object>();
+			param.put("c_idx", c_idx);
+			param.put("al_division", "가입신청");
+			param.put("al_url", "/UClub/UclubMUserList.techni");
+			ClubVO cvo = cService.selectOneClub(c_idx);
+			param.put("u_id", cvo.getU_mid());
+			mService.alarmInsert(session,param);
+			return "uclub/uClubList.page";
 		} else {
 			redirect.addAttribute("가입신청", "죄송합니다. 다시 시도해주세요.");
 			redirect.addAttribute("c_idx", c_idx);
@@ -435,18 +430,10 @@ public class UClubController {
 		String u_id = (String) json2.get("u_id");
 		String c_idx = (String) json2.get("c_idx");
 		String uc_mng = (String) json2.get("uc_mng");
-		String push_id = (String) json2.get("push_id");
-		String u_nm = (String) json2.get("u_nm");
 
 		Map<Object, Object> map1 = new HashMap<Object, Object>();
 
 		Map<String, String> map = new HashMap<String, String>();
-		Map<String, String> map2 = new HashMap<String, String>();
-		map2.put("push_id", push_id);
-		map2.put("push_ment", u_nm+"님이 가입을 신청하였습니다.");
-		map2.put("push_url", "http://mgl.techni.co.kr:8081/UClub/UclubMUserList.techni?c_idx="+c_idx);
-		map2.put("u_nm", u_nm);
-		ucService.pushInsert(map2);
 		map.put("u_id", u_id);
 		map.put("c_idx", c_idx);
 		map.put("uc_mng", uc_mng);
@@ -455,7 +442,16 @@ public class UClubController {
 
 		if (res > 0) {
 			map1.put("cnt", 1);
-
+			Map<String,Object> param = new HashMap<String,Object>();
+			param.put("c_idx", c_idx);
+			param.put("al_division", "가입승인");
+			param.put("al_url", "/Board/BoardList.techni");
+			param.put("u_id", u_id);
+			mService.alarmInsert(session, param);
+			int res2 = ucService.representCheck(u_id);
+			if(res2 == 0) {
+				mService.clubUpdate2(map);
+			}
 			return map1;
 
 		} else {
@@ -692,7 +688,7 @@ public class UClubController {
 	// 비교
 	@RequestMapping(value = "/UClub/UClubMemberCompareTo.techni")
 	public String getUClubMemberCompareTo(HttpSession session, Model model, @RequestParam String total,
-			@RequestParam String my_rank, @RequestParam String you_rank, @RequestParam String you_id, @RequestParam String ym) {
+			@RequestParam String my_rank, @RequestParam String you_rank, @RequestParam String you_id, @RequestParam String ym,@RequestParam String ymd) {
 
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 
@@ -710,15 +706,29 @@ public class UClubController {
 		UClubVO uvo = ucService.meAndYou(map);
 		
 		String  m = ym.substring(2);
-		System.out.println(m);
+		 
+		 map.put("c_idx", c_idx);
+		 map.put("ymd", ymd);
+		 
+		 List<ClubMatchVO> list = gService.getGidx(map);
+		 List<List<ClubMatchVO>> list2 = new ArrayList<List<ClubMatchVO>>();
+		 System.out.println("list  :  "+list);
+		 for(ClubMatchVO cmvo : list){
+			String j = cmvo.getC_gidx();
+			map.remove("c_gidx");
+			map.put("c_gidx", j);
+			list2.add(gService.gameResult(map));
+		 }
 		
 		model.addAttribute("m", m);
 		model.addAttribute("uvo", uvo);
 		model.addAttribute("you_rank", you_rank);
 		model.addAttribute("my_rank", my_rank);
 		model.addAttribute("total", total);
+		model.addAttribute("list2", list2);
+		model.addAttribute("list", list);
 
-		return "uclub/uClubMemberCompareTo";
+		return "uclub/uClubMemberCompareTo.pag";
 	}
 	//유저업데이트
 	@RequestMapping("/UClub/UserUpdat.techni")
@@ -912,7 +922,7 @@ public class UClubController {
 		model.addAttribute("list5",sList);
 		System.out.println(sList);
 		
-		return "uclub/uClubMemberDetail.pag";
+		return "uclub/uClubMemberDetail.page";
 	}
 	//클럽 등급 변경
 	@RequestMapping("/UClub/gdChange.techni")
@@ -1010,7 +1020,7 @@ public class UClubController {
 
 		model.addAttribute("uvo", uvo);
 
-		return "uclub/UClubMemberUpdate.page";
+		return "uclub/UClubMemberUpdate.pag";
 	}
 	//개인리그등록 화면
 	@RequestMapping("/UClub/GamePrivateStateInfo.techni")
@@ -1170,10 +1180,202 @@ public class UClubController {
 		map2.put("u_id", mvo.getM_id());
 		
 		int cnt = mService.clubUpdate2(map2);
+		if(cnt>0) {
+			session.setAttribute("represent_idx", c_idx);
+		}
 	
 		
 		map.put("cnt", cnt);
 		
 		return map;
 	}
+	@RequestMapping("/UClub/excelJoin.techni")
+	public String excelJoin(@RequestParam String c_idx ,Model model) {
+		
+		List<MemberVO> list = new ArrayList<MemberVO>();
+		
+		FileInputStream fis = null;
+		XSSFWorkbook workbook = null;
+		String filePath="C:\\Users\\TechDev\\git\\aasdfasdf\\mgl\\src\\main\\webapp\\resources\\excel\\민턴인 단체 회원가입 필요 양식.xlsx";
+		 int result = 0;
+         int all = 0;
+		/*String c_idx = "C201805300007";*/
+		 try {
+	            
+	            fis= new FileInputStream(filePath);
+	            // HSSFWorkbook은 엑셀파일 전체 내용을 담고 있는 객체
+	            workbook = new XSSFWorkbook(fis);
+	            
+	            // 탐색에 사용할 Sheet, Row, Cell 객체
+	            XSSFSheet curSheet;
+	            XSSFRow   curRow;
+	            XSSFCell  curCell;
+	            MemberVO mvo;
+	            UClubVO uvo;
+	            // Sheet 탐색 for문
+	           
+	            for(int sheetIndex = 0 ; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
+	                // 현재 Sheet 반환
+	                curSheet = workbook.getSheetAt(sheetIndex);
+	                // row 탐색 for문
+	                for(int rowIndex=0; rowIndex < curSheet.getPhysicalNumberOfRows(); rowIndex++) {
+	                    // row 0은 헤더정보이기 때문에 무시
+	                    if(rowIndex != 0) {
+	                        // 현재 row 반환
+	                        curRow = curSheet.getRow(rowIndex);
+	                       mvo = new MemberVO();
+	                       uvo = new UClubVO();
+	                        String value;
+	                        
+	                        // row의 첫번째 cell값이 비어있지 않은 경우 만 cell탐색
+	                        if(!"".equals(curRow.getCell(0).getStringCellValue())) {
+	                            
+	                            // cell 탐색 for 문
+	                            for(int cellIndex=0;cellIndex<curRow.getPhysicalNumberOfCells(); cellIndex++) {
+	                                curCell = curRow.getCell(cellIndex);
+	                                
+	                                if(true) {
+	                                    value = "";
+	                                    // cell 스타일이 다르더라도 String으로 반환 받음
+	                                    switch (curCell.getCellType()){
+	                                    case HSSFCell.CELL_TYPE_FORMULA:
+	                                        value = curCell.getCellFormula();
+	                                        break;
+	                                    case HSSFCell.CELL_TYPE_NUMERIC:
+	                                        value = curCell.getNumericCellValue()+"";
+	                                        break;
+	                                    case HSSFCell.CELL_TYPE_STRING:
+	                                        value = curCell.getStringCellValue()+"";
+	                                        break;
+	                                    case HSSFCell.CELL_TYPE_BLANK:
+	                                        value = curCell.getBooleanCellValue()+"";
+	                                        break;
+	                                    case HSSFCell.CELL_TYPE_ERROR:
+	                                        value = curCell.getErrorCellValue()+"";
+	                                        break;
+	                                    default:
+	                                        value = new String();
+	                                        break;
+	                                    }
+	                                    
+	                                    // 현재 column index에 따라서 vo에 입력
+	                                    switch (cellIndex) {
+	                                    case 1: // 이름
+	                                        mvo.setM_nm(value);
+	                                        mvo.setM_tsize("95");
+	                                        break;
+	                                        
+	                                    case 2: // 성별,사진
+	                                    	if(value.equals("남")||value.equals("남자")||value.equals("M")||value.equals("m")||value.equals("남성")) {
+	                                    		value = "M";
+	                                    		mvo.setM_photo("/resources/img/man_face.svg");
+	                                    	}else if(value.equals("여")||value.equals("여자")||value.equals("F")||value.equals("f")||value.equals("여성")){
+	                                    		value = "F";
+	                                    		mvo.setM_photo("/resources/img/woman_face.svg");
+	                                    	}
+	                                        mvo.setM_sex(value);;
+	                                        break;
+	                                        
+	                                    case 3: // 생년월일,비밀번호
+	                                    	value = value.replaceAll("-", "");
+	                                    	System.out.println("1왜이래 "+value);
+	                                    	value = value.replaceAll(",", "");
+	                                    	System.out.println("2왜이래 "+value);
+	                                    	value = value.replaceAll("\\.", "");
+	                                    	System.out.println("3왜이래 "+value);
+	                                        mvo.setM_birth(value);
+	                                        mvo.setM_pw(value);
+	                                        break;
+	                                        
+	                                    case 4: // 전화번호 아이디
+	                                    	value = value.replaceAll("-", "");
+	                                    	value = value.replaceAll(",", "");
+	                                        mvo.setM_tel(value);
+	                                        mvo.setM_id(value);
+	                                        uvo.setU_id(value);
+	                                        break;
+	                                        
+	                                    case 5: // 급수
+	                                        mvo.setM_club_gd(value);
+	                                        mvo.setM_city_gd(value);
+	                                        mvo.setM_con_gd(value);
+	                                        mvo.setM_do_gd(value);
+	                                        uvo.setU_club_gd(value);
+	                                        break;
+	                                        
+	                                    case 6: // 직책 "회장","부회장","고문","감사","총무","재무","경기이사","관리이사","홍보이사","회원"
+	                                    	if(!value.equals("회장")&&!value.equals("부회장")&&!value.equals("고문")&&!value.equals("감사")&&!value.equals("총무")&&!value.equals("재무")&&!value.equals("경기이사")&&!value.equals("관리이사")&&!value.equals("홍보이사")) {
+	                                    		value="회원";
+	                                    	}
+	                                        uvo.setUc_mng(value);
+	                                        break;
+	                                        
+	                                    default:
+	                                        break;
+	                                    }
+	                                }
+	                            }
+	                            // cell 탐색 이후 vo 추가
+	                            list.add(mvo);
+	                            int res = mService.idCheck(mvo.getM_id());
+	                            all++;
+	                            if(res == 0) {
+	                            	int res2 = mService.memberInsert(mvo);
+	                            	int s_res = mService.m_join_seq();
+	                            	if(res2 >0 && s_res>0) {
+	                            		System.out.println("성공");
+	                            		uvo.setC_idx(c_idx);
+	                            		int res3 = ucService.user_insert(uvo);
+	                            		int res4 = ucService.uc_seq();
+	                            		if(res3>0&&res4>0) {
+	                            			System.out.println("클럽가입성공");
+	                            			Map<String,String> map = new HashMap<String,String>();
+	                            			map.put("u_id", mvo.getM_id());
+	                            			map.put("c_idx", c_idx);
+	                            			mService.clubUpdate2(map);
+	                            			result++;
+	                            		}else {
+	                            			System.out.println("클럽가입실패");
+	                            		}
+	                            	}else {
+	                            		System.out.println("실패");
+	                            	}
+	                            }else {
+	                            	System.out.println("동일번호 가입되어있음.");
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	        } catch (FileNotFoundException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            
+	        } finally {
+	            try {
+	                // 사용한 자원은 finally에서 해제
+	                if( workbook!= null) workbook.close();
+	                if( fis!= null) fis.close();
+	                
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
+	        }
+		 System.out.println(list);
+		 
+		 
+		 model.addAttribute("result","전체" + all+"성공" +result);
+		return "ajax/excelResult";
+	}
+	
+	@RequestMapping("/excel/excel.techni")
+	public String excel() {
+		return "ajax/excel";
+	}
+	
+	
 }

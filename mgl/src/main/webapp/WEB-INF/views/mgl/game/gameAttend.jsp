@@ -105,11 +105,11 @@ function attend(){
 			if(data.cnt > 0 ){
 				location.href="/UClub/AttendList.techni"
 			}else{
-				swal("MGL", "이미 출석된 회원입니다.");
+				swal("민턴in", "이미 출석된 회원입니다.");
 			}
 		},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 }
@@ -122,11 +122,11 @@ function attendOut(){
 			if(data.cnt > 0 ){
 				location.href="/UClub/AttendList.techni"
 			}else{
-				swal("MGL", "이미 퇴실 상태입니다.");
+				swal("민턴in", "이미 퇴실 상태입니다.");
 			}
 		},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 }
@@ -144,11 +144,11 @@ function multiAttend(){
 			if(data.cnt > 0 ){
 				location.href="/UClub/AttendList.techni"
 			}else{
-				swal("MGL", "이미 퇴실 상태입니다.");
+				swal("민턴in", "이미 퇴실 상태입니다.");
 			}
 		},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 }		
@@ -160,7 +160,7 @@ function multiAttend(){
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo" onclick="location.href='/UClub/UClubAllList.techni'">
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo" onclick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
 					<h1>${list[0].c_nm }</h1>

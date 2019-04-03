@@ -28,7 +28,7 @@
 	<div id="wrap">
 	  <header>
 	    <div class="head_top"> <!-- InstanceBeginEditable name="head_top" -->
-	      <div class="logo_top"><img src="/resources/img/logo.svg" alt="MGL" class="logo" onClick="location.href='/Member/LoginForm.techni'"></div>
+	      <div class="logo_top"><img src="/resources/img/logo.svg" alt="민턴in" class="logo" onClick="location.href='/Member/LoginForm.techni'"></div>
 	      <div class="tit_top">
 	        <h1>SNS 회원가입</h1>
 	      </div>
@@ -204,49 +204,49 @@ $(document).ready(function() {
 
 			var birth = $("input[name=m_birth]").val();
 			if(birth == ""){
-				swal("MGL","생년월일을 입력해주세요.");
+				swal("민턴in","생년월일을 입력해주세요.");
 				$("#m_birth").focus();
 				return;
 			}
 			var yy = new Date().getFullYear().toString().substr(-4)
 			if(Number($("#date1").val()) > yy ||Number($("#date1").val()) < 1900 ||Number($("#date2").val()) > 12 ||Number($("#date3").val()) > 31 ){
-				swal("MGL","생년월일을 확인해주세요.");
+				swal("민턴in","생년월일을 확인해주세요.");
 				$("#m_birth").focus();
 				return;
 			}
 			var phone1 = $("#phone1").val();
 			if(phone1 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone1").focus();
 				return;
 			}else if(phone1.length < 3){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
 			var phone2 = $("#phone2").val();
 			if(phone2 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone2").focus();
 				return;
 			}else if(phone2.length < 3){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
 			var phone3 = $("#phone3").val();
 			if(phone3 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone3").focus();
 				return;
 			}else if(phone3.length < 4){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
 			if("${m_sex}" == ""){
 				if(!$("input[name=m_sex]:checked").val()==true){
-					swal("MGL","성별을 선택해해주세요.");
+					swal("민턴in","성별을 선택해해주세요.");
 					$("#check_1").focus();
 					return;
 				}
@@ -271,12 +271,12 @@ $(document).ready(function() {
 						if(data.cnt == 0) {
 							$("#insertForm").submit();
 						}else{
-							swal("MGL","해당 정보로 등록된 아이디가 이미 있습니다.")
+							swal("민턴in","해당 정보로 등록된 아이디가 이미 있습니다.")
 							return;
 						}
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			

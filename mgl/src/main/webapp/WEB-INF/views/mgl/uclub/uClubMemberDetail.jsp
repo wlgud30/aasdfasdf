@@ -6,7 +6,7 @@
 <script>
 	function clubOut(){
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "클럽을 탈퇴 하시겠습니까?",
 			buttons : true
 		})
@@ -21,18 +21,18 @@
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title : "MGL",
+								title : "민턴in",
 								text : "매니저의 승인 후 탈퇴 됩니다."
 							})
 							.then((value)=>{
 									location.href='/UClub/UClubAllList.techni'
 							})
 						}else{
-							swal("MGL" , "다시 시도해 주세요.")
+							swal("민턴in" , "다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				})
 			}
@@ -50,11 +50,11 @@
 				if(data.cnt>0){
 					
 				}else{
-					swal("MGL","죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}			
 		})
 	}
@@ -71,7 +71,7 @@
 		<div class="tit_main">
 			<ul class="li_row">
 				<li><i class="icon-f i_font icon-man"></i>${uvo.u_nm}(${uvo.u_age}세/${uvo.u_sex == 'M' ? '남':'여'})</li>
-				<li><i class="icon-f i_font icon-member_1"></i>${uvo.uc_mng }</li>
+				<%-- <li><i class="icon-f i_font icon-member_1"></i>${uvo.uc_mng }</li> --%>
 				<li><i class="icon-f i_font icon-enlist"></i>${uvo.u_c_indat }</li>
 				<li><i class="icon-f i_font icon-cake"></i>${fn:substring(uvo.u_birth,0,4) }.${fn:substring(uvo.u_birth,4,6) }.${fn:substring(uvo.u_birth,6,8) }</li>
 			</ul>
@@ -174,7 +174,7 @@
         <div class="content white_bg">
           <table class="game_td cet_lay td_pd_l0">
            <c:forEach items="${list4}" var="list">
-            <tr>
+            <tr onclick="rankHref('${list.cf_idx}')">
               <td class="ga_title"><div class="el_date">
                   <span class="main_color" style="">[교류전]</span>
                   ${list.cf_nm }</div>
@@ -450,11 +450,11 @@ var yy = new Date().getFullYear().toString().substr(-2)
 					$("#"+ym).append(appendTr);
 					clickEv();
 				}else{
-					swal("MGL","죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}			
 		})
 	}
@@ -493,12 +493,26 @@ var yy = new Date().getFullYear().toString().substr(-2)
 					$("#c_b2_total").text(data.list[3].cm_total+"("+data.list[3].cm_win+")"+" "+data.list[3].cm_sc_gap);
 					$("#c_b2_point").text("+"+data.list[3].cm_aptn+"p");
 				}else{
-					swal("MGL","죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}			
 		})
+	}
+	function rankHref(cf_idx){
+		var path = "/Cfight/CfightMyRank.techni";
+		var form = document.createElement("form");
+		
+		form.setAttribute("method","POST");
+		form.setAttribute("action",path);
+		var hiddenField = document.createElement("input");
+		hiddenField.setAttribute("type","hidden");
+		hiddenField.setAttribute("name","cf_idx");
+		hiddenField.setAttribute("value",cf_idx);
+		form.appendChild(hiddenField);
+		document.body.appendChild(form);
+		form.submit();
 	}
 </script>

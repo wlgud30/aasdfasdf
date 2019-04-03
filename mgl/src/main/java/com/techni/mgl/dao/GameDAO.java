@@ -14,6 +14,7 @@ import com.techni.mgl.domain.CfightVO;
 import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.GTempTeamVO;
 import com.techni.mgl.domain.MemberVO;
+import com.techni.mgl.domain.UClubVO;
 
 @Repository
 public class GameDAO {
@@ -336,6 +337,12 @@ public class GameDAO {
 		public List<ClubMatchVO> all_match(String cs_idx){
 			return sqlSession.selectList(nameSpace+"all_match", cs_idx);
 		}
+		
+	//전적비교할때 게임인덱스
+	public List<ClubMatchVO> getGidx(Map<String, String> map){
+			return sqlSession.selectList(nameSpace+"getGidx", map);
+	}		
+	
 	public List<ClubMatchVO> pointAllDetail(Map<String,String> map){
 		return sqlSession.selectList(nameSpace + "pointAllDetail", map);
 	}

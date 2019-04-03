@@ -22,10 +22,111 @@ public class MemberVO {
 	private String m_push;		//MGL_USER_PUSH_TOKEN
 	private String m_agent;	 			//MGL_USER_AGENT
 	private String m_represent;
+	public String al_idx;
+	public String al_send;
+	public String al_receive;
+	public String al_url;
+	public String al_date;
+	public String al_msg;
+	public String al_division;
+	public String al_read;
+	public String cb_idx;
+	public String cf_idx;
+	public String c_nm;
 	
 	
 	
 	
+	
+	
+	public String getC_nm() {
+		return c_nm;
+	}
+
+	public void setC_nm(String c_nm) {
+		this.c_nm = c_nm;
+	}
+
+	public String getCb_idx() {
+		return cb_idx;
+	}
+
+	public void setCb_idx(String cb_idx) {
+		this.cb_idx = cb_idx;
+	}
+
+	public String getCf_idx() {
+		return cf_idx;
+	}
+
+	public void setCf_idx(String cf_idx) {
+		this.cf_idx = cf_idx;
+	}
+
+	public String getAl_idx() {
+		return al_idx;
+	}
+
+	public void setAl_idx(String al_idx) {
+		this.al_idx = al_idx;
+	}
+
+	public String getAl_send() {
+		return al_send;
+	}
+
+	public void setAl_send(String al_send) {
+		this.al_send = al_send;
+	}
+
+	public String getAl_receive() {
+		return al_receive;
+	}
+
+	public void setAl_receive(String al_receive) {
+		this.al_receive = al_receive;
+	}
+
+	public String getAl_url() {
+		return al_url;
+	}
+
+	public void setAl_url(String al_url) {
+		this.al_url = al_url;
+	}
+
+	public String getAl_date() {
+		return al_date;
+	}
+
+	public void setAl_date(String al_date) {
+		this.al_date = al_date;
+	}
+
+	public String getAl_msg() {
+		return al_msg;
+	}
+
+	public void setAl_msg(String al_msg) {
+		this.al_msg = al_msg;
+	}
+
+	public String getAl_division() {
+		return al_division;
+	}
+
+	public void setAl_division(String al_division) {
+		this.al_division = al_division;
+	}
+
+	public String getAl_read() {
+		return al_read;
+	}
+
+	public void setAl_read(String al_read) {
+		this.al_read = al_read;
+	}
+
 	public String getM_represent() {
 		return m_represent;
 	}

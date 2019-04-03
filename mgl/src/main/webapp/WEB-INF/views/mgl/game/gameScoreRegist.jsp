@@ -1,17 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script type="text/javascript">
 		/* function startTime() {
 		    var today = new Date();
@@ -53,25 +43,17 @@
 		
 			if(aScore == ""||bScore ==""||aScore == null||bScore==null){
 				swal({
-					title : "MGL",
+					title : "민턴in",
 					text : "점수를 입력해주세요."
 				})
+				return false;
 			}else if(aScore == bScore){
 				swal({
-					title : "MGL",
+					title : "민턴in",
 					text : "점수가 같습니다. 다시 확인해주세요."
 				})
+				return false;
 			}else{
-				swal({
-					title : "MGL",
-					text : "점수를 등록하시겠습니까?",
-					buttons : {
-						confirm : "OK",
-						cancel : "NO"
-					}
-				})
-				.then((value) => {
-					if(value){
 						$.ajax({
 							async : true,
 							type:"post",
@@ -81,46 +63,21 @@
 							contentType : "application/json; charset=UTF-8",
 							success : function(data){
 								if(data.cnt>0){
-									swal({
-										title : "MGL",
-										text : "점수가 등록되었습니다.",
-										type : "success"
-									})
-									.then((value) =>{
 										 $("#frm").submit();
-									})
 								}else{
-									swal("MGL","죄송합니다. 다시 시도해 주세요.")
+									swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 								}
 							},
 							error : function(error){
-								swal("MGL","error : "+error);
+								swal("민턴in","error : "+error);
 							}
 						}) 
-					}
-				})
 			}
 		}
 </script>
-<body >
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="location.href='/Game/EndGame.techni'"></div>
-				<div class="tit_top">
-					<h1>점수등록</h1>
-				</div>
-				<div class="bt_top">
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
 		<form id="frm" method="post" action="/Game/GameResult.techni" >
 			<input type="hidden" name="c_gidx" value="${cmvo.c_gidx}"> 
 		</form>
-		<div id="container">
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="content white_bg">
 				<div class="bd_cat col_2-1">
@@ -189,7 +146,7 @@
 					</tr>
 				</table>
 				<div class="btn_full">
-					<span class="btn_st" onClick="goSubmit()">결과확인</span>
+					<span class="btn_st" onClick="goSubmit()">확인</span>
 				</div>
 			</div>
 			<!-- content end -->
@@ -225,20 +182,14 @@
 			</div> -->
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
 			<!-- InstanceEndEditable -->
 			<ul class="ft_menu">
 				<li onClick="location.href='/Board/BoardList.techni'"><span>공지</span></li>
-				<li onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
+				<li class="active_tab" onClick="location.href='/Game/GameState.techni'"><span>게임</span></li>
 				<li onClick="location.href='/UClub/UClubUserList.techni'"><span>랭킹</span></li>
 				<li onclick="location.href='/Club/ClubDetailMy.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

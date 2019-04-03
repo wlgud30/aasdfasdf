@@ -12,7 +12,7 @@
 			ynS="불참"
 		}
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "자체대회에 "+ynS+"하시겠습니까?",
 			buttons : {
 				confirm : "OK",
@@ -31,7 +31,7 @@
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title : "MGL",
+								title : "민턴in",
 								text : "자체대회에"+ynS+"되었습니다.",
 								type : "success"
 							})
@@ -39,11 +39,11 @@
 								 location.href="/Game/selfMatchDetail.techni?cs_idx=${list.cs_idx}"
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				}) 
 			}

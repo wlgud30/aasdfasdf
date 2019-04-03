@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -165,7 +167,9 @@ public class CfightController {
 			map.put("u_id", mvo.getM_id());
 
 			List<CfightVO> mList = cfService.myMatchList(map);
-			
+			CfightVO cfvo = cfService.gameDetail(cf_idx);
+			int all_court =Integer.parseInt(cfvo.getCf_court());
+			model.addAttribute("all_court", all_court);
 			model.addAttribute("list", mList);
 			model.addAttribute("list3", list3);
 
@@ -183,11 +187,13 @@ public class CfightController {
 					} else if (c_idx.equals(cvo.c_idx) && cvo.cf_yn.equals("N")) {
 						join = "불참";
 					} else {
-						join = "";
+						join = "미정";
 					}
 					if (c_idx.equals(cvo.c_idx)) {
 						break;
 					}
+				}else {
+					join="미정";
 				}
 			}
 			if (c_idx.equals(list.get(0).cf_c_idx)) {
@@ -497,7 +503,10 @@ public class CfightController {
 		}
 
 		List<CfightVO> team_list = cfService.clubTeamList(map1);
-
+		System.out.println(list.size());
+		System.out.println(team_list.size());
+		System.out.println(list);
+		System.out.println(team_list);
 		int var = 0;
 		for (int i = 0; i < list.size(); i++) {
 			int c = Integer.parseInt((String) list.get(i).get("cf_g_count"));
@@ -646,17 +655,133 @@ public class CfightController {
 			}
 		}
 		CfightVO cfvo = cfService.gameDetail(cf_idx);
-		String[] ar = new String[Integer.parseInt(cfvo.getCf_court()) * 4];
-		// 배열 사이즈는 사용가능 코트수 *8
+		String[] ar = new String[(Integer.parseInt(cfvo.getCf_court()) * 8)];
+		Random random = new Random();
+		// 배열 사이즈는 사용가능 코트수 *4
 		int va = 0;
 		int bl = 0;
 		System.out.println(gameList);
-
+		List<Object> gameLista = new ArrayList<Object>();
+		System.out.println(gameList.size());
+		int k =0;
+		for(int i= 0;;i++) {
+			for(int t = 0 ; t<ar.length;t++) {
+				System.out.println(k);
+				System.out.println(Arrays.asList(ar).toString());
+			}
+			if(!Arrays.asList(ar).contains(null)) {//널값이 하나도 없다면 (꽉찼다면) 코트수X8 일때 코트수X4만큼 앞에서 비워주고 뒤에있는 것들을 땡긴다
+				for(int z = 0 ;z<(Integer.parseInt(cfvo.getCf_court()) * 8);z++) {
+					if(z<Integer.parseInt(cfvo.getCf_court()) * 4) {
+						ar[z]=ar[(Integer.parseInt(cfvo.getCf_court()) * 4)+z];
+					}else {
+						ar[z]=null;
+					}
+					
+				}
+				i=0;
+				k=Integer.parseInt(cfvo.getCf_court()) * 4;
+			}
+			
+			if(i>=gameList.size()) {
+				ar[k]="blank_"+k+"_"+i+"_"+random.nextInt(100)+1;
+				ar[k+1]="blank_"+k+1+"_"+i+"_"+random.nextInt(100)+1;
+				ar[k+2]="blank_"+k+2+"_"+i+"_"+random.nextInt(100)+1;
+				ar[k+3]="blank_"+k+3+"_"+i+"_"+random.nextInt(100)+1;
+				k=k+4;
+				Map<String,String> e = new HashMap<String,String>();
+				e.put("team_a_user_a","blank_"+k+"_"+i+"_"+random.nextInt(100)+1);
+				e.put("team_a_user_b","blank_"+k+1+"_"+i+"_"+random.nextInt(100)+1);
+				e.put("team_b_user_a","blank_"+k+2+"_"+i+"_"+random.nextInt(100)+1);
+				e.put("team_b_user_b","blank_"+k+3+"_"+i+"_"+random.nextInt(100)+1);
+				e.put("cf_gidx", cf_idx + "_blank" + k+"_"+i+"_"+random.nextInt(100)+1);
+				e.put("team_b_idx", null);
+				e.put("team_a_idx", null);
+				e.put("cf_g_idx", null);
+				gameLista.add(e);
+				i=0;
+			}else{
+				Map<String,String> all_of_game =(Map<String, String>) gameList.get(i);
+				String a1 = all_of_game.get("team_a_user_a");
+				String a2 = all_of_game.get("team_a_user_b");
+				String b1 = all_of_game.get("team_b_user_a");
+				String b2 = all_of_game.get("team_b_user_b");
+				if(!Arrays.asList(ar).contains(a1)&&!Arrays.asList(ar).contains(a2)&&!Arrays.asList(ar).contains(b1)&&!Arrays.asList(ar).contains(b2)) {
+					ar[k]=a1;
+					k++;
+					ar[k]=a2;
+					k++;
+					ar[k]=b1;
+					k++;
+					ar[k]=b2;
+					k++;
+					gameLista.add(all_of_game);
+					gameList.remove(i);
+					i=0;
+				}
+			}
+				
+			
+			
+			if(gameList.size()==0) {
+				break;
+			}
+		}
+		/*for(int g= 0; ;g++) {
+			if(gameList.size()==1) {
+				break;
+			}else if(gameList.size()<=g) {
+				Map<String,String> e = new HashMap<String,String>();
+				e.put("team_a_user_a","blank_"+g);
+				e.put("team_a_user_b","blank_"+g);
+				e.put("team_b_user_a","blank_"+g);
+				e.put("team_b_user_b","blank_"+g);
+				e.put("cf_gidx", cf_idx + "_blank" + bl);
+				e.put("team_b_idx", null);
+				e.put("team_a_idx", null);
+				e.put("team_a_user_a", null);
+				e.put("team_a_user_b", null);
+				e.put("team_b_user_a", null);
+				e.put("team_b_user_b", null);
+				e.put("cf_g_idx", null);
+				gameList.add(e);
+			}
+			Map<String,String> map4 =(Map<String, String>) gameList.get(g);
+			//게임리스트에 첫번째 유저들을저장
+			String a1 = map4.get("team_a_user_a");
+			String a2 = map4.get("team_a_user_b");
+			String b1 = map4.get("team_b_user_a");
+			String b2 = map4.get("team_b_user_b");
+			
+				Map<String,String> map5 = (Map<String, String>) gameLista.get(gameLista.size()-1);
+				//게임 유저들의 두번째 유저부터 순서대로 저장
+				String i_a1 = map5.get("team_a_user_a");
+				String i_a2 = map5.get("team_a_user_b");
+				String i_b1 = map5.get("team_b_user_a");
+				String i_b2 = map5.get("team_b_user_b");
+				//만약 첫번째 유저중 두번째 유저와 겹치는사람이 있다면 반복문 실행해서 다시 리스트의 첫번째부터 반복문실행후 겹치는게 하나도없을때
+				if(!a1.equals(i_a1)&&!a1.equals(i_a2)&&!a1.equals(i_b1)&&!a1.equals(i_b2)&&!a2.equals(i_a1)&&!a2.equals(i_a2)&&!a2.equals(i_b1)&&!a2.equals(i_b2)&&!b1.equals(i_a1)&&!b1.equals(i_a2)&&!b1.equals(i_b1)&&!b1.equals(i_b2)&&!b2.equals(i_a1)&&!b2.equals(i_a2)&&!b2.equals(i_b1)&&!b2.equals(i_b2)) {
+					gameLista.add(map4);
+					gameList.remove(g);
+					g=0;
+				}
+			
+			if(gameList.size()==0) {
+				break;
+			}
+		}*/
+		for(int i = 0; i<gameLista.size(); i++ ) {
+			Map<String,String> map4 = (Map<String, String>) gameLista.get(i);
+			String aTeam = "A팀 : 1번  : "+map4.get("team_a_user_a") +" 2번 : "+map4.get("team_a_user_b");
+			String bTeam = "B팀 : 1번  : "+map4.get("team_b_user_a") +" 2번 : "+map4.get("team_b_user_b");
+			System.out.println(aTeam + bTeam);
+		}
+		
+		System.out.println("리스트사이즈"+gameLista.size());
 		List<Object> endGameList = new ArrayList<Object>();
 
-		for (int i = 0; i < gameList.size(); i++) {
+		for (int i = 0; i < gameLista.size(); i++) {
 			Map<String, Object> newM = new HashMap<String, Object>();
-			newM = (Map<String, Object>) gameList.get(i);
+			newM = (Map<String, Object>) gameLista.get(i);
 			int vv = 1;
 			Map<String, String> M = new HashMap<String, String>();
 			Map<String, String> M2 = new HashMap<String, String>();
@@ -665,7 +790,11 @@ public class CfightController {
 			M.put("cf_e_gidx", (String) newM.get("cf_gidx") + "_" + vv);
 			M.put("cf_gidx", (String) newM.get("cf_gidx"));
 			M.put("cf_g_idx", (String) newM.get("cf_g_idx"));
-			M.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			if(newM.get("cf_g_idx") != null) {
+				M.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			}else {
+				M.put("cf_t_idx", null);
+			}
 			M.put("cf_team_idx", (String) newM.get("team_a_idx"));
 			M.put("u_id", (String) newM.get("team_a_user_a"));
 			M.put("c_idx", (String) newM.get("team_a_club"));
@@ -673,7 +802,11 @@ public class CfightController {
 			M2.put("cf_e_gidx", (String) newM.get("cf_gidx") + "_" + vv);
 			M2.put("cf_gidx", (String) newM.get("cf_gidx"));
 			M2.put("cf_g_idx", (String) newM.get("cf_g_idx"));
-			M2.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			if(newM.get("cf_g_idx") != null) {
+				M2.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			}else {
+				M2.put("cf_t_idx", null);
+			}
 			M2.put("cf_team_idx", (String) newM.get("team_a_idx"));
 			M2.put("u_id", (String) newM.get("team_a_user_b"));
 			M2.put("c_idx", (String) newM.get("team_a_club"));
@@ -681,7 +814,11 @@ public class CfightController {
 			M3.put("cf_e_gidx", (String) newM.get("cf_gidx") + "_" + vv);
 			M3.put("cf_gidx", (String) newM.get("cf_gidx"));
 			M3.put("cf_g_idx", (String) newM.get("cf_g_idx"));
-			M3.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			if(newM.get("cf_g_idx") != null) {
+				M3.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			}else {
+				M3.put("cf_t_idx", null);
+			}
 			M3.put("cf_team_idx", (String) newM.get("team_b_idx"));
 			M3.put("u_id", (String) newM.get("team_b_user_a"));
 			M3.put("c_idx", (String) newM.get("team_b_club"));
@@ -689,7 +826,11 @@ public class CfightController {
 			M4.put("cf_e_gidx", (String) newM.get("cf_gidx") + "_" + vv);
 			M4.put("cf_gidx", (String) newM.get("cf_gidx"));
 			M4.put("cf_g_idx", (String) newM.get("cf_g_idx"));
-			M4.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			if(newM.get("cf_g_idx") != null) {
+				M4.put("cf_t_idx", newM.get("cf_g_idx").toString().substring(0, 14));
+			}else {
+				M4.put("cf_t_idx", null);
+			}
 			M4.put("cf_team_idx", (String) newM.get("team_b_idx"));
 			M4.put("u_id", (String) newM.get("team_b_user_b"));
 			M4.put("c_idx", (String) newM.get("team_b_club"));
@@ -703,10 +844,10 @@ public class CfightController {
 		System.out.println("end게임" + endGameList);
 
 		List<Object> rGameList = new ArrayList<Object>();
-		for (int i = 0; i < gameList.size() + 1; i++) {
+		/*for (int i = 0; i < gameLista.size() + 1; i++) {
 			Map<String, Object> newM = new HashMap<String, Object>();
 			System.out.println(i);
-			newM = (Map<String, Object>) gameList.get(i);
+			newM = (Map<String, Object>) gameLista.get(i);
 			int jjj = 0;
 			for (int jk = 0; jk < rGameList.size(); jk++) {
 				Map<String, Object> nM = new HashMap<String, Object>();
@@ -720,7 +861,7 @@ public class CfightController {
 			}
 			System.out.println(Arrays.asList(ar).toString());
 			System.out.println(i);
-			System.out.println(gameList.size());
+			System.out.println(gameLista.size());
 
 			if (jjj != 1 && !Arrays.asList(ar).contains((String) newM.get("team_a_user_a"))
 					&& !Arrays.asList(ar).contains((String) newM.get("team_a_user_b"))
@@ -736,13 +877,13 @@ public class CfightController {
 				i = -1;
 
 				rGameList.add(newM);
-				gameList.remove(newM);
-				if (gameList.isEmpty()) {
+				gameLista.remove(newM);
+				if (gameLista.isEmpty()) {
 					break;
 				}
-			} else if (i + 1 == gameList.size()) {
+			} else if (i + 1 == gameLista.size()) {
 				System.out.println(i);
-				System.out.println(gameList.size());
+				System.out.println(gameLista.size());
 				ar[va] = ""; // 0 +4 = 4 4+4 = 8 8+4=12
 				ar[va + 1] = "";
 				ar[va + 2] = "";
@@ -760,7 +901,7 @@ public class CfightController {
 				nM.put("cf_g_idx", null);
 				rGameList.add(nM);
 				bl++;
-				if (gameList.isEmpty()) {
+				if (gameLista.isEmpty()) {
 					break;
 				}
 			}
@@ -773,7 +914,7 @@ public class CfightController {
 				}
 				va = 0;
 			}
-		}
+		}*/
 		/*
 		 * for(int ac = 0 ; ac<second.length;ac++){ for(int ad = 0 ;
 		 * ad<second[ac].length;ad++){ System.out.println("2차원"+second[ac][ad]);
@@ -802,7 +943,7 @@ public class CfightController {
 		if((rGameList.size() / Integer.parseInt(cfvo.getCf_court())) % 2 != 0){
 			s= s+1;
 		}*/
-		for (int i = 0; i < s; i++) {
+		/*for (int i = 0; i < s; i++) {
 			Map<String, Object> newM = new HashMap<String, Object>();
 			for(int j = 0 ; j<Integer.parseInt(cfvo.getCf_court());j++){
 				newM = (Map<String, Object>) rGameList.get(ii);
@@ -831,32 +972,30 @@ public class CfightController {
 			rGameList2.add(newM);
 		}
 		System.out.println("바뀐거 : "+rGameList2);
-		
+		*/
 		int co = 1;
 		int order = 1;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		Date date = dateFormat.parse(cfvo.getCf_sTime());
 		cal.setTime(date);
-		for (int i = 0; i < rGameList2.size(); i++) {
+		for (int i = 0; i < gameLista.size(); i++) {
 			if ((co - 1) == Integer.parseInt(cfvo.getCf_court())) {
 				co = 1;
 				order++;
 				cal.add(Calendar.MINUTE, Integer.parseInt(cfvo.getCf_time()));
 			}
 			Map<String, Object> newM = new HashMap<String, Object>();
-			newM = (Map<String, Object>) rGameList2.get(i);
+			newM = (Map<String, Object>) gameLista.get(i);
 			newM.put("cf_u_court", co);
 			newM.put("cf_order", order);
 			newM.put("cf_w_date", dateFormat.format(cal.getTime()));
 			newM.put("cf_no", i + 1);
 			co++;
 		}
-		System.out.println(rGameList2);
-		System.out.println(rGameList.size());
 		Map<String, Object> cf_match = new HashMap<String, Object>();
 
-		cf_match.put("list", rGameList2);
+		cf_match.put("list", gameLista);
 		cf_match.put("cf_idx", cf_idx);
 		cf_match.put("cf_status", "대기");
 
@@ -873,7 +1012,13 @@ public class CfightController {
 		System.out.println(rGameList2.size());
 		System.out.println(rGameList);
 		System.out.println(hae);
-		
+		for(int i = 0; i<gameLista.size(); i++ ) {
+			Map<String,String> map4 = (Map<String, String>) gameLista.get(i);
+			String aTeam = "A팀 : 1번  : "+map4.get("team_a_user_a") +" 2번 : "+map4.get("team_a_user_b");
+			String bTeam = "B팀 : 1번  : "+map4.get("team_b_user_a") +" 2번 : "+map4.get("team_b_user_b");
+			System.out.println(aTeam + bTeam);
+			System.out.println(map4.get("cf_w_date"));
+		}
 		if (cf > 0) {
 			map.put("cnt", 1);
 		} else {
@@ -891,7 +1036,7 @@ public class CfightController {
 		map.put("type", "MGL_CFIGHT_W_DAT");
 
 		List<CfightVO> list = cfService.timeMatchList(cf_idx);
-		List<CfightVO> list2 = cfService.matchList(map);
+		/*List<CfightVO> list2 = cfService.matchList(map);*/
 		
 		String c_idx = (String) session.getAttribute("c_idx");
 		String cfm = "";
@@ -907,9 +1052,11 @@ public class CfightController {
 				cfm = "매니저";
 			}
 		}
-
-		model.addAttribute("list", list);
-		model.addAttribute("list2", list2);
+		CfightVO cfvo = cfService.gameDetail(cf_idx);
+		int all_court =Integer.parseInt(cfvo.getCf_court());
+		model.addAttribute("all_court", all_court);
+		model.addAttribute("list", list);/*
+		model.addAttribute("list2", list2);*/
 		model.addAttribute("cfm", cfm);
 
 		return "cFight/cFightTimeList.pag";
@@ -924,7 +1071,9 @@ public class CfightController {
 
 		List<CfightVO> list = cfService.courtMatchList(cf_idx);
 		List<CfightVO> list2 = cfService.matchList(map);
-
+		CfightVO cfvo = cfService.gameDetail(cf_idx);
+		int all_court =Integer.parseInt(cfvo.getCf_court());
+		model.addAttribute("all_court", all_court);
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
 
@@ -975,6 +1124,9 @@ public class CfightController {
 		List<CfightVO> list2 = cfService.typeDetailList(map);
 
 		List<CfightVO> list3 = cfService.typeDetailRank(map);
+		CfightVO cfvo = cfService.gameDetail(cf_idx);
+		int all_court =Integer.parseInt(cfvo.getCf_court());
+		model.addAttribute("all_court", all_court);
 		session.setAttribute("cf_t_nm", list2.get(0).getCf_t_nm());
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
@@ -1029,18 +1181,25 @@ public class CfightController {
 		List<CfightVO> list2 = cfService.cf_nm(cf_idx);
 		
 		int court = cfService.courtCount(cf_idx);
+		CfightVO cfvo = cfService.gameDetail(cf_idx);
+		int all_court =Integer.parseInt(cfvo.getCf_court());
 		model.addAttribute("cf_court", cf_court);
 		model.addAttribute("court", court);
 		model.addAttribute("list", list);
 		model.addAttribute("list2",list2);
+		model.addAttribute("all_court", all_court);
 		
 		return "cFight/cFightReferee.pag";
 	}
 
 	@RequestMapping("Cfight/CfightMyRank.techni")
-	public String myRank(HttpSession session, Model model) {
-
-		String cf_idx = (String) session.getAttribute("cf_idx");
+	public String myRank(HttpSession session, Model model,@RequestParam(required = false)String cf_idx) {
+		if(cf_idx==null) {
+			cf_idx = (String) session.getAttribute("cf_idx");
+		}else if(cf_idx=="") {
+			cf_idx = (String) session.getAttribute("cf_idx");
+		}
+		
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 
 		Map<String, String> map = new HashMap<String, String>();
@@ -1078,7 +1237,8 @@ public class CfightController {
 	public String Summary(HttpSession session, Model model) {
 
 		String cf_idx = (String) session.getAttribute("cf_idx");
-
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("cf_idx", cf_idx);
 		map.put("c_idx", (String) session.getAttribute("c_idx"));
@@ -1086,9 +1246,19 @@ public class CfightController {
 		List<CfightVO> list = cfService.cFightJoinClub(cf_idx);
 		List<CfightVO> list2 = cfService.cFightTypeList(map);
 
+		String cfm = "";
+		String yn = list.get(0).getCf_yn();
+		String c_idx=(String) session.getAttribute("c_idx");
+		for (CfightVO cvo : list2) {
+			if (mvo.getM_id().equals(cvo.c_u_mid) && c_idx.equals(cvo.cf_c_idx)) {
+				cfm = "매니저";
+			}
+		}
+		model.addAttribute("cfm", cfm);
 		model.addAttribute("list", list);
 		model.addAttribute("list2", list2);
-
+		model.addAttribute("yn", yn);
+		
 		return "cFight/cFightSummary.pag";
 	}
 
@@ -1345,7 +1515,7 @@ public class CfightController {
 		
 		WritableWorkbook workbook = Workbook.createWorkbook(file2);
 		
-		WritableSheet sheet = workbook.createSheet("MGL", 0);
+		WritableSheet sheet = workbook.createSheet("민턴in", 0);
 		
 		Label label;
 		int j = 0;
@@ -1480,7 +1650,7 @@ public class CfightController {
 					param1.add("notitype", "noti");
 					param1.add("oscode", "a");
 					param1.add("token", token);
-					param1.add("title", "MGL");
+					param1.add("title", "민턴in");
 					param1.add("desc", court+"번 코트에 대기해 주세요.");
 					param1.add("dataval", "http://mgl.techni.co.kr:8081/Cfight/CfightDetail.techni");
 					mc.token(param1);
@@ -1522,5 +1692,19 @@ public class CfightController {
 		model.addAttribute("list3", list3);
 		
 		return "cFight/cFightAllMatch.pag";
+	}
+	@RequestMapping("/Cfight/CfightDelete.techni")
+	@ResponseBody
+	public Map<Object,Object> cfightDelete(@RequestBody String json) throws ParseException{
+		JSONParser parser = new JSONParser();
+		JSONObject json2 = (JSONObject) parser.parse(json);
+		
+		Map<Object,Object> map = new HashMap<Object,Object>();
+		
+		int cnt = cfService.cFightDelete((String) json2.get("cf_idx"));
+		
+		map.put("cnt", cnt);
+		
+		return map;
 	}
 }

@@ -2,6 +2,7 @@ package com.techni.mgl.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.service.ClubService;
+import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
 @Controller
@@ -45,6 +47,8 @@ public class ClubController {
 	public ClubService cService;
 	@Autowired
 	public UClubService ucService;
+	@Autowired
+	public MemberService mService;
 	
 	@RequestMapping(value="/Club/ClubInsert.techni", method={RequestMethod.POST,RequestMethod.GET})
 	@ResponseBody
@@ -62,7 +66,41 @@ public class ClubController {
 		int res1 = ucService.insert(uVO);
 		int res2 = ucService.c_seq();
 		int res3 = ucService.uc_seq();
+		
 		if(res > 0 &&res1>0&&res2>0&&res3>0)	{
+			
+			int ch = ucService.representCheck(mvo.getM_id());
+			
+			if(ch==0) {
+				Map<String, String> map2 = new HashMap<String, String>();
+				session.setAttribute("represent_idx", cVO.getC_idx());
+				map2.put("u_id", mvo.getM_id());
+				map2.put("c_idx", cVO.getC_idx());
+				System.out.println(cVO.getC_idx());
+				System.out.println(cVO);
+				
+				session.setAttribute("c_idx",mvo.getM_represent());
+				session.setAttribute("represent_idx", mvo.getM_represent());
+				
+				UClubVO uvo = ucService.userMng(map2);
+				UClubVO uvo2 = ucService.headerSelect(map2);
+				
+				Map<String,Object> mvo2 = new HashMap<String,Object>();
+				
+				mvo2.put("aptn", uvo2.getCm_p_total());
+				mvo2.put("c_nm", uvo2.getC_nm());
+				mvo2.put("u_nm", mvo.getM_nm());
+				mvo2.put("c_gd", uvo2.getU_club_gd());
+				mvo2.put("u_photo", mvo.getM_photo());
+				mvo2.put("c_idx",mvo.getM_represent());
+				
+				session.setAttribute("mvo", mvo2);
+				System.out.println(mvo2);
+				session.setAttribute("mng", uvo.getUc_mng());
+				
+				mService.clubUpdate2(map2);
+			}
+			
 			map.put("cnt", 1);
 		}else{
 			map.put("cnt", 0);
@@ -89,6 +127,48 @@ public class ClubController {
 			}
 		model.addAttribute("yn", i);
 		model.addAttribute("club", cvo);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyMM");
+		Date currentTime = new Date();
+		String dTime = formatter.format(currentTime);
+
+		String	ym = dTime;
+		
+		map.put("ym", ym);
+		
+		List<UClubVO> list2 = ucService.selectUClubUser(map);
+		
+		int ss = 0;
+		int a = 0;
+		int b = 0;
+		int c = 0;
+		int d = 0;
+		int e = 0;
+		int f = 0;
+		
+		for(UClubVO uvo : list2){
+			if(uvo.getU_club_gd().equals("자강")) {
+				ss++;
+			}else if(uvo.getU_club_gd().equals("A")||uvo.getU_club_gd().equals("a")) {
+				a++;
+			}else if(uvo.getU_club_gd().equals("B")||uvo.getU_club_gd().equals("b")) {
+				b++;
+			}else if(uvo.getU_club_gd().equals("C")||uvo.getU_club_gd().equals("c")) {
+				c++;
+			}else if(uvo.getU_club_gd().equals("D")||uvo.getU_club_gd().equals("d")) {
+				d++;
+			}else if(uvo.getU_club_gd().equals("초심")||uvo.getU_club_gd().equals("초심")) {
+				e++;
+			}else if(uvo.getU_club_gd().equals("왕초")||uvo.getU_club_gd().equals("왕초")) {
+				f++;
+			}
+		}
+		model.addAttribute("ss", ss);
+		model.addAttribute("a", a);
+		model.addAttribute("b", b);
+		model.addAttribute("c", c);
+		model.addAttribute("d", d);
+		model.addAttribute("e", e);
+		model.addAttribute("f", f);
 		
 		return "uclub/uClubDetail.pag";
 	}
@@ -146,7 +226,50 @@ public class ClubController {
 			model.addAttribute("msg", msg);
 			session.removeAttribute("c_idx");
 			
-			return "uclub/uClubDetail";
+			SimpleDateFormat formatter = new SimpleDateFormat("yyMM");
+			Date currentTime = new Date();
+			String dTime = formatter.format(currentTime);
+
+			String	ym = dTime;
+			
+			map.put("ym", ym);
+			
+			List<UClubVO> list = ucService.selectUClubUser(map);
+			
+			int ss = 0;
+			int a = 0;
+			int b = 0;
+			int c = 0;
+			int d = 0;
+			int e = 0;
+			int f = 0;
+			
+			for(UClubVO uvo : list){
+				if(uvo.getU_club_gd().equals("자강")) {
+					ss++;
+				}else if(uvo.getU_club_gd().equals("A")||uvo.getU_club_gd().equals("a")) {
+					a++;
+				}else if(uvo.getU_club_gd().equals("B")||uvo.getU_club_gd().equals("b")) {
+					b++;
+				}else if(uvo.getU_club_gd().equals("C")||uvo.getU_club_gd().equals("c")) {
+					c++;
+				}else if(uvo.getU_club_gd().equals("D")||uvo.getU_club_gd().equals("d")) {
+					d++;
+				}else if(uvo.getU_club_gd().equals("초심")||uvo.getU_club_gd().equals("초심")) {
+					e++;
+				}else if(uvo.getU_club_gd().equals("왕초")||uvo.getU_club_gd().equals("왕초")) {
+					f++;
+				}
+			}
+			model.addAttribute("ss", ss);
+			model.addAttribute("a", a);
+			model.addAttribute("b", b);
+			model.addAttribute("c", c);
+			model.addAttribute("d", d);
+			model.addAttribute("e", e);
+			model.addAttribute("f", f);
+			
+			return "uclub/uClubDetail.page";
 		}
 	}
 	
@@ -158,7 +281,7 @@ public class ClubController {
 		
 		model.addAttribute("cvo", cvo);
 		
-		return "uclub/uClubUpdate";
+		return "uclub/uClubUpdate.pag";
 	}
 	//클럽삭제
 	@RequestMapping("/Club/ClubDel.techni")

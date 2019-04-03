@@ -23,11 +23,11 @@ $(document).ready(function() {
 	var u_nm = "${uvo.u_nm}";
 	var uc_mng = $("#uc_mng option:selected").val();
 	if("${uvo.c_cnt}" >0 && uc_mng == "총무"){
-		swal("MGL","총무는 최대 1명까지 가능합니다.")
+		swal("민턴in","총무는 최대 1명까지 가능합니다.")
 		return;
 	}
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "가입 승인 하시겠습니까?",
 			buttons : true
 		})
@@ -43,7 +43,7 @@ $(document).ready(function() {
 						success : function(data){
 							if(data.cnt>0){
 								swal({
-									title:"MGL",
+									title:"민턴in",
 									text : "가입이 승인 되었습니다.",
 									type : "success"
 								})
@@ -62,12 +62,12 @@ $(document).ready(function() {
 								    form.submit();
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 							
 						},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 		};
@@ -81,7 +81,7 @@ $(document).ready(function() {
 		var u_id = "${uvo.u_id}";
 		var c_idx = "${uvo.c_idx}";
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "가입 거절 하시겠습니까?",
 				buttons : true
 			})
@@ -97,7 +97,7 @@ $(document).ready(function() {
 							success : function(data){
 								if(data.cnt>0){
 									swal({
-										title:"MGL",
+										title:"민턴in",
 										text : "가입이 거절 되었습니다.",
 										type : "success"
 									})
@@ -105,12 +105,12 @@ $(document).ready(function() {
 									
 									})
 								}else{
-									swal("MGL","죄송합니다. 다시 시도해 주세요.")
+									swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 								}
 								
 							},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 			};

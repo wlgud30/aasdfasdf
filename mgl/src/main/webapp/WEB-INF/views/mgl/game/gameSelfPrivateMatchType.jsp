@@ -96,6 +96,8 @@ function matchSetting(){
 		form.submit();
 }
 function teamSetting(kind){
+	alert(kind);
+	
 	if(kind=="개인리그전"){
 		var path = "/Game/selfMatchPrivateInsertForm.techni"
 	}else{
@@ -116,9 +118,8 @@ function teamSetting(kind){
 	$(document).ready(function() {
 		if("${cs_kind}" == "팀리그전"){
 			$("#c_li2").text("팀·출전신청");
-			$("#c_li").attr("onclick","#");
+			$("#c_li").attr("onclick","");
 		}
-		alert("${cs_kind}")
 	});
 	var q = ${i+1}
 	function append(i, t) {
@@ -129,7 +130,7 @@ function teamSetting(kind){
 				.append(
 						"<tr id='abcd_"
 								+ (q)
-								+ "'><td class='no_td'><input id='no_"+q+"' class='no cet_lay' name='no' type='text' value="+q+"></td><td class='ga_title'><input type='text' class='type' id ='type_"
+								+ "'><td class='no_td'><input id='no_"+q+"' class='no cet_lay' name='no' type='number' value="+q+"></td><td class='ga_title'><input type='text' class='type' id ='type_"
 								+ q
 								+ "' name='type' placeholder='구분(종목) 입력'></td><td class='i_btn_td'><span id ='ad_"
 								+ q
@@ -165,11 +166,11 @@ function teamSetting(kind){
 		var type = "";
 		for (var i = 1; i < b + 1; i++) {
 			if ($("#no_" + i).val() == "" || $("#no_" + i).val() == null) {
-				swal("MGL", "게임 순서를 입력해 주세요.");
+				swal("민턴in", "게임 순서를 입력해 주세요.");
 				return false;
 			}
 			if ($("#type_" + i).val() == "" || $("#type_" + i).val() == null) {
-				swal("MGL", "종목을 입력해 주세요.");
+				swal("민턴in", "종목을 입력해 주세요.");
 				return false;
 			}
 			if (i == b) {
@@ -196,11 +197,11 @@ function teamSetting(kind){
 					/* location.href = "/Game/selfPrivateMatchInsertForm.techni"  */
 						teamSetting('${cs_kind}');
 				} else {
-					swal("MGL", "죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in", "죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error) {
-				swal("MGL", "error : " + error);
+				swal("민턴in", "error : " + error);
 			}
 		})
 

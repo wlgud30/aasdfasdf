@@ -2,7 +2,7 @@
 	pageEncoding="EUC-KR"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<div class="tab_btn_b_area" >
+<div class="tab_btn_b_area">
 	<ul class="tab_btn_b">
 		<li onClick="location.href='/UClub/UClubAllList.techni'"><span>가입한
 				클럽</span></li>
@@ -31,12 +31,15 @@
 			</form>
 		</div>
 		<div class="search_btn">
-			<span id="btn_search" class="icon-magnifier btn_i i-text">검색</span>
-			<span class="icon-location-pin btn_i i-text">내위치</span>
+			<span id="btn_search" class="icon-magnifier btn_i i-text">검색</span> <span
+				class="icon-location-pin btn_i i-text">내위치</span>
 		</div>
 	</div>
 	<!-- search_bar end -->
 </div>
+<form method="post" action="/Club/ClubDetail.techni" id="frm2">
+	<input type="hidden" name="c_idx" id="c_idx">
+</form>
 <c:choose>
 	<c:when test="${list == null || list.size()==0 }">
 		<div class="content white_bg">
@@ -68,11 +71,11 @@
 						</div>
 						<div class="room_data">
 							<h4>${data.c_nm }</h4>
-							<div class="li_date">
-								<span class="ti"><c:set var="location"
-										value="${data.c_location}" />${data.c_location}</span> <span
-									class="members"><i class="icon-user"></i>${data.cu_cnt}</span>
-							</div>
+							<p class="el_date">
+								<c:set var="location" value="${data.c_location}" />${data.c_location}</p>
+						</div>
+						<div class="btn_td">
+							<span class="members"><i class="icon-user"></i>${data.cu_cnt}</span>
 						</div>
 					</li>
 				</c:forEach>
@@ -87,16 +90,21 @@
 <script>
 	$(document).ready(function() {
 		$("#club").attr("class", "active_tab");
-		var msg  = "${msg}";
-		if(msg == 1){
-			swal("MGL","검색 결과가 없습니다.")
+		var msg = "${msg}";
+		if (msg == 1) {
+			swal("민턴in", "검색 결과가 없습니다.")
 		}
+		$(".post1").click(function() {
+			var c_idx = $(this).attr("value");
+			$("#c_idx").val(c_idx);
+			$("#frm2").submit();
+		});
 	});
 
 	$("#btn_search").click(function() {
 		var keyword = $("#keyword").val();
 		if (keyword == "" || null) {
-			swal("MGL", "검색어를 입력해주세요.");
+			swal("민턴in", "검색어를 입력해주세요.");
 		} else {
 			$("#frm").attr("action", "/UClub/SearchList.techni").submit();
 		}

@@ -53,10 +53,10 @@
   <div id="container"> <!-- InstanceBeginEditable name="container" -->
     <div class="content white_bg join">
       <h4 class="title_m">SNS 회원가입</h4>
-      <a href="naversearchapp://'<%=apiURL%>'" >네이버앱 실행</a>
+     <%--  <a href="naversearchapp://'<%=apiURL%>'" >네이버앱 실행</a> --%>
         <ul class="box_line_li ar_right">
-          <li onClick="location.href='<%=apiURL%>'"><div class="sns_logo"><img src="/resources/img/naver.svg"></div><div>네이버 계정으로 회원가입</div></li>
-          <li onClick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=d8193c16fc0293b7a0fbae13d2cc5e62&redirect_uri=http://mgl.techni.co.kr:8081/Member/kakaoLogin.techni&response_type=code'"><div class="sns_logo"><img src="/resources/img/kakao.svg"></div><div>카카오 계정으로 회원가입</div></li> 
+          <%-- <li onClick="location.href='<%=apiURL%>'"><div class="sns_logo"><img src="/resources/img/naver.svg"></div><div>네이버 계정으로 회원가입</div></li>
+          <li onClick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=d8193c16fc0293b7a0fbae13d2cc5e62&redirect_uri=http://mgl.techni.co.kr:8081/Member/kakaoLogin.techni&response_type=code'"><div class="sns_logo"><img src="/resources/img/kakao.svg"></div><div>카카오 계정으로 회원가입</div></li>  --%>
 			<li onClick="googleClikc()"><div class="sns_logo"><img src="/resources/img/naver.svg"></div><div>네이버 계정으로 회원가입</div></li>
           <li onClick="googleClikc()"><div class="sns_logo"><img src="/resources/img/kakao.svg"></div><div>카카오 계정으로 회원가입</div></li>
           <li onClick="googleClikc()"><div class="sns_logo"><img src="/resources/img/google.svg"></div><div>구글 계정으로 회원가입</div></li>
@@ -78,7 +78,8 @@
 </div>
 <script type="text/javascript">
 function googleClikc(){
-	location.href="${google_url}";
+	/* location.href="${google_url}"; */
+	swal("민턴in","서비스 준비중 입니다.")
 }
 </script>
 <!-- wrap end -->

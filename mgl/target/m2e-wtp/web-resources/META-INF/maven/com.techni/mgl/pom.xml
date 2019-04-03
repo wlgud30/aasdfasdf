@@ -263,8 +263,17 @@
 			<version>3.0.8</version>
 
 		</dependency>
-
-
+		<!-- 엑셀파일 읽기 -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

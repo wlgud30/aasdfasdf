@@ -17,6 +17,7 @@ import com.techni.mgl.domain.CfightVO;
 import com.techni.mgl.domain.ClubMatchVO;
 import com.techni.mgl.domain.GTempTeamVO;
 import com.techni.mgl.domain.MemberVO;
+import com.techni.mgl.domain.UClubVO;
 
 @Service
 public class GameService {
@@ -454,6 +455,11 @@ public class GameService {
 		return gDAO.pointAllDetail(map);
 	}
 	
+	//전적비교할때 게임인덱스
+	@Transactional
+	public List<ClubMatchVO> getGidx(Map<String, String> map){
+			return gDAO.getGidx(map);
+	}	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
 	 */	

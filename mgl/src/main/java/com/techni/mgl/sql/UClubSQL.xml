@@ -34,6 +34,7 @@
 		<result column="MGL_CFIGHT_NM" property="cf_nm"/>
 		<result column="MGL_CFIGHT_TYPE_NM" property="cf_t_nm"/>
 		<result column="MGL_CFIGHT_START" property="cf_start"/>
+		<result column="MGL_CFIGHT_IDX" property="cf_idx"/>
 	</resultMap>
 	
 	<resultMap type="com.techni.mgl.domain.ClubVO" id="clubVO">
@@ -98,7 +99,7 @@
 		INSERT INTO 
 				MGL_UCLUB VALUES(
 						concat("CI",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_UCLUB_SEQ) FROM MGL_SEQ) NEXT),4,0)),
-						(SELECT max(mgl_club_idx) FROM MGL_CLUB) ,
+						#{c_idx} ,
 						#{u_id},
 						(SELECT concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") FROM MGL_USER WHERE MGL_USER_ID = #{u_id}),
 						#{u_club_gd},
@@ -116,7 +117,7 @@
 				#{u_id},
 				(SELECT concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") FROM MGL_USER WHERE MGL_USER_ID = #{u_id}),
 				#{u_club_gd},
-				"가입대기",
+				#{uc_mng},
 				sysdate(),
 				null
 			);
@@ -459,7 +460,7 @@
 		LEFT JOIN
 		(
 			SELECT
-				my_t_p.*,you_t_p.*,count(case when my.mgl_club_match_win = "승" then 1 end)as my_win,count(case when my.mgl_club_match_win = "패" then 1 end)as my_lose,sum(my.mgl_club_match_aptn)as my_ap,sum(you.mgl_club_match_aptn)as you_ap,sum(my.mgl_club_match_pptn)as my_pp,sum(you.mgl_club_match_pptn)as you_pp,sum(my.mgl_club_match_cnt_gap)as my_gap,sum(you.mgl_club_match_cnt_gap)as you_gap,MGL_CLUB_NM,my_id,my_nm,my_gd,my_gr,you_id,you_nm,you_gd,you_gr from
+				my_t_p.*,you_t_p.*,count(case when my.mgl_club_match_win = "승" then 1 end)as my_win,count(case when my.mgl_club_match_win = "패" then 1 end)as my_lose,sum(my.mgl_club_match_aptn)as my_ap,sum(you.mgl_club_match_aptn)as you_ap,sum(my.mgl_club_match_pptn)as my_pp,sum(you.mgl_club_match_pptn)as you_pp,sum(my.mgl_club_match_cnt_gap)as my_gap,sum(you.mgl_club_match_cnt_gap)as you_gap,MGL_CLUB_NM,my_id,my_nm,my_gd,my_gr,my_photo,my_age,you_id,you_nm,you_gd,you_gr,you_photo,you_age from
 				(
 					SELECT 
 						SUM(MGL_CLUB_MATCH_APTN)as my_cm_p_total,SUM(case when MID(MGL_CLUB_MATCH_IDX,2,4) =  #{ym} then MGL_CLUB_MATCH_APTN end) as my_cm_p_total_m FROM MGL_CLUB_MATCH 
@@ -478,7 +479,7 @@
 				) as you_t_p,
 				(
 					SELECT 
-						MGL_CLUB_NM,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as my_age,a.MGL_USER_ID as my_id,MGL_USER_NM as my_nm,D.MGL_UCLUB_GRADE_CD as my_gd,MGL_CLUB_MATCH_IDX,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB,MGL_CLUB_MATCH_UEFFORT as my_gr,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_PPTN,MGL_CLUB_MATCH_APTN
+						MGL_CLUB_NM,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as my_age,a.MGL_USER_ID as my_id,MGL_USER_NM as my_nm,D.MGL_UCLUB_GRADE_CD as my_gd,MGL_CLUB_MATCH_IDX,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB,MGL_CLUB_MATCH_UEFFORT as my_gr,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_PPTN,MGL_CLUB_MATCH_APTN,MGL_USER_PHOTO AS my_photo
 					FROM 
 						MGL_USER	A
 					INNER JOIN 
@@ -507,7 +508,7 @@
 						
 				(
 					SELECT 
-						left(now(),4)-left(MGL_USER_BIRTH,4)+1 as you_age,a.MGL_USER_ID as you_id,MGL_USER_NM as you_nm,D.MGL_UCLUB_GRADE_CD as you_gd,MGL_CLUB_MATCH_IDX,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB,MGL_CLUB_MATCH_UEFFORT as you_gr,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_PPTN,MGL_CLUB_MATCH_APTN
+						left(now(),4)-left(MGL_USER_BIRTH,4)+1 as you_age,a.MGL_USER_ID as you_id,MGL_USER_NM as you_nm,D.MGL_UCLUB_GRADE_CD as you_gd,MGL_CLUB_MATCH_IDX,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB,MGL_CLUB_MATCH_UEFFORT as you_gr,MGL_CLUB_MATCH_CNT_GAP,MGL_CLUB_MATCH_WIN,MGL_CLUB_MATCH_PPTN,MGL_CLUB_MATCH_APTN,MGL_USER_PHOTO AS you_photo
 					FROM 
 						MGL_USER	A
 					INNER JOIN 
@@ -545,6 +546,7 @@
 			ON 
 				JA.MGL_CLUB_NM = JB.MGL_CLUB_NM	
 	</select>
+	
 	<!-- 클럽업데이트 -->
 	<update id="clubUpdate">
 		UPDATE 
@@ -620,6 +622,7 @@
 		WHERE 
 			MGL_USER_ID = #{u_id}
 		GROUP BY c_mm
+		ORDER BY C_MM DESC;
 	</select>
 	<!-- 클럽사용자 탈퇴 -->
 	<update id="clubOut">
@@ -770,7 +773,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 	<select id ="GameOKListGuest" resultMap="uClubVO">
 		(
 			SELECT 
-				ifnull(END_COUNT,0)as END_COUNT,WAIT_COUNT,D.MGL_CLUB_IDX,B.MGL_USER_ID,b.mgl_uclub_grade_cd,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,A.MGL_USER_NM,A.MGL_USER_PHOTO,d.c_count 
+				MGL_USER_SEX,ifnull(END_COUNT,0)as END_COUNT,WAIT_COUNT,D.MGL_CLUB_IDX,B.MGL_USER_ID,b.mgl_uclub_grade_cd,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,A.MGL_USER_NM,A.MGL_USER_PHOTO,d.c_count 
 			FROM 
 				MGL_USER A 
 			JOIN
@@ -843,7 +846,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 
 		(
 			SELECT 
-				IFNULL(END_COUNT,0),IFNULL(WAIT_COUNT,0),left(MGL_USER_ID,13)AS MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_NM,MGL_USER_PHOTO,0  
+				MGL_USER_SEX,IFNULL(END_COUNT,0),IFNULL(WAIT_COUNT,0),left(MGL_USER_ID,13)AS MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_NM,MGL_USER_PHOTO,0  
 			FROM 
 				(
 					SELECT 
@@ -851,7 +854,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 					FROM
 						 (
 							SELECT 
-								MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USER_PHOTO,MGL_USER_BIRTH,COUNT(CASE WHEN MGL_CLUB_AT_ID1 = MGL_USER_ID or MGL_CLUB_AT_ID2 = MGL_USER_ID or MGL_CLUB_BT_ID1 = MGL_USER_ID or MGL_CLUB_BT_ID2 = MGL_USER_ID  then 1 END) AS WAIT_COUNT
+								MGL_USER_SEX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USER_PHOTO,MGL_USER_BIRTH,COUNT(CASE WHEN MGL_CLUB_AT_ID1 = MGL_USER_ID or MGL_CLUB_AT_ID2 = MGL_USER_ID or MGL_CLUB_BT_ID1 = MGL_USER_ID or MGL_CLUB_BT_ID2 = MGL_USER_ID  then 1 END) AS WAIT_COUNT
 							FROM 
 								(
 									SELECT
@@ -914,7 +917,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 	UNION
 		(
 			SELECT 
-				IFNULL(END_COUNT,0),IFNULL(WAIT_COUNT,0),left(MGL_USER_ID,13)AS MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_NM,MGL_USER_PHOTO,0  
+				MGL_USER_SEX,IFNULL(END_COUNT,0),IFNULL(WAIT_COUNT,0),left(MGL_USER_ID,13)AS MGL_CLUB_IDX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,left(now(),4)-left(MGL_USER_BIRTH,4)+1 as u_age,MGL_USER_NM,MGL_USER_PHOTO,0  
 			FROM 
 				(
 					SELECT 
@@ -922,7 +925,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 					FROM 
 						(
 							SELECT 
-								MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USER_PHOTO,MGL_USER_BIRTH,COUNT(CASE WHEN MGL_CLUB_AT_ID1 = MGL_USER_ID or MGL_CLUB_AT_ID2 = MGL_USER_ID or MGL_CLUB_BT_ID1 = MGL_USER_ID or MGL_CLUB_BT_ID2 = MGL_USER_ID  then 1 END) AS WAIT_COUNT
+								MGL_USER_SEX,MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USER_PHOTO,MGL_USER_BIRTH,COUNT(CASE WHEN MGL_CLUB_AT_ID1 = MGL_USER_ID or MGL_CLUB_AT_ID2 = MGL_USER_ID or MGL_CLUB_BT_ID1 = MGL_USER_ID or MGL_CLUB_BT_ID2 = MGL_USER_ID  then 1 END) AS WAIT_COUNT
 							FROM 
 								MGL_CLUB_MATCH_WAIT Atb 
 							JOIN 
@@ -992,7 +995,7 @@ ORDER BY my_win desc,my_gap desc,my_ap DESC
 						FROM
 							(
 								SELECT 
-									JA.MGL_CFIGHT_NM,JA.MGL_CFIGHT_START,ja.MGL_CFIGHT_TYPE_NM,jb.*,jc.MGL_CFIGHT_USER_A,jc.MGL_CFIGHT_USER_B,JD.a1_id,jd.a1_age,jd.a1_gd,JE.* 
+									JA.MGL_CFIGHT_IDX,JA.MGL_CFIGHT_NM,JA.MGL_CFIGHT_START,ja.MGL_CFIGHT_TYPE_NM,jb.*,jc.MGL_CFIGHT_USER_A,jc.MGL_CFIGHT_USER_B,JD.a1_id,jd.a1_age,jd.a1_gd,JE.* 
 								FROM 
 									( 
 										SELECT 
@@ -1576,6 +1579,8 @@ BY MGL_USER_ID ) BTABLE USING(MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USE
 			mgl_club_idx = #{c_idx} 
 		AND 
 			mgl_uclub_mng != '가입대기' 
+		AND
+			mgl_uclub_mng != "탈퇴"
 	</select>
 	
 	<!-- 대표클럽이 NULL일때 클럽에 가입하면 대표클럽을 가입한 클럽으로 함 -->
@@ -1583,6 +1588,21 @@ BY MGL_USER_ID ) BTABLE USING(MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_USER_NM,MGL_USE
 		SELECT IFNULL(COUNT(MGL_REPRESENT_CLUB),0) as c_idx FROM MGL_USER WHERE MGL_USER_ID =#{u_id}
 	</select>
 	<!-- 대표클럽이 NULL일때 클럽에 가입하면 대표클럽을 가입한 클럽으로 함 -->
-
 	
+	<!-- 헤더 화면 -->
+	<select id="headerSelect" resultMap="uClubVO">
+		SELECT IFNULL(SUM(C_APTN+CF_APTN+CS_APTN),0) AS cm_p_total,MGL_UCLUB_GRADE_CD,MGL_CLUB_NM FROM(
+(SELECT IFNULL(SUM(MGL_CLUB_MATCH_APTN),0) AS C_APTN,MGL_USER_ID FROM MGL_CLUB_MATCH WHERE MGL_USER_ID = #{u_id})A LEFT JOIN 
+(SELECT IFNULL(SUM(MGL_CFIGHT_APTN),0) AS CF_APTN,MGL_CFIGHT_USER_ID FROM MGL_CFIGHT_MATCH_END WHERE MGL_CFIGHT_USER_ID = #{u_id})B
+ON A.MGL_USER_ID = B.MGL_CFIGHT_USER_ID LEFT JOIN
+(SELECT IFNULL(SUM(MGL_CSELF_APTN),0) AS CS_APTN,MGL_CSELF_USER_ID FROM MGL_CSELF_MATCH_END WHERE MGL_CSELF_USER_ID = #{u_id})C
+ON B.MGL_CFIGHT_USER_ID = C.MGL_CSELF_USER_ID RIGHT JOIN
+(SELECT MGL_USER_ID,MGL_UCLUB_GRADE_CD,MGL_CLUB_NM FROM MGL_UCLUB A LEFT JOIN (SELECT MGL_CLUB_NM,MGL_CLUB_IDX FROM MGL_CLUB WHERE MGL_CLUB_IDX=#{c_idx}) B ON A.MGL_CLUB_IDX = B.MGL_CLUB_IDX 
+WHERE MGL_USER_ID = #{u_id} AND A.MGL_CLUB_IDX = #{c_idx})D
+ON A.MGL_USER_ID = D.MGL_USER_ID)
+	</select>
+	<!-- 클럽 이름 -->
+	<select id="club_nm" resultMap="uClubVO">
+		SELECT CLUB_NM FROM MGL_CLUB WHERE MGL_CLUB_IDX = #{c_idx}
+	</select>
 </mapper>

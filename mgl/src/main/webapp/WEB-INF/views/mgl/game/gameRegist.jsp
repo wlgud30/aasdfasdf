@@ -40,7 +40,7 @@
 		function teamA(id,nm,photo,gd,age,push){
 			
 			if(a1 == 1  && a2 == 1){
-				swal("MGL","A팀은 더이상 선택할 수 없습니다,");
+				swal("민턴in","A팀은 더이상 선택할 수 없습니다,");
 				return;
 			}
 			
@@ -48,7 +48,7 @@
 				a1 = 1;
 				$("#a1_nm").text(nm)
 				$("#a1_photo").attr("style","background-image: url("+photo+")");
-				$("#a1_age_gd").text("("+age+" 세"+gd+")");
+				$("#a1_age_gd").text("("+age+"-"+gd+")");
 				$("#a1").val(id);
 				$("#pa1").val(push);
 				$("#a1_bar").attr("style","display:''");
@@ -57,7 +57,7 @@
 				a2=1;
 				$("#a2_nm").text(nm)
 				$("#a2_photo").attr("style","background-image: url("+photo+")");
-				$("#a2_age_gd").text("("+age+" 세"+gd+")");
+				$("#a2_age_gd").text("("+age+"-"+gd+")");
 				$("#a2").val(id);
 				$("#pa2").val(push);
 				$("#a2_bar").attr("style","display:''");
@@ -72,7 +72,7 @@
 		function teamB(id,nm,photo,gd,age,push){
 			
 			if(b1 == 1  && b2 == 1 ){
-				swal("MGL","B팀은 더이상 선택할 수 없습니다,");
+				swal("민턴in","B팀은 더이상 선택할 수 없습니다,");
 				return;
 			}
 			
@@ -80,7 +80,7 @@
 				b1 = 1;
 				$("#b1_nm").text(nm)
 				$("#b1_photo").attr("style","background-image: url("+photo+")");
-				$("#b1_age_gd").text("("+age+"세  "+gd+")");
+				$("#b1_age_gd").text("("+age+"- "+gd+")");
 				$("#b1").val(id)
 				$("#pb1").val(push);
 				$("#b1_bar").attr("style","display:''");
@@ -89,7 +89,7 @@
 				b2=1;
 				$("#b2_nm").text(nm)
 				$("#b2_photo").attr("style","background-image: url("+photo+")");
-				$("#b2_age_gd").text("("+age+"세 "+gd+")");
+				$("#b2_age_gd").text("("+age+"-"+gd+")");
 				$("#b2").val(id)
 				$("#pb2").val(push);
 				$("#b2_bar").attr("style","display:''");
@@ -156,7 +156,7 @@
 			var n = team.includes("1")
 			
 			if(b1==1&&b2==1){
-			swal("MGL","누구와 팀을 바꾸시겠습니까?", {
+			swal("민턴in","누구와 팀을 바꾸시겠습니까?", {
 				  buttons: {
 				    b1_nm : {
 				    	text : b1_nm,
@@ -270,7 +270,7 @@
 			var n = team.includes("1")
 			
 			if(a1==1&&a2==1){
-			swal("MGL","누구와 팀을 바꾸시겠습니까?", {
+			swal("민턴in","누구와 팀을 바꾸시겠습니까?", {
 				  buttons: {
 				    a1_nm : {
 				    	text : a1_nm,
@@ -409,27 +409,27 @@
 			
 				if(team == "a1"){
 					if(a1 == 1){
-						swal("MGL","자리를 비워주세요.")
+						swal("민턴in","자리를 비워주세요.")
 						return;
 					}
 				}else if(team == "a2"){
 					if(a2 == 1){
-						swal("MGL","자리를 비워주세요.")
+						swal("민턴in","자리를 비워주세요.")
 						return;
 					}
 				}else if(team =="b1"){
 					if(b1 == 1){
-						swal("MGL","자리를 비워주세요.")
+						swal("민턴in","자리를 비워주세요.")
 						return;
 					}
 				}else{
 					if(b2 == 1){
-						swal("MGL","자리를 비워주세요.")
+						swal("민턴in","자리를 비워주세요.")
 						return;
 					}
 				}
 				if(guest_c<3){
-			swal("MGL","게스트의 성별을 선택해 주세요.", {
+			swal("민턴in","게스트의 성별을 선택해 주세요.", {
 				  buttons: {
 				    "남자": {
 				      text: "남자",
@@ -491,7 +491,7 @@
 				 
 				});
 			}else{
-				swal("MGL","게스트는 최대 3명까지 가능합니다.");
+				swal("민턴in","게스트는 최대 3명까지 가능합니다.");
 			}
 		}
 		
@@ -501,7 +501,7 @@
 			var al, bl;
 			if(ach == 2 && bch == 2){
 				swal({
-					title : "MGL",
+					title : "민턴in",
 					text : "게임을 등록하시겠습니까?",
 					buttons : true
 				})
@@ -527,19 +527,19 @@
 									}											
 											location.href = "/Game/GameState.techni"
 										}else{
-											swal("MGL","죄송합니다. 다시 시도해 주세요.")
+											swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 										}
 										
 									},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}			
 					})
 				}
 				});
 				
 			}else{
-				swal("MGL","게임 등록은 각팀당 두명씩 선택 후 가능합니다.");
+				swal("민턴in","게임 등록은 각팀당 두명씩 선택 후 가능합니다.");
 				return;
 			}
 		}
@@ -551,11 +551,11 @@
 					if(data.cnt > 0 ){
 						location.href="/UClub/AttendList.techni"
 					}else{
-						swal("MGL", "이미 출석된 회원입니다.");
+						swal("민턴in", "이미 출석된 회원입니다.");
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}
 			});
 		}
@@ -568,11 +568,11 @@
 					if(data.cnt > 0 ){
 						location.href="/UClub/AttendList.techni"
 					}else{
-						swal("MGL", "이미 퇴실 상태입니다.");
+						swal("민턴in", "이미 퇴실 상태입니다.");
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}
 			});
 		}
@@ -651,15 +651,14 @@
 			var yyyy = today.getFullYear();
 			
 			g_age = yyyy-g_age;
-			alert(g_age);
 			if(g_id == null || g_id ==""){
-				swal("MGL","이름을 입력해주세요.")
+				swal("민턴in","이름을 입력해주세요.")
 			}else if(g_sex == null || g_sex ==""){
-				swal("MGL","성별을 입력해주세요.")
+				swal("민턴in","성별을 입력해주세요.")
 			}else if(g_age == null || g_age ==""){
-				swal("MGL","연령대를 입력해주세요.")
+				swal("민턴in","연령대를 입력해주세요.")
 			}else if(g_gd == null || g_gd ==""){
-				swal("MGL","급수를 입력해주세요.")
+				swal("민턴in","급수를 입력해주세요.")
 			}else{
 				$.ajax({
 					async : true,
@@ -670,13 +669,13 @@
 					contentType : "application/json; charset=UTF-8",
 					success : function(data){
 						if(data.cnt>0){
-							location.href="/UClub/GameTeamStateInfo.techni"
+							location.href="/UClub/GameOKList.techni"
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				}); 
 			}
@@ -686,7 +685,7 @@
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo"
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo"
 						onclick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
@@ -917,15 +916,15 @@
 									<c:when test="${canData.wait_count > 0 }"><em class="game_nb-tiny">0</em></c:when>
 									<c:otherwise></c:otherwise>
 								</c:choose>
-							<span class="age_rank">(${fn:substring(canData.u_age,0,1)}0대
+							<span class="age_rank">(${fn:substring(canData.u_age,0,1)}0
 								${canData.u_club_gd })</span>
 						</div>
 					</div> <!--photo_name end-->
 					<div class="btns_box" id="divide">
 						<span
-							onClick="teamA('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }' ,'${canData.u_push }')"
+							onClick="teamA('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${fn:substring(canData.u_age,0,1)}0' ,'${canData.u_push }')"
 							id="ateam">A팀</span> <span
-							onClick="teamB('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${canData.u_age }','${canData.u_push }')"
+							onClick="teamB('${canData.u_id}','${canData.u_nm }' ,'${canData.u_photo}','${canData.u_club_gd }','${fn:substring(canData.u_age,0,1)}0','${canData.u_push }')"
 							id="bteam">B팀</span>
 					</div>
 				</li>
@@ -968,9 +967,9 @@
 			<tr>
 				<td><ul class="list_check">
 						<li><input type="radio" name="choice" class="check_circle"
-							id="check_1" value="m"> <label for="check_1">남자</label></li>
+							id="check_1" value="M"> <label for="check_1">남자</label></li>
 						<li><input type="radio" name="choice" class="check_circle"
-							id="check_2" value="f"> <label for="check_2">여자</label></li>
+							id="check_2" value="F"> <label for="check_2">여자</label></li>
 					</ul></td>
 			</tr>
 			<tr>
@@ -1062,7 +1061,7 @@
 		a1 = 1;
 		$("#a1_nm").text(nm)
 		$("#a1_photo").attr("style","background-image: url("+photo+")");
-		$("#a1_age_gd").text("("+age+" 세"+gd+")");
+		$("#a1_age_gd").text("("+age+"-"+gd+")");
 		$("#a1").val(id);
 		$("#pa1").val(push);
 		$("#a1_bar").attr("style","display:''");
@@ -1076,7 +1075,7 @@
     	a2=1;
 		$("#a2_nm").text(nm)
 		$("#a2_photo").attr("style","background-image: url("+photo+")");
-		$("#a2_age_gd").text("("+age+" 세"+gd+")");
+		$("#a2_age_gd").text("("+age+"-"+gd+")");
 		$("#a2").val(id);
 		$("#pa2").val(push);
 		$("#a2_bar").attr("style","display:''");
@@ -1090,7 +1089,7 @@
 		b1 = 1;
 		$("#b1_nm").text(nm)
 		$("#b1_photo").attr("style","background-image: url("+photo+")");
-		$("#b1_age_gd").text("("+age+"세  "+gd+")");
+		$("#b1_age_gd").text("("+age+"- "+gd+")");
 		$("#b1").val(id)
 		$("#pb1").val(push);
 		$("#b1_bar").attr("style","display:''");
@@ -1104,7 +1103,7 @@
 		b2=1;
 		$("#b2_nm").text(nm)
 		$("#b2_photo").attr("style","background-image: url("+photo+")");
-		$("#b2_age_gd").text("("+age+"세 "+gd+")");
+		$("#b2_age_gd").text("("+age+"-"+gd+")");
 		$("#b2").val(id)
 		$("#pb2").val(push);
 		$("#b2_bar").attr("style","display:''");

@@ -1,17 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-<script src="/resources/js/jquery-1.12.0.min.js"></script>
 <style type="text/css">
 	input[type="number"]::-webkit-inner-spin-button {
 	    -webkit-appearance: none;
@@ -55,26 +44,26 @@ function onlyNumber(){
 		var pw = $("#u_pw").val();
 		var pwchk=$("#confirm_pw").val();
 		if($("#phone1").val() == "" || $("#phone2").val() == "" ||$("#phone3").val() == ""){
-			swal("MGL","전화번호를 입력해 주세요.")
+			swal("민턴in","전화번호를 입력해 주세요.")
 		}else if($("#gd").val()=="클럽 급수"){
-			swal("MGL","클럽 급수를 선택해 주세요.")
+			swal("민턴in","클럽 급수를 선택해 주세요.")
 		}else if($("#email").val()==""){
-			swal("MGL","이메일을 입력해 주세요.")
+			swal("민턴in","이메일을 입력해 주세요.")
 		}else if($("#ts").val()=="T사이즈"){
-			swal("MGL","T 사이즈를 선택해 주세요.")
+			swal("민턴in","T 사이즈를 선택해 주세요.")
 		}else if(pw!=pwchk){
-			swal("MGL","비밀번호가 일치하지 않습니다.")
+			swal("민턴in","비밀번호가 일치하지 않습니다.")
 			$("#u_pw").val("");
 			$("#confirm_pw").val("");
 		}else if(pw.length != 0 && pw.length < 6){
-			swal("MGL","비밀번호는 6자 이상으로 입력해 주세요.")
+			swal("민턴in","비밀번호는 6자 이상으로 입력해 주세요.")
 		}else{
 			var tel = $("#phone1").val()+$("#phone2").val()+$("#phone3").val()
 			var form = $("form")[0];
 			var formData = new FormData(form);
 			formData.append("tel",tel);
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "저장 하시겠습니까?",
 				buttons : true
 			})
@@ -90,7 +79,7 @@ function onlyNumber(){
 						success : function(data){
 							if(data.cnt==1){
 								swal({
-									title : "MGL",
+									title : "민턴in",
 									text : "수정이 완료되었습니다.",
 									type : "success"
 								})
@@ -99,7 +88,7 @@ function onlyNumber(){
 								})
 							}else if(data.cnt==2){
 								swal({
-									title : "MGL",
+									title : "민턴in",
 									text : "수정이 완료되었습니다.다시 로그인 해주세요.",
 									type : "success"
 								})
@@ -117,11 +106,11 @@ function onlyNumber(){
 									}
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 						},
 						error : function(error){
-							swal("MGL","error : " + error);
+							swal("민턴in","error : " + error);
 						}
 					});
 				};
@@ -129,25 +118,7 @@ function onlyNumber(){
 		}
 	}
 </script>
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-</head>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="history.back();"></div>
-				<div class="tit_top">
-					<h1>개인정보 수정</h1>
-				</div>
-				<div class="bt_top">
-					<span class="icon-save icon-f btn_i i-text" onclick="update()">저장</span>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
+
 			<!-- InstanceBeginEditable name="container" -->
 			<form id="file_form" method="post" enctype="multipart/form-data">
 			<div class="content white_bg">
@@ -244,14 +215,3 @@ function onlyNumber(){
 			</div> -->
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
-		<!-- container end -->
-		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
-		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

@@ -6,9 +6,9 @@
 /*  $(document).ready(function() {
 	 var u_status = "${u_status}";
 	 if(u_status != '게임중' && u_status !="게임가능"){
-		swal("MGL","오늘 게임에 참석 하시겠습니까?");
+		swal("민턴in","오늘 게임에 참석 하시겠습니까?");
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "오늘 게임에 참석 하시겠습니까?",
 			buttons : true
 		})
@@ -21,11 +21,11 @@
 });  */
 	/* function upTeam(i,c_gidx){
 		if(i == 1){
-			swal("MGL","첫번째 대기순번 입니다.")
+			swal("민턴in","첫번째 대기순번 입니다.")
 		}else{
 			var c_gidx_c = $("#cg_"+(i-1)).val();
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "대기 순번을 위로 올리시겠습니까?",
 				buttons : true
 			})
@@ -42,11 +42,11 @@
 							if(data.cnt > 0){
 								location.href = "/Game/GameState.techni"
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 						},
 						error : function(error){
-							swal("MGL","error : "+error);
+							swal("민턴in","error : "+error);
 						}
 					})
 				}
@@ -57,10 +57,10 @@
 /* 	function downTeam(i,c_gidx){
 		var c_gidx_c = $("#cg_"+(i+1)).val();
 		if(i == ${fn:length(list2)}){
-			swal("MGL","마지막 대기순번 입니다.")
+			swal("민턴in","마지막 대기순번 입니다.")
 		}else{
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "대기 순번을 내리시겠습니까?",
 				buttons : true
 			})
@@ -77,11 +77,11 @@
 							if(data.cnt > 0){
 								location.href = "/Game/GameState.techni"
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 						},
 						error : function(error){
-							swal("MGL","error : "+error);
+							swal("민턴in","error : "+error);
 						}
 					})
 				}
@@ -90,7 +90,7 @@
 	} */
 	function deleteW(c_gidx,a1,a2,b1,b2){
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "대기를 취소 하시겠습니까?",
 			buttons : true
 		})
@@ -107,11 +107,11 @@
 							if(data.cnt > 0){
 								location.href = "/Game/GameState.techni"
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 						},
 						error : function(error){
-							swal("MGL","error : "+error);
+							swal("민턴in","error : "+error);
 						}
 					})
 				}
@@ -125,11 +125,11 @@
 				if(data.cnt > 0 ){
 					location.href="/UClub/AttendList.techni"
 				}else{
-					swal("MGL", "이미 출석된 회원입니다.");
+					swal("민턴in", "이미 출석된 회원입니다.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}
@@ -142,11 +142,11 @@
 				if(data.cnt > 0 ){
 					location.href="/UClub/Attend.techni"
 				}else{
-					swal("MGL", "이미 출석된 회원입니다.");
+					swal("민턴in", "이미 출석된 회원입니다.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}
@@ -159,11 +159,11 @@
 				if(data.cnt > 0 ){
 					location.href="/UClub/AttendList.techni"
 				}else{
-					swal("MGL", "이미 퇴실 상태입니다.");
+					swal("민턴in", "이미 퇴실 상태입니다.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	} */
@@ -173,16 +173,6 @@
 		}
 	} */
 	function gameEnd(c_gidx,cm_a1_id,cm_a2_id,cm_b1_id,cm_b2_id,cm_order){
-		swal({
-			title : "MGL",
-			text : "게임을 끝내고 점수를 등록 하시겠습니까?",
-			buttons : {
-				confirm : "OK",
-				cancel : "NO"
-			}
-		})
-		.then((value)=>{
-			if(value){
 				$.ajax({
 					type:"POST",
 					url:"/Game/GameScoreRegist.techni",
@@ -204,7 +194,7 @@
 							form.submit();
 						}else{
 							swal({
-								title : "MGL",
+								title : "민턴in",
 								text : "죄송합니다. 다시 시도해 주세요."
 							})
 							.then((value) =>{
@@ -213,20 +203,16 @@
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				});
-			}else{
-				
-			}
-		})
 	}
 </script>
 <%-- 		<header>
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo"
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo"
 						onClick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">

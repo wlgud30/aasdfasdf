@@ -22,21 +22,6 @@ function ref(){
 }
 
 </script>
-	<div id="wrap">
-	<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="tit_top">
-					<h1>점수결과</h1>
-				</div>
-				<div class="bt_top">
-				</div>
-				
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
 		<div class="content white_bg">
 				<div class="bd_cat col_2-1">
 					<div>
@@ -102,6 +87,3 @@ function ref(){
 					<span class="btn_st" onclick="ref()">확인</span>
 				</div>
 			</div>
-	
-		</div>
-	</div>

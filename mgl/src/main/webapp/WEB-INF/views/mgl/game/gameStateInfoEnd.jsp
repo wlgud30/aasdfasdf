@@ -5,7 +5,7 @@
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo" onClick="location.href='/UClub/UClubAllList.techni'">
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo" onClick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
 					<h1><a href='/Board/BoardList.techni'>${list[0].c_nm }</a></h1>
@@ -88,7 +88,7 @@
 				
 				function gameEnd(c_gidx){
 					swal({
-						title : "MGL",
+						title : "민턴in",
 						text : "점수를 등록 하시겠습니까?",
 						buttons : {
 							confirm : "OK",
@@ -120,7 +120,7 @@
 				
 				function gameEnd(c_gidx){
 					swal({
-						title : "MGL",
+						title : "민턴in",
 						text : "점수를 등록 하시겠습니까?",
 						buttons : {
 							confirm : "OK",

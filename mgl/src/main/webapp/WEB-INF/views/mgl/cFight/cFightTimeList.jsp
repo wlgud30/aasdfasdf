@@ -19,13 +19,14 @@
 						<li>${fn:substring(list.cf_w_date,0,5)}</li>
 					</ul>
 					<div class="accd_a">
-					<c:forEach items="${list2}" var="list2">
+					<%-- <c:forEach items="${list2}" var="list2">
 					<c:if test="${list.cf_w_date eq list2.cf_w_date }">
 						<div class="head-data">
 							<div>
 								<ul class="li_col-nol impot">
 									<li>${list2.cf_court }코트</li>
-									<li>${list2.cf_no}경기</li>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list2.cf_no/all_court+(1-(list2.cf_no/all_court%1))%1}"/>
+									<li>${pages}경기</li>
 									<li>${list2.cf_t_nm } - ${fn:substring(list2.cf_gidx,15,16)}조</li>
 									<li>토너먼트</li>
 								</ul>
@@ -89,7 +90,7 @@
 							</tr>
 						</table>
 						</c:if>
-						</c:forEach>
+						</c:forEach> --%>
 					</div>
 					<!-- accd_a end-->
 				</li>

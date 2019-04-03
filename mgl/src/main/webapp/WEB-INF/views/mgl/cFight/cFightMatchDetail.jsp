@@ -201,7 +201,8 @@
 								<td class="club-name_td"><span class="club_name">${list[4].team_a_nm}</span>
 									<span class="name3">${list[4].a1_id }</span><span class="name3">${list[4].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[0].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[0].cf_court }-${list[0].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[0].cf_no/all_court+(1-(list[0].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[0].cf_court }코트-${pages}경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -295,9 +296,11 @@
 								<td class="club-name_td"><span class="club_name">${list[7].team_a_nm}</span>
 									<span class="name3">${list[7].a1_id }</span><span class="name3">${list[7].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[1].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[1].cf_court }-${list[1].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[1].cf_no/all_court+(1-(list[1].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[1].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[4].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[4].cf_court }-${list[4].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[4].cf_no/all_court+(1-(list[4].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[4].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -362,11 +365,14 @@
 								<td class="club-name_td"><span class="club_name">${list[9].team_a_nm}</span>
 									<span class="name3">${list[9].a1_id }</span><span class="name3">${list[9].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[2].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[2].cf_court }-${list[2].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[2].cf_no/all_court+(1-(list[2].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[2].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[5].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[5].cf_court }-${list[5].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[5].cf_no/all_court+(1-(list[5].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[5].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[7].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[7].cf_court }-${list[7].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[7].cf_no/all_court+(1-(list[7].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[7].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -402,13 +408,17 @@
 								<td class="club-name_td"><span class="club_name">${list[9].team_b_nm}</span> 
 									<span class="name3">${list[9].b1_id }</span><span class="name3">${list[9].b2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[3].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[3].cf_court }-${list[3].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[3].cf_no/all_court+(1-(list[3].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[3].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[6].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[6].cf_court }-${list[6].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[6].cf_no/all_court+(1-(list[6].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[6].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[8].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[8].cf_court }-${list[8].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[8].cf_no/all_court+(1-(list[8].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[8].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[9].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[9].cf_court }-${list[9].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[9].cf_no/all_court+(1-(list[9].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[9].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 							</tr>
 						</table>
@@ -521,7 +531,8 @@
 								<td class="club-name_td"><span class="club_name">${list[3].team_a_nm}</span>
 									<span class="name3">${list[3].a1_id }</span><span class="name3">${list[3].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[0].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[0].cf_court }-${list[0].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[0].cf_no/all_court+(1-(list[0].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[0].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -586,9 +597,11 @@
 								<td class="club-name_td"><span class="club_name">${list[5].team_a_nm}</span>
 									<span class="name3">${list[5].a1_id }</span><span class="name3">${list[5].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[1].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[1].cf_court }-${list[1].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[1].cf_no/all_court+(1-(list[1].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[1].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[3].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[3].cf_court }-${list[3].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[3].cf_no/all_court+(1-(list[3].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[3].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -624,11 +637,14 @@
 								<td class="club-name_td"><span class="club_name">${list[5].team_b_nm}</span> 
 									<span class="name3">${list[5].b1_id }</span><span class="name3">${list[5].b2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[2].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[2].cf_court }-${list[2].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[2].cf_no/all_court+(1-(list[2].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[2].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[4].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[4].cf_court }-${list[4].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[4].cf_no/all_court+(1-(list[4].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[4].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[5].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[5].cf_court }-${list[5].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[5].cf_no/all_court+(1-(list[5].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[5].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 							</tr>
 						</table>
@@ -711,7 +727,8 @@
 								<td class="club-name_td"><span class="club_name">${list[2].team_a_nm}</span>
 									<span class="name3">${list[2].a1_id }</span><span class="name3">${list[2].a2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[0].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[0].cf_court }-${list[0].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[0].cf_no/all_court+(1-(list[0].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[0].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 								<td>
 									<c:choose>
@@ -747,9 +764,11 @@
 								<td class="club-name_td"><span class="club_name">${list[2].team_b_nm}</span> 
 									<span class="name3">${list[2].b1_id }</span><span class="name3">${list[2].b2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[1].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[1].cf_court }-${list[1].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[1].cf_no/all_court+(1-(list[1].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[1].cf_court }코트-${pages }경기</p></td>
 								<td><p class="time_s main_color">${fn:substring(list[2].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[2].cf_court }-${list[2].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[2].cf_no/all_court+(1-(list[2].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[2].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 							</tr>
 						</table>
@@ -802,7 +821,8 @@
 								<td class="club-name_td"><span class="club_name">${list[0].team_b_nm}</span> 
 									<span class="name3">${list[0].b1_id }</span><span class="name3">${list[0].b2_id }</span></td>
 								<td><p class="time_s main_color">${fn:substring(list[0].cf_w_date,0,5)}</p>
-									<p class="score-2">${list[0].cf_court }-${list[0].cf_no }</p></td>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list[0].cf_no/all_court+(1-(list[0].cf_no/all_court%1))%1}"/>
+									<p class="score-2">${list[0].cf_court }코트-${pages }경기</p></td>
 								<td>-</td>
 							</tr>
 						</table>
@@ -853,7 +873,7 @@
 					<div>
 						<ul class="li_col-nol impot">
 							<li>${fn:substring(list.cf_w_date,0,5)}</li>
-							<li>${list.cf_court }코트 230</li>
+							<li>${list.cf_court }코트 </li>
 							<li>${list.cf_t_nm }</li>
 							<li>토너먼트</li>
 						</ul>

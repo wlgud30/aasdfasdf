@@ -7,7 +7,7 @@
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo" onclick="location.href='/UClub/UClubAllList.techni'">
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo" onclick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
 					<h1><a href = "/Board/BoardList.techni" >${list[0].c_nm}</a></h1>
@@ -173,7 +173,7 @@
 		</div>
 	<script>
 		function game_kind(){
-			swal("MGL","게임의 종류를 선택해 주세요",{
+			swal("민턴in","게임의 종류를 선택해 주세요",{
 				buttons:{
 					"자체대회" :{
 						text : "자체대회",

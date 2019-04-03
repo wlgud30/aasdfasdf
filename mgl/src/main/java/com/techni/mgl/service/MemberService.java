@@ -10,9 +10,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.techni.mgl.controller.MemberController;
 import com.techni.mgl.dao.MemberDAO;
 import com.techni.mgl.domain.MemberVO;
+import com.techni.mgl.domain.BoardVO;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.dto.LoginDTO;
 
@@ -20,7 +25,147 @@ import com.techni.mgl.dto.LoginDTO;
 public class MemberService {
 	@Autowired
 	MemberDAO mDAO;
+	@Transactional
+	public void alarmInsert(HttpSession session, @RequestBody Map<String,Object> param) {
+		
+		Map<String, String> map2 = new HashMap<String,String>();
+		
+        MemberVO mvo = (MemberVO) session.getAttribute("login");
+        
+        String al_division = (String) param.get("al_division");
+        String al_send = mvo.getM_id();
+        String al_url = (String) param.get("al_url");
+        String c_idx = (String) param.get("c_idx");
+        String cb_idx = "";
+        if(param.get("cb_idx")!=null) {
+        	cb_idx = param.get("cb_idx").toString();
+        }
+        String cf_idx = "";
+        if(param.get("cf_idx")!=null) {
+        	cf_idx = param.get("cf_idx").toString();
+        }
+        
+        map2.put("al_division", al_division);
+        map2.put("al_send", al_send);
+        map2.put("al_url", al_url);
+        map2.put("c_idx", c_idx);
+        map2.put("cb_idx", cb_idx);
+        map2.put("cf_idx", cf_idx);
+
+    	MemberController mc = new MemberController();
+		MultiValueMap<String,String> param1 = new LinkedMultiValueMap<>();
+		
+        if(al_division.equals("공지")) {
+        	List<BoardVO> list = (List<BoardVO>) param.get("list");
+        	
+    		for(BoardVO bvo : list){
+    			if(!bvo.getU_id().equals(mvo.getM_id())) {
+    				map2.put("al_msg", "["+bvo.getC_nm()+" - 공지] 새로운 글이 등록되었습니다.");
+					map2.put("al_receive", bvo.getU_id());
+					alarmInsert(map2);
+					
+    				param1.clear();
+					param1.add("sendtype", "push");
+					param1.add("appcode", "techni_mglb");
+					param1.add("notitype", "noti");
+					param1.add("oscode", "a");
+					param1.add("token", bvo.getU_push());
+					param1.add("title", "민턴in");
+					param1.add("desc", "["+bvo.getC_nm()+" - 공지] 새로운 글이 등록되었습니다.");
+					param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+					mc.token(param1);
+    			}
+			}
+		}else if(al_division.equals("주요공지")) {
+			System.out.println(c_idx);
+        	List<MemberVO> list = pushList(c_idx);
+        	
+    		for(MemberVO bvo : list){
+    			if(!bvo.getM_id().equals(mvo.getM_id())) {
+    				map2.put("al_msg", "["+bvo.getC_nm()+"-주요공지] 새로운 글이 등록되었습니다.");
+					map2.put("al_receive", bvo.getM_id());
+					alarmInsert(map2);
+					
+    				param1.clear();
+					param1.add("sendtype", "push");
+					param1.add("appcode", "techni_mglb");
+					param1.add("notitype", "noti");
+					param1.add("oscode", "a");
+					param1.add("token", bvo.getM_push());
+					param1.add("title", "민턴in");
+					param1.add("desc", "["+bvo.getC_nm()+"-주요공지] 새로운 글이 등록되었습니다.");
+					param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+					System.out.println(map2.get("al_idx"));
+					mc.token(param1);
+    			}
+			}
+		}else if(al_division.equals("클럽게임")) {
+			List<String> list = new ArrayList<String>();
+			if(param.get("list") instanceof HashMap) {
+				for(int i = 0; i < ((List<?>)param.get("list")).size(); i++){
+		            Object item = ((List<?>) param.get("list")).get(i);
+		            if(item instanceof String){
+		            	list.add((String) item);
+		            }
+		        }
+			}
+			for(int i = 0 ; i<list.size();i++) {
+				map2.put("al_msg", "["+param.get("c_nm")+"-게임] 게임이 등록되었습니다.");
+				map2.put("al_receive", list.get(i));
+				alarmInsert(map2);
+				
+				param1.clear();
+				param1.add("sendtype", "push");
+				param1.add("appcode", "techni_mglb");
+				param1.add("notitype", "noti");
+				param1.add("oscode", "a");
+				param1.add("token", map2.get("m_push"));
+				param1.add("title", "민턴in");
+				param1.add("desc","["+param.get("c_nm")+"-게임] 게임이 등록되었습니다.");
+				param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+				mc.token(param1);
+			}
+		}else if(al_division.equals("채팅")) {
+			
+		}else if(al_division.equals("가입대기")) {
+			map2.put("al_msg", "["+param.get("c_nm")+"-가입신청] 새로운 가입신청이 있습니다.");
+			map2.put("al_receive", param.get("u_id").toString());
+			alarmInsert(map2);
+			
+			param1.clear();
+			param1.add("sendtype", "push");
+			param1.add("appcode", "techni_mglb");
+			param1.add("notitype", "noti");
+			param1.add("oscode", "a");
+			param1.add("token", map2.get("m_push"));
+			param1.add("title", "민턴in");
+			param1.add("desc", "["+param.get("c_nm")+"-가입신청] 새로운 가입신청이 있습니다.");
+			param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+			mc.token(param1);
+			
+		}else if(al_division.equals("가입승인")) {
+			map2.put("al_msg", "["+param.get("c_nm")+"-가입승인] 클럽에 가입승인 되었습니다.");
+			map2.put("al_receive", param.get("u_id").toString());
+			alarmInsert(map2);
+			
+			param1.clear();
+			param1.add("sendtype", "push");
+			param1.add("appcode", "techni_mglb");
+			param1.add("notitype", "noti");
+			param1.add("oscode", "a");
+			param1.add("token", map2.get("m_push"));
+			param1.add("title", "민턴in");
+			param1.add("desc", "["+param.get("c_nm")+"-가입승인] 클럽에 가입승인 되었습니다.");
+			param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+			mc.token(param1);
+		}
+        
+	}
 	
+	@Transactional
+	public List<MemberVO> pushList(String c_idx){
+		return mDAO.pushList(c_idx);
+	}
 	//아이디 중복체크
 	@Transactional
 	public int idCheck(String m_id){
@@ -38,7 +183,11 @@ public class MemberService {
 	public MemberVO login(Map<String,String>map){
 		return mDAO.login(map);
 	}
-	
+	//푸시로그인
+	@Transactional
+	public MemberVO pushLogin(String m_push){
+		return mDAO.pushLogin(m_push);
+	}	
 	//시퀀스 증가
 	@Transactional
 	public int m_join_seq(){
@@ -97,6 +246,10 @@ public class MemberService {
 	public MemberVO represent(String u_id) {
 		return mDAO.represent(u_id);
 	}
+	@Transactional
+	public int pwReset(String u_id) {
+		return mDAO.pwReset(u_id);
+	}
 //	public boolean getSessionSetting(int cnt, HttpSession session, LoginDTO dto){
 //		boolean isLogin = false;
 //		if(cnt == 0){
@@ -127,4 +280,37 @@ public class MemberService {
 		return (ArrayList<MemberVO>) mDAO.getMemberList(map);
 	}*/
 	
+	@Transactional
+	public int alarmInsert(Map<String,String> map) {
+		
+		int res = mDAO.alarmInsert(map);
+		int res2 =0;
+		
+		if(res>0) {
+			res2 = mDAO.alarmSeq();
+		}
+		return res2;
+	}
+	@Transactional
+	public int alarmYNUpdate(String al_idx) {
+		return mDAO.alarmYNUpdate(al_idx);
+	}
+	@Transactional
+	public MemberVO alarmSelect(String al_idx) {
+		return mDAO.alarmSelect(al_idx);
+	}
+	@Transactional
+	public List<MemberVO> alarmList(String u_id){
+		return mDAO.alarmList(u_id);
+	}
+	
+	@Transactional
+	public int alarmDel(String al_idx) {
+		return mDAO.alarmDel(al_idx);
+	}
+	
+	@Transactional
+	public int alarmDelAll(String u_id) {
+		return mDAO.alarmDelAll(u_id);
+	}
 }

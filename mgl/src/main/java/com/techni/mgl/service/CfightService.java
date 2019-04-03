@@ -328,4 +328,9 @@ public class CfightService {
 	public List<CfightVO> cf_nm(String cf_idx){
 		return cfDAO.cf_nm(cf_idx);
 	}
+	//대항전 삭제
+	@Transactional
+	public int cFightDelete(String cf_idx) {
+		return cfDAO.cFightDelete(cf_idx);
+	}
 }

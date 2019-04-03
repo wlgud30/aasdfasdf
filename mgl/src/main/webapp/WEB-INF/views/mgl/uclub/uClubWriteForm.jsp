@@ -23,15 +23,15 @@
 		});
 		$("#ClubInsert").click(function() {
 			if($("#c_nm").val()==null||$("#c_nm").val()==""){
-				swal("MGL","클럽 이름을 작성해 주세요.")
+				swal("민턴in","클럽 이름을 작성해 주세요.")
 			}else if($("#c_info").val()==null||$("#c_info").val()==""){
-				swal("MGL","클럽 소개를 작성해 주세요.")
+				swal("민턴in","클럽 소개를 작성해 주세요.")
 			}else if($("#cst_nm").val()==null||$("#cst_nm").val()==""){
-				swal("MGL","클럽 구장을 작성해 주세요.")
+				swal("민턴in","클럽 구장을 작성해 주세요.")
 			}else if($("#c_location").val()==null||$("#c_location").val()==""){
-				swal("MGL","클럽 모임 주소를 작성해 주세요.")
+				swal("민턴in","클럽 모임 주소를 작성해 주세요.")
 			}else if($("#c_court_sa").val() == null || $("#c_court_sa").val() == ""){
-				swal("MGL","사용하실 코트를 체크해 주세요.")
+				swal("민턴in","사용하실 코트를 체크해 주세요.")
 			}else{
 				$.ajax({
 					type : 'post',
@@ -42,19 +42,19 @@
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title:"MGL",
+								title:"민턴in",
 								text : "클럽이 생성 되었습니다."
 							})
 							.then((value) =>{
 								location.href='/UClub/UClubAllList.techni';
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 	error : function(error){
-		swal("MGL","error : " + error);
+		swal("민턴in","error : " + error);
 	}
 });
 			}

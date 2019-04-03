@@ -20,6 +20,9 @@ public class MemberDAO {
 	public SqlSessionTemplate sqlSession;
 	private String nameSpace="mgl.Member.";
 	
+	public List<MemberVO> pushList(String c_idx){
+		return sqlSession.selectList(nameSpace+"pushList",c_idx);
+	}
 	//아이디 중복체크
 	public int idCheck(String m_id){
 		
@@ -59,6 +62,11 @@ public class MemberDAO {
 		MemberVO res = sqlSession.selectOne(nameSpace+"login", map);
 		return res;
 	}
+
+	public MemberVO pushLogin(String m_push){
+		MemberVO res = sqlSession.selectOne(nameSpace+"pushLogin", m_push);
+		return res;
+	}
 	
 	public int getLogin(LoginDTO dto){
 			return sqlSession.selectOne("mgl.Member.getLogin", dto);
@@ -94,6 +102,38 @@ public class MemberDAO {
 	public MemberVO represent(String u_id) {
 		return sqlSession.selectOne(nameSpace+"represent", u_id);
 	}
+	
+	public int pwReset(String u_id) {
+		return sqlSession.update(nameSpace+"pwReset", u_id);
+	}
+	
+	public MemberVO alarmSelect(String al_idx) {
+		return sqlSession.selectOne(nameSpace+"alarmSelect", al_idx);
+	}
+	
+	public int alarmYNUpdate(String al_idx) {
+		return sqlSession.update(nameSpace+"alarmYNUpdate");
+	}
+	public int alarmSeq() {
+		return sqlSession.update(nameSpace+"alarmSeq");
+	}
+	
+	public int alarmInsert(Map<String,String> map) {
+		return sqlSession.insert(nameSpace+"alarmInsert", map);
+	}
+	
+	public List<MemberVO> alarmList(String u_id){
+		return sqlSession.selectList(nameSpace+"alarmList", u_id);
+	}
+	
+	public int alarmDel(String al_idx) {
+		return sqlSession.delete(nameSpace+"alarmDel", al_idx);
+	}
+	
+	public int alarmDelAll(String u_id) {
+		return sqlSession.delete(nameSpace+"alarmDelAll", u_id);
+	}
+	
 	
 	public ArrayList<ClubVO> getClubList(String lselect){
 		return (ArrayList) sqlSession.selectList("mgl.Member.getClubList", lselect);

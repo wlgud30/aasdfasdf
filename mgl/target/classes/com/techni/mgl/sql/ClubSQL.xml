@@ -25,6 +25,9 @@
 	</resultMap>
 	<!-- 클럽생성 -->
 	<insert id="insert">
+		<selectKey resultType="string" keyProperty="c_idx" order="BEFORE">
+			SELECT concat("C",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_CLUB_SEQ) FROM MGL_SEQ) NEXT),4,0))
+	    </selectKey>
 		INSERT INTO 
 				MGL_CLUB VALUES(
 						concat("C",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_CLUB_SEQ) FROM MGL_SEQ) NEXT),4,0)),
@@ -43,6 +46,7 @@
 				)
 	</insert>
 	
+	<!-- 인서트된 클럽 -->
 	<select id="selectOne" resultMap="ClubVOMap">
 		SELECT * 
 			FROM 

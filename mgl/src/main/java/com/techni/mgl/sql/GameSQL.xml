@@ -415,7 +415,8 @@
 								#{cs_kind},
 								#{cs_content},
 								#{cs_nm},
-								#{cs_cnm}
+								#{cs_cnm},
+								"N"
 							);		
 	</insert>
 	
@@ -2173,7 +2174,39 @@
 		ORDER BY 
 			MGL_CSELF_W_DAT,MGL_CSELF_COURT
 	</select>
-	
+	<!-- 전적비교 게임인덱스 셀렉 쿼리 -->
+	<select id="getGidx" resultMap="ClubMatchVOMap">
+		SELECT 
+			A.MGL_CLUB_GIDX,MGL_CLUB_MATCH_DATE 
+		FROM
+			(
+				SELECT 
+					MGL_USER_ID AS A_ID,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB AS A_AB,MGL_CLUB_MATCH_DATE 
+				FROM 
+					MGL_CLUB_MATCH 
+				WHERE 
+					MGL_USER_ID = #{my_id}
+				AND 
+					MGL_CLUB_MATCH_WIN is not null 
+			) A 
+		JOIN
+			(
+				SELECT 
+					MGL_USER_ID AS B_ID,MGL_CLUB_GIDX,MGL_CLUB_TEAM_AB AS B_AB 
+				FROM 
+					MGL_CLUB_MATCH 
+				WHERE 
+					MGL_USER_ID = #{you_id}
+				AND 
+					MGL_CLUB_MATCH_WIN is not null
+			) B
+		ON 
+			A.MGL_CLUB_GIDX = B.MGL_CLUB_GIDX
+		AND 
+			A_AB != B_AB
+		WHERE 
+			SUBSTR(MGL_CLUB_MATCH_DATE,1,7) = #{ymd}
+	</select>
 	
 	
 	
