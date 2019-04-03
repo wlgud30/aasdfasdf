@@ -159,7 +159,6 @@ public class MemberController {
 		
 		return "member/loginForm";
 	}
-	
 	@RequestMapping("/Member/Logout.techni")
 	public String Logout(HttpSession session,Model model){
 		
