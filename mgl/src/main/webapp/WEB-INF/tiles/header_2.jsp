@@ -97,7 +97,7 @@ $(document).ready(function(){
 		$("#sub_title_2").text("");
 		$("#sub_title_2").removeAttr("class");
 		$("#sub_title_3").removeAttr("class");
-		if("${cfm eq '매니저'}" =="true"&&"${yn eq 'N'}"=="true"){
+		if("${cfm eq '매니저'}" =="true"&&"${yn eq N}"=="true"){
 			$("#bt_top").append("<span class='icon-delete icon-f btn_i i-text' onclick=\"cfightDel('"+cf_idx+"')\">삭제</span>");
 		}
 	}else if(lo.includes("/Cfight/CfightMatchDetail.techni")){

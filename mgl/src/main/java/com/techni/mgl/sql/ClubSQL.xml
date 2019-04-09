@@ -75,8 +75,10 @@
 				(SELECT MGL_USER_NM AS ga_nm,MGL_USER_TEL as ga_tel,MGL_UCLUB_MNG as ga,MGL_CLUB_IDX
 					FROM MGL_USER INNER JOIN MGL_UCLUB USING(MGL_USER_ID)
 						WHERE MGL_CLUB_IDX = #{c_idx}
-						AND MGL_UCLUB_MNG = "총무") E
+						AND MGL_UCLUB_MNG = "총무"
+						OR MGL_UCLUB_MNG = "회장") E
 					ON E.MGL_CLUB_IDX = #{c_idx}
+			ORDER BY  field (ga,"매니저","회장","부회장","고문","감사","총무","재무","경기이사","관리이사","홍보이사","회원")
 	</select>
 	
 	<!-- 클럽 디테일 들어가기전에 어디로갈지 정해주는 작업 -->

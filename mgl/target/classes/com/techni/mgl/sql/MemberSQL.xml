@@ -321,7 +321,7 @@
 		WHERE 
 			MGL_USER_ID = #{m_id} 
 		AND 
-			LEFT(MGL_LOGINTIME,8) = date_format(now(),"%Y%m%d")
+			LEFT(MGL_LOGINTIME,10) = date_format(now(),"%Y-%m-%d")
 	</select>
 	
 	<insert id="todayLoginInsert">
@@ -447,6 +447,10 @@
 	<delete id="alarmDelAll">
 		DELETE FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id}
 	</delete>
+	
+	<select id="alarmCount" resultType="int">
+		SELECT COUNT(*) FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id} AND MGL_ALARM_READ = "N"
+	</select>
 	
 	
 </mapper>

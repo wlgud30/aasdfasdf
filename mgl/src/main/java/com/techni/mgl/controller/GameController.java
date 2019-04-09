@@ -743,6 +743,7 @@ public class GameController {
 			String[] arr = user_id.split(",");
 			
 			ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+			System.out.println(list.toString());
 			param.put("c_idx",session.getAttribute("c_idx").toString());
 			param.put("list", list);
 			param.put("al_division", "클럽게임");
@@ -880,7 +881,7 @@ public class GameController {
 			
 			ClubMatchVO cmVO = gService.clubUseCourt(c_idx);
 			
-			
+			int res = 0;
 			String curTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 				for(int i = 0 ; i<tList.size();i++){
 					Map<String, Object> newM = new HashMap<String, Object>();
@@ -902,19 +903,19 @@ public class GameController {
 							cmVO.setCm_status("게임");
 							cmVO.setCm_start(curTime);
 							M.put("u_status", "게임중");
-							int res = gService.clubGameSet(cmVO, M);
-							if(res == 0){
-								
-								map2.put("cnt", 0);
-								
-								return map2;
-							}else{
-								mService.alarmInsert(session,param);
-								map2.put("cnt", 1);
-							}
+							res += gService.clubGameSet(cmVO, M);
+							
 				}
 			
-			
+				if(res == 0){
+					
+					map2.put("cnt", 0);
+					
+					return map2;
+				}else{
+					mService.alarmInsert(session, param);
+					map2.put("cnt", 1);
+				}
 			
 			
 			return map2;

@@ -40,7 +40,14 @@
 	<div class="bt_top">
 		<div class="alarm" onClick="location.href='/Member/Alarm.techni'">
           <span class="icon-bell btn_i" ></span>
-          <span class="notice_ub">!</span>
+         
+          	<%if(session.getAttribute("al_count") !=null){if((int)session.getAttribute("al_count") > 0 ){
+          	%> <span class="notice_ub">
+          	<% 		out.print("N"); %>
+          		</span>
+          	<%	}}
+          	%>
+         
         </div>
 		<%
 			if ((String) session.getAttribute("represent_idx") != null) {
