@@ -35,9 +35,9 @@ function Remove(idd,nm,photo,age,gd,sex){
 }
 function privateLeagueInsert(){
 	if($("#appendUl li").length < 4){
-		swal("MGL" ,"최소 4명이 필요합니다.")
+		swal("민턴in" ,"최소 4명이 필요합니다.")
 	}else if($("#count").val()==0 || $("#count").val()==null){
-		swal("MGL","경기수를 선택해 주세요")
+		swal("민턴in","경기수를 선택해 주세요")
 	}else{
 		var cs_k_idx = $("#wh").val();
 		var user_id ="";
@@ -54,7 +54,7 @@ function privateLeagueInsert(){
 			success:function(data){
 				if(data.cnt > 0 ){
 					swal({
-						title : "MGL",
+						title : "민턴in",
 						text : "등록 되었습니다.",
 						type : "success"
 					})
@@ -62,11 +62,11 @@ function privateLeagueInsert(){
 						location.href="/Game/selfMatchPrivateInsertForm.techni?cs_kind=${cs_kind}&cs_idx=${cs_idx}"+"&cs_k_idx="+cs_k_idx;
 					})
 				}else{
-					swal("MGL", "죄송합니다. 다시 시도 해주세요.");
+					swal("민턴in", "죄송합니다. 다시 시도 해주세요.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}

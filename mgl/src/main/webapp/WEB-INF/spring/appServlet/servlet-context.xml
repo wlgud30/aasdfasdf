@@ -32,7 +32,7 @@
  	
  	<beans:bean id="uploadPath" class="java.lang.String">
     <!-- 파일업로드 디렉토리-->
-    	<beans:constructor-arg value="C:\MGLPROJECT\mgl\mgl\src\main\webapp\resources\uploadImg"/>
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadImg"/>
 	</beans:bean>
 	
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">

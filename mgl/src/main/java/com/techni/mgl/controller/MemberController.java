@@ -52,9 +52,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cloudrail.si.CloudRail;
 import com.cloudrail.si.services.GooglePlus;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.techni.mgl.domain.BoardVO;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.domain.UClubVO;
+import com.techni.mgl.service.BoardService;
 import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
@@ -63,6 +65,8 @@ public class MemberController {
 	
 	Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 	
+	@Autowired
+	public BoardService brdService;
 	@Autowired
 	public MemberService mService;
 	@Autowired
@@ -161,10 +165,16 @@ public class MemberController {
 	}
 	@RequestMapping("/Member/Logout.techni")
 	public String Logout(HttpSession session,Model model){
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("m_push", null);
+		map.put("m_id", mvo.getM_id());
 		
+		mService.pushUpdate(map);
 		session.invalidate();
 		
 		model.addAttribute("au", "1");
+		
 		
 		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
 		String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
@@ -215,10 +225,31 @@ public class MemberController {
         
         MemberVO mvo = mService.searchID(map1);
         
-        String m_id = mvo.getM_id();
+        if(mvo==null) {
+        	map.put("cnt", 0);
+        }else if(mvo.getM_id().equals("")) {
+        	map.put("cnt", 0);
+        }else {
+        	map.put("cnt", 1);
+        	map.put("m_id",  mvo.getM_id());
+            map.put("m_nm", mvo.getM_nm());
+        }
         
-        map.put("m_id", m_id);
-		
+		return map;
+	}
+	@RequestMapping("/Member/PwReset.techni")
+	@ResponseBody
+	public Map<Object,Object> PwReset(@RequestBody String json) throws ParseException{
+		Map<Object,Object>map = new HashMap<Object,Object>();
+		JSONParser parser = new JSONParser();
+        JSONObject json2 = (JSONObject) parser.parse(json);
+        
+        String u_id = (String) json2.get("m_id");
+        
+        int cnt = mService.pwReset(u_id);
+        
+        map.put("cnt", cnt);
+      
 		return map;
 	}
 	@RequestMapping("/Member/HandlerIndex.techni")
@@ -333,11 +364,24 @@ public class MemberController {
 			}
 			if(ucService.representCheck(m_id)>0) {
 				session.setAttribute("c_idx",mvo.getM_represent());
+				session.setAttribute("represent_idx", mvo.getM_represent());
 				
 				map.put("c_idx", mvo.getM_represent());
 				map.put("u_id",mvo.getM_id());
 				
 				UClubVO uvo = ucService.userMng(map);
+				UClubVO uvo2 = ucService.headerSelect(map);
+				
+				Map<String,Object> mvo2 = new HashMap<String,Object>();
+				
+				mvo2.put("aptn", uvo2.getCm_p_total());
+				mvo2.put("c_nm", uvo2.getC_nm());
+				mvo2.put("u_nm", mvo.getM_nm());
+				mvo2.put("c_gd", uvo2.getU_club_gd());
+				mvo2.put("u_photo", mvo.getM_photo());
+				mvo2.put("c_idx",mvo.getM_represent());
+				
+				session.setAttribute("mvo", mvo2);
 				
 				session.setAttribute("mng", uvo.getUc_mng());
 				
@@ -380,6 +424,11 @@ public class MemberController {
 		System.out.println(g_age);
 		map2.put("m_nm", g_id);
 		map2.put("m_sex", g_sex);
+		if(g_sex.equals("M")) {
+			
+		}else if(g_sex.equals("F")) {
+			
+		}
 		map2.put("m_birth", g_age);
 		map2.put("m_club_gd", g_gd);
 		map2.put("c_idx", c_idx);
@@ -502,6 +551,8 @@ public class MemberController {
 		RestTemplate restTemplate = new RestTemplate();
 		
 		String res = restTemplate.postForObject(url,param1, String.class);
+		
+		System.out.println(res);
 	}
 	
 	@RequestMapping("/Member/naverInsert.techni")
@@ -874,7 +925,7 @@ public class MemberController {
 	}
 	@RequestMapping("/Member/home.techni")
 	public String home(Model model) {
-		/*	List<MemberVO> list = mService.clubUpdate();
+			/*List<MemberVO> list = mService.clubUpdate();
 			
 			for(int i = 0; i< list.size();i++) {
 				Map<String,String> map = new HashMap<String,String>();
@@ -904,5 +955,208 @@ public class MemberController {
 	@RequestMapping("/Member/personalData.techni")
 	public String personalData() {
 		return "member/personalData";
+	}
+	@RequestMapping("/Member/PushController")
+	public String pushController(HttpSession session,String al_idx,RedirectAttributes redirectAttributes) {
+		
+		String redirect_url = "redirect:";
+		
+		MemberVO mVO = mService.alarmSelect(al_idx);
+		
+		MemberVO login = mService.pushLogin(mVO.getM_push());
+		
+		String division = mVO.getAl_division();
+		
+		session.setAttribute("c_idx", mVO.getC_idx());
+		session.setAttribute("login", login);
+		if(division.equals("공지")||division.equals("주요공지")) {
+			redirectAttributes.addAttribute("cb_idx", mVO.getCb_idx());
+			redirect_url += "/Board/BoardDetail.techni";
+		}else if(division.equals("클럽게임")) {
+			redirect_url += "/Game/GameState.techni";
+		}else if(division.equals("채팅")) {
+			redirect_url += "/Board/BoardDetail.techni";
+		}else if(division.equals("가입")) {
+			redirect_url += "/UClub/UclubMUserList.techni";
+		}else if(division.equals("")) {
+			redirect_url += "/Board/BoardDetail.techni";
+		}
+		System.out.println(redirect_url);
+		return redirect_url;
+	}
+	@RequestMapping("/Member/tokenpush.techni")
+	@ResponseBody
+	public void alarmInsert(HttpSession session, @RequestBody Map<String,Object> param) {
+		
+		Map<String, String> map2 = new HashMap<String,String>();
+		
+        MemberVO mvo = (MemberVO) session.getAttribute("login");
+        
+        String al_division = (String) param.get("al_division");
+        String al_send = mvo.getM_id();
+        String al_url = (String) param.get("al_url");
+        String c_idx = (String) param.get("c_idx");
+        String cb_idx = "";
+        if(param.get("cb_idx")!=null) {
+        	cb_idx = param.get("cb_idx").toString();
+        }
+        String cf_idx = "";
+        if(param.get("cf_idx")!=null) {
+        	cf_idx = param.get("cf_idx").toString();
+        }
+        
+        map2.put("al_division", al_division);
+        map2.put("al_send", al_send);
+        map2.put("al_url", al_url);
+        map2.put("c_idx", c_idx);
+        map2.put("cb_idx", cb_idx);
+        map2.put("cf_idx", cf_idx);
+
+    	MemberController mc = new MemberController();
+		MultiValueMap<String,String> param1 = new LinkedMultiValueMap<>();
+		
+        if(al_division.equals("공지")) {
+        	System.out.println("여기까진오냐");
+        	List<BoardVO> list = (List<BoardVO>) param.get("list");
+        	
+    		for(BoardVO bvo : list){
+    			if(!bvo.getU_id().equals(mvo.getM_id())) {
+    				map2.put("al_msg", bvo.getC_nm()+"의 공지가 등록되었습니다.");
+					map2.put("al_receive", bvo.getU_id());
+					mService.alarmInsert(map2);
+					
+    				param1.clear();
+					param1.add("sendtype", "push");
+					param1.add("appcode", "techni_mglb");
+					param1.add("notitype", "noti");
+					param1.add("oscode", "a");
+					param1.add("token", bvo.getU_push());
+					param1.add("title", "민턴in");
+					param1.add("desc", "["+bvo.getC_nm()+" - 공지] 새로운 글이 등록되었습니다.");
+					param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+					mc.token(param1);
+    			}
+			}
+		}else if(al_division.equals("주요공지")) {
+			System.out.println(c_idx);
+        	List<BoardVO> list = 
+        			brdService.pushList(c_idx);
+        	
+    		for(BoardVO bvo : list){
+    			if(!bvo.getU_id().equals(mvo.getM_id())) {
+    				map2.put("al_msg", "["+bvo.getC_nm()+"-주요공지] 새로운 글이 등록되었습니다.");
+					map2.put("al_receive", bvo.getU_id());
+					mService.alarmInsert(map2);
+					
+    				param1.clear();
+					param1.add("sendtype", "push");
+					param1.add("appcode", "techni_mglb");
+					param1.add("notitype", "noti");
+					param1.add("oscode", "a");
+					param1.add("token", bvo.getU_push());
+					param1.add("title", "민턴in");
+					param1.add("desc", "["+bvo.getC_nm()+"-주요공지] 새로운 글이 등록되었습니다.");
+					param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+					mc.token(param1);
+    			}
+			}
+		}else if(al_division.equals("클럽게임")) {
+			List<String> list = new ArrayList<String>();
+			if(param.get("list") instanceof HashMap) {
+				for(int i = 0; i < ((List<?>)param.get("list")).size(); i++){
+		            Object item = ((List<?>) param.get("list")).get(i);
+		            if(item instanceof String){
+		            	list.add((String) item);
+		            }
+		        }
+			}
+			for(int i = 0 ; i<list.size();i++) {
+				map2.put("al_msg", "["+param.get("c_nm")+"-주요공지] 새로운 글이 등록되었습니다.");
+				map2.put("al_receive", list.get(i));
+				mService.alarmInsert(map2);
+				
+				param1.clear();
+				param1.add("sendtype", "push");
+				param1.add("appcode", "techni_mglb");
+				param1.add("notitype", "noti");
+				param1.add("oscode", "a");
+				param1.add("token", map2.get("m_push"));
+				param1.add("title", "민턴in");
+				param1.add("desc", "["+param.get("c_nm")+"-주요공지] 새로운 글이 등록되었습니다.");
+				param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+				mc.token(param1);
+			}
+		}else if(al_division.equals("채팅")) {
+			
+		}else if(al_division.equals("가입대기")) {
+			map2.put("al_msg", "["+param.get("c_nm")+"-가입신청] 새로운 가입신청이 있습니다.");
+			map2.put("al_receive", param.get("u_nm").toString());
+			mService.alarmInsert(map2);
+			
+			param1.clear();
+			param1.add("sendtype", "push");
+			param1.add("appcode", "techni_mglb");
+			param1.add("notitype", "noti");
+			param1.add("oscode", "a");
+			param1.add("token", map2.get("m_push"));
+			param1.add("title", "민턴in");
+			param1.add("desc", "["+param.get("c_nm")+"-가입신청] 새로운 가입신청이 있습니다.");
+			param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx="+map2.get("al_idx"));
+			mc.token(param1);
+			
+		}else if(al_division.equals("")) {
+		}
+        
+	}
+	@RequestMapping("/Member/Alarm.techni")
+	public String alarm(HttpSession session,Model model) {
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		String u_id = mvo.getM_id();
+		List<MemberVO> list = mService.alarmList(u_id);
+		
+		model.addAttribute("list", list);
+		
+		
+		return "member/alarm.pag";
+	}
+	@RequestMapping("/Member/AlarmDel.techni")
+	@ResponseBody
+	public Map<String,Object> alarmDel(HttpSession session, @RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		JSONParser parser = new JSONParser();
+        JSONObject json2 = (JSONObject) parser.parse(json);
+        
+        String al_idx = (String) json2.get("al_idx");
+        int res = 0;
+        if(al_idx == null||al_idx =="") {
+        	MemberVO mvo = (MemberVO) session.getAttribute("login");
+        	res = mService.alarmDelAll(mvo.getM_id());
+        }else {
+        	res = mService.alarmDel(al_idx);
+        }
+        map.put("cnt", res);
+        
+		return map;
+	}
+	@RequestMapping("/Member/AlarmHref.techni")
+	@ResponseBody
+	public String alarmHref(HttpSession session, @RequestBody String json) throws ParseException{
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		JSONParser parser = new JSONParser();
+        JSONObject json2 = (JSONObject) parser.parse(json);
+        
+        String al_idx = (String) json2.get("al_idx");
+        int res = 0;
+        if(al_idx == null||al_idx =="") {
+        	MemberVO mvo = (MemberVO) session.getAttribute("login");
+        	res = mService.alarmDelAll(mvo.getM_id());
+        }else {
+        	res = mService.alarmDel(al_idx);
+        }
+        map.put("cnt", res);
+        
+		return "";
 	}
 }

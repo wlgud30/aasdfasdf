@@ -8,7 +8,10 @@
  $(document).ready(function() {
 	 var msg = "${msg}";
 	if(${msg != null} || ${msg eq ""}){
-		swal("MGL","${msg}");
+		swal("민턴in","${msg}");
+	}
+	if("${mng}" != "매니저")	{
+		$("#ga").remove();
 	}
 			
 });
@@ -47,7 +50,7 @@ function post1(c_idx,u_id){
 		    form.submit();
 }
 function chat(){
-	swal("MGL","서비스 준비중 입니다.")
+	swal("민턴in","서비스 준비중 입니다.")
 }
 </script>
 
@@ -68,7 +71,7 @@ function chat(){
 			
 			<div class="tab_bt_area white_bg mb_b0 mb_t">
 				<div>
-					<ul class="tabs_cont tab_cont">
+					<ul id="ga" class="tabs_cont tab_cont">
 						<li class="active_tab" onclick="active_change(this)"><span>전체 (${fn:length(list)})</span></li>
 						<li onclick="active_change(this)"><span>가입대기(${fn:length(list2)})</span></li>
 						<li onclick="active_change(this)"><span>탈퇴대기(${fn:length(list3)})</span></li>
@@ -85,7 +88,7 @@ function chat(){
 								<tr>
 									<th>이름</th>
 									<th class="td_2">직급</th>
-									<th>전화번호
+									<th>가입일자
 										<!-- <ul class="li_nol">
 											<li class="phone_data">전화번호</li>
 											<li class="in_data">가입일자</li>
@@ -117,8 +120,8 @@ function chat(){
 										<span class="age_rank">(${list.u_age}살 ${list.u_club_gd })</span> --%>
 										</td>
 										<td class="td_2">${list.uc_mng }</td>
-										<td>
-											<c:set var="string1" value="${list.u_tel }"></c:set>
+										<td>${list.u_join_date }
+											<%-- <c:set var="string1" value="${list.u_tel }"></c:set>
 												<c:choose>
 													<c:when test="${fn:length(string1) eq 11 }">
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
@@ -126,7 +129,7 @@ function chat(){
 													<c:otherwise>
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
 													</c:otherwise>
-												</c:choose>
+												</c:choose> --%>
 										<%-- <ul class="li_nol">
 												<li class="phone_data">
 												<c:set var="string1" value="${list.u_tel }"></c:set>
@@ -154,7 +157,7 @@ function chat(){
 								<tr>
 									<th>이름</th>
 									<th class="td_2">직급</th>
-									<th>전화번호
+									<th>신청일자
 										<!-- <ul class="li_nol">
 											<li class="phone_data">전화번호</li>
 											<li class="in_data">가입일자</li>
@@ -187,8 +190,8 @@ function chat(){
 										<span class="age_rank">(${list.u_age}살 ${list.u_club_gd })</span> --%>
 										</td>
 										<td class="td_2">${list.uc_mng }</td>
-										<td>
-											<c:set var="string1" value="${list.u_tel }"></c:set>
+										<td>${list.u_join_date }
+											<%-- <c:set var="string1" value="${list.u_tel }"></c:set>
 												<c:choose>
 													<c:when test="${fn:length(string1) eq 11 }">
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
@@ -196,7 +199,7 @@ function chat(){
 													<c:otherwise>
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
 													</c:otherwise>
-												</c:choose>
+												</c:choose> --%>
 										<%-- <ul class="li_nol">
 												<li class="phone_data">
 												<c:set var="string1" value="${list.u_tel }"></c:set>
@@ -224,7 +227,7 @@ function chat(){
 								<tr>
 									<th>이름</th>
 									<th class="td_2">직급</th>
-									<th>전화번호
+									<th>신청일자
 										<!-- <ul class="li_nol">
 											<li class="phone_data">전화번호</li>
 											<li class="in_data">가입일자</li>
@@ -256,8 +259,8 @@ function chat(){
 										<span class="age_rank">(${list.u_age}살 ${list.u_club_gd })</span> --%>
 										</td>
 										<td class="td_2">${list.uc_mng }</td>
-										<td>
-											<c:set var="string1" value="${list.u_tel }"></c:set>
+										<td>${list.u_join_date }
+											<%-- <c:set var="string1" value="${list.u_tel }"></c:set>
 												<c:choose>
 													<c:when test="${fn:length(string1) eq 11 }">
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
@@ -265,7 +268,7 @@ function chat(){
 													<c:otherwise>
 														${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
 													</c:otherwise>
-												</c:choose>
+												</c:choose> --%>
 										<%-- <ul class="li_nol">
 												<li class="phone_data">
 												<c:set var="string1" value="${list.u_tel }"></c:set>
@@ -398,7 +401,7 @@ function chat(){
 	<script>
 		function modal(id,nm,age,sex,photo,mng,mail,gd,date,birth,kind){
 			/* if("${mng}" != "매니저"){
-				swal("MGL","매니저를 수정할 수 없습니다.")
+				swal("민턴in","매니저를 수정할 수 없습니다.")
 			} */
 			if(mng=="가입대기"){
 				mng="회원"
@@ -491,10 +494,10 @@ function chat(){
 			var u_mng = $("#select_mng").val(); 
 			var mng = $("#mng").text();
 			if("${mng}" != "매니저" &&u_mng=="매니저" ){
-					swal("MGL","매니저를 수정 할 수 없습니다.")
+					swal("민턴in","매니저를 수정 할 수 없습니다.")
 					return false;
 			}else if("${mng}" == "매니저" && mng == "매니저" && u_mng != "매니저"){
-				swal("MGL","매니저를 수정 할 수 없습니다.")
+				swal("민턴in","매니저를 수정 할 수 없습니다.")
 				return false;
 			}
 			$.ajax({
@@ -511,11 +514,11 @@ function chat(){
 							location.href="/UClub/UclubMUserList.techni"
 						}
 					}else{
-						swal("MGL","죄송합니다. 다시 시도해 주세요.")
+						swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}			
 			})
 					
@@ -523,11 +526,11 @@ function chat(){
 		function clubOut(){
 			var u_id = $("#u_id").val();
 			if($("#mng").text()=="매니저"){
-				swal("MGL","매니저는 강퇴 할 수 없습니다.")
+				swal("민턴in","매니저는 강퇴 할 수 없습니다.")
 				return false;
 			}
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "강퇴 하시겠습니까?",
 				buttons : true
 			})
@@ -543,19 +546,19 @@ function chat(){
 							success : function(data){
 								if(data.cnt>0){
 									swal({
-										title:"MGL",
+										title:"민턴in",
 										text : "추방 되었습니다."
 									})
 									.then((value) =>{
 										location.href='/UClub/UclubMUserList.techni'
 									})
 								}else{
-									swal("MGL","죄송합니다. 다시 시도해 주세요.")
+									swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 								}
 								
 							},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 			};
@@ -581,7 +584,7 @@ function chat(){
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title:"MGL",
+								title:"민턴in",
 								text : "가입이 승인 되었습니다.",
 								type : "success"
 							})
@@ -600,12 +603,12 @@ function chat(){
 							    form.submit();
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			}else if(YN=='N'){
@@ -620,12 +623,12 @@ function chat(){
 						if(data.cnt>0){
 							location.href='/UClub/UclubMUserList.techni'
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			}
@@ -644,19 +647,19 @@ function chat(){
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title:"MGL",
+								title:"민턴in",
 								text : "탈퇴 승인 되었습니다."
 							})
 							.then((value) =>{
 								location.href='/UClub/UclubMUserList.techni'
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			}else if(YN=='N'){
@@ -671,19 +674,19 @@ function chat(){
 						success : function(data){
 							if(data.cnt>0){
 								swal({
-									title:"MGL",
+									title:"민턴in",
 									text : "탈퇴 거절 되었습니다."
 								})
 								.then((value) =>{
 									location.href='/UClub/UclubMUserList.techni'
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 							
 						},
 						error : function(error){
-							swal("MGL","error : " + error);
+							swal("민턴in","error : " + error);
 						}
 					});
 			}

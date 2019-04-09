@@ -245,11 +245,11 @@
 				if(data.cnt > 0 ){
 					location.href="/UClub/AttendList.techni"
 				}else{
-					swal("MGL", "이미 출석된 회원입니다.");
+					swal("민턴in", "이미 출석된 회원입니다.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}
@@ -262,11 +262,11 @@
 				if(data.cnt > 0 ){
 					location.href="/UClub/AttendList.techni"
 				}else{
-					swal("MGL", "이미 퇴실 상태입니다.");
+					swal("민턴in", "이미 퇴실 상태입니다.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}

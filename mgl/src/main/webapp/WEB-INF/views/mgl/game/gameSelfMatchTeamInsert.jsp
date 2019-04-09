@@ -67,7 +67,7 @@ function te(idd,nm,photo,age,gd,sex){
 		$("#id_2").val(idd)
 		team2++;
 	}else{
-		swal("MGL","자리가 꽉 찼습니다.")
+		swal("민턴in","자리가 꽉 찼습니다.")
 	}
 	
 }
@@ -91,7 +91,7 @@ function teamInsert(){
 	
 	if(team1 != 0 && team2 != 0){
 	swal({
-		title : "MGL",
+		title : "민턴in",
 		text : "팀을 생성 하시겠습니까?",
 		buttons : {
 			confirm : "OK",
@@ -110,7 +110,7 @@ function teamInsert(){
 				success : function(data){
 					if(data.cnt>0){
 						swal({
-							title : "MGL",
+							title : "민턴in",
 							text : "팀이 생성 되었습니다.",
 							type : "success"
 						})
@@ -118,24 +118,24 @@ function teamInsert(){
 							location.href="/Game/selfMatchTeamInsertForm.techni?cs_kind=${cs_kind}&cs_k_idx="+cs_k_idx;
 						})
 					}else{
-						swal("MGL","죄송합니다. 다시 시도해 주세요.")
+						swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 					}
 				},
 				error : function(error){
-					swal("MGL","error : "+error);
+					swal("민턴in","error : "+error);
 				}
 			}) 
 		}
 	})
 	}else{
-		swal("MGL","팀원을 선택해 주세요.");
+		swal("민턴in","팀원을 선택해 주세요.");
 	}
 }
 function teamDelete(idx){
 	
 	var cs_k_idx=$("#wh").val();
 	swal({
-		title : "MGL",
+		title : "민턴in",
 		text : "팀을 삭제 하시겠습니까?",
 		buttons : {
 			confirm : "OK",
@@ -154,7 +154,7 @@ function teamDelete(idx){
 				success : function(data){
 					if(data.cnt>0){
 						swal({
-							title : "MGL",
+							title : "민턴in",
 							text : "팀이 삭제 되었습니다.",
 							type : "success"
 						})
@@ -162,11 +162,11 @@ function teamDelete(idx){
 							location.href="/Game/selfMatchTeamInsertForm.techni?cs_kind=${cs_kind}&cs_k_idx="+cs_k_idx;
 						})
 					}else{
-						swal("MGL","죄송합니다. 다시 시도해 주세요.")
+						swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 					}
 				},
 				error : function(error){
-					swal("MGL","error : "+error);
+					swal("민턴in","error : "+error);
 				}
 			}) 
 		}

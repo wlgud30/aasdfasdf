@@ -43,11 +43,22 @@ public class UClubVO {
 	public String cf_nm;
 	public String cf_start;
 	public String cf_t_nm;
+	public String cf_idx;
 	
 	
 	
 	
 	
+	public String getCf_idx() {
+		return cf_idx;
+	}
+
+
+	public void setCf_idx(String cf_idx) {
+		this.cf_idx = cf_idx;
+	}
+
+
 	public String getCf_nm() {
 		return cf_nm;
 	}
@@ -220,6 +231,7 @@ public class UClubVO {
 	public String my_nm;
 	public String my_gd;
 	public String my_gr;
+	public String my_photo;
 	public String you_cm_p_total;
 	public String you_cm_p_total_m;
 	public String you_age;
@@ -230,6 +242,7 @@ public class UClubVO {
 	public String you_nm;
 	public String you_gd;
 	public String you_gr;
+	public String you_photo;
 	public int rnum;
 	public int team_count;
 	
@@ -240,6 +253,26 @@ public class UClubVO {
 	
 	
 	
+
+
+	public String getMy_photo() {
+		return my_photo;
+	}
+
+
+	public void setMy_photo(String my_photo) {
+		this.my_photo = my_photo;
+	}
+
+
+	public String getYou_photo() {
+		return you_photo;
+	}
+
+
+	public void setYou_photo(String you_photo) {
+		this.you_photo = you_photo;
+	}
 
 
 	public int getRnum() {
@@ -723,13 +756,19 @@ public class UClubVO {
 	}
 
 
+	public UClubVO(String c_idx, String u_id, String u_club_gd,String uc_mng) {
+		super();
+		this.c_idx = c_idx;
+		this.u_id = u_id;
+		this.u_club_gd = u_club_gd;
+		this.uc_mng=uc_mng;
+	}
 	public UClubVO(String c_idx, String u_id, String u_club_gd) {
 		super();
 		this.c_idx = c_idx;
 		this.u_id = u_id;
 		this.u_club_gd = u_club_gd;
 	}
-	
 	
 	public String getU_club_gd() {
 		return u_club_gd;

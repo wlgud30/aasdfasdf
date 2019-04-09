@@ -18,11 +18,11 @@ $(document).ready(function() {
 
 function userMngGd(){
 	if("${uvo.c_cnt}" >0 && $("#uc_mng").val() == "총무"	){
-		swal("MGL","회장은 최대 1명까지 가능합니다.")
+		swal("민턴in","회장은 최대 1명까지 가능합니다.")
 		return;
 	}
 	swal({
-		title : "MGL",
+		title : "민턴in",
 		text : "저장 하시겠습니까?",
 		buttons : true
 	})
@@ -42,11 +42,11 @@ function userMngGd(){
 								location.href="/UClub/UclubMUserList.techni"
 							}
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}			
 				})
 			}
@@ -54,7 +54,7 @@ function userMngGd(){
 }
 function clubOut(){
 	swal({
-		title : "MGL",
+		title : "민턴in",
 		text : "추방 하시겠습니까?",
 		buttons : true
 	})
@@ -70,19 +70,19 @@ function clubOut(){
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title:"MGL",
+								title:"민턴in",
 								text : "추방 되었습니다."
 							})
 							.then((value) =>{
 								location.href='/UClub/UclubMUserList.techni'
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 	error : function(error){
-		swal("MGL","error : " + error);
+		swal("민턴in","error : " + error);
 	}
 });
 	};

@@ -56,7 +56,7 @@ function pushTok(token,u_nm,msg,url){
 		var push = "${u_push}";
 		var nm = "${u_nm}";
 		if(msg !="" && msg!=null){
-			swal("MGL",msg);
+			swal("민턴in",msg);
 			if(push !="" && push !=null){
 				pushTok(push,nm,nm+"님이 가입을 신청하였습니다.","http://mgl.techni.co.kr:8081/UClub/UclubMUserList.techni?c_idx=${c_idx}");
 			}
@@ -75,16 +75,11 @@ function pushTok(token,u_nm,msg,url){
 		 $("#btn_search").click(function(){
 			var keyword = $("#keyword").val();
 			if(keyword == ""||null){
-				swal("MGL","검색어를 입력해주세요.");
+				swal("민턴in","검색어를 입력해주세요.");
 			}else{
 			$("#frm").attr("action", "/UClub/SearchList.techni").submit();
 			}
 		}) 
-		$(".post1").click(function(){
-			var c_idx = $(this).attr("value");
-		    $("#c_idx").val(c_idx);
-		    $("#frm2").submit();
-		});
 	})
 	
 </script>
@@ -129,7 +124,7 @@ function pushTok(token,u_nm,msg,url){
 				</c:when>
 				<c:otherwise>
 			<div class="content white_bg pt_00">
-				<ul class="list_room white_bg mb_t">
+				<ul class="list_room white_bg mb_t" id="clubList">
 				<c:forEach var="data" items="${list}">
 					<li class="post1" value=${data.c_idx }>
 						<div class="room_photo">
@@ -177,10 +172,23 @@ function pushTok(token,u_nm,msg,url){
 		<script>
 		$(document).ready(function(){
 			$("#club").attr("class","active_tab");
+			$(".post1").each(function(){
+				var idx = $(this).attr("value");
+				if(idx == "${represent}"){
+					var cl = $(this).clone();
+					$(this).remove();
+					$("#clubList").prepend(cl)
+				}
+			})
+			$(".post1").click(function(){
+				var c_idx = $(this).attr("value");
+			    $("#c_idx").val(c_idx);
+			    $("#frm2").submit();
+			});
 		});
 		function repersent(c_idx){
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "대표클럽을 변경하시겠습니까?",
 				buttons : true
 			})
@@ -197,11 +205,11 @@ function pushTok(token,u_nm,msg,url){
 						if(data.cnt > 0) {
 							location.href="/UClub/UClubAllList.techni";
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해주세요.");
+							swal("민턴in","죄송합니다. 다시 시도해주세요.");
 						}
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			}

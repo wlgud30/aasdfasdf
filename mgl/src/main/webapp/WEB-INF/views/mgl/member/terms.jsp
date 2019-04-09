@@ -641,7 +641,7 @@ Kakao.init('2414323fe8d134c3fab9ad7f62f99cba');
 			if($("#check_1").is(":checked") && $("#check_2").is(":checked")){
 				location.href="/Member/SnsOrMgl.techni";
 			}else{
-				swal("MGL","약관에 동의해 주세요.")
+				swal("민턴in","약관에 동의해 주세요.")
 			}
 	}
 	$(document).ready(function() {

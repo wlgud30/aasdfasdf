@@ -19,7 +19,16 @@
 							<td class="sub_td">${fn:substring(list.cf_w_date,0,5)}</td>
 							<c:forEach items="${list3}" var="list3">
 								<c:if test="${list.cf_w_date eq list3.cf_w_date }">
-									<td>${list3.cf_status }</td>
+									<td>
+									<c:choose>
+										<c:when test="${fn:contains(list3.cf_gidx,'blank') }">
+											-
+										</c:when>
+										<c:otherwise>
+											${list3.cf_status }
+										</c:otherwise>
+									</c:choose>
+									</td>
 								</c:if>
 							</c:forEach>
 						</tr>

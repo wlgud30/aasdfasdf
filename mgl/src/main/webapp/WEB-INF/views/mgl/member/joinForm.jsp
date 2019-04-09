@@ -84,7 +84,7 @@ function ymdFocus(){
 			var m_id_num = m_id.search(/[0-9]/g);
 			var m_id_eng = m_id.search(/[a-zA-Z]/g);
 			if(m_id_num<0 && m_id_eng<0 ){
-				swal("MGL","아이디는 영어나 숫자를 사용하여야 합니다.")
+				swal("민턴in","아이디는 영어나 숫자를 사용하여야 합니다.")
 			}else{
 			$.ajax({
 				async : true,
@@ -95,14 +95,14 @@ function ymdFocus(){
 				contentType : "application/json; charset=UTF-8",
 				success : function(data) {
 					if(data.cnt > 0) {
-						swal("MGL","사용 할 수 없는 아이디 입니다.");
+						swal("민턴in","사용 할 수 없는 아이디 입니다.");
 					}else{
-						swal("MGL","사용 가능한 아이디 입니다.");
+						swal("민턴in","사용 가능한 아이디 입니다.");
 						idck = 1;
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}
 			});
 			}
@@ -134,12 +134,12 @@ function ymdFocus(){
 			
 			var id = $("#m_id").val();
 			if(id == ""){
-				swal("MGL", "아이디를 입력해주세요.");
+				swal("민턴in", "아이디를 입력해주세요.");
 				$("#m_id").focus();
 				return;
 			}
 			if(idck ==0){
-				swal("MGL","아이디 중복체크를 해주세요.");
+				swal("민턴in","아이디 중복체크를 해주세요.");
 				$("#m_id").focus();
 				return;
 			}
@@ -147,70 +147,70 @@ function ymdFocus(){
 			var pw2 = $("#confirm_pw").val();
 			
 			if(pw1.length <= 5){
-				swal("MGL","비밀번호는 6자 이상으로 입력해주세요.");
+				swal("민턴in","비밀번호는 6자 이상으로 입력해주세요.");
 				$("#m_pw").val().focus();
 			}
 			
 			if(pw1 == ""){
-				swal("MGL","비밀번호를 입력해주세요.");
+				swal("민턴in","비밀번호를 입력해주세요.");
 				$("#m_pw").val().focus();
 			}
 			
 			if(pw1 != pw2){
-				swal("MGL","비밀번호가 동일하지 않습니다.");
+				swal("민턴in","비밀번호가 동일하지 않습니다.");
 				$("#confirm_pw").val("").focus();
 				return;
 			}
 			var name = $("#m_nm").val();
 			if(name == ""){
-				swal("MGL","이름을 입력해주세요.");
+				swal("민턴in","이름을 입력해주세요.");
 				$("#m_nm").focus();
 				return;
 			}
 			if(!$("input[name=m_sex]:checked").val()==true){
-				swal("MGL","성별을 선택해해주세요.");
+				swal("민턴in","성별을 선택해해주세요.");
 				$("#check_1").focus();
 				return;
 			}
 			var birth = $("input[name=m_birth]").val();
 			if(birth == ""){
-				swal("MGL","생년월일을 입력해주세요.");
+				swal("민턴in","생년월일을 입력해주세요.");
 				$("#m_birth").focus();
 				return;
 			}
 			var yy = new Date().getFullYear().toString().substr(-4)
 			if(Number($("#date1").val()) > yy ||Number($("#date1").val()) < 1900 ||Number($("#date2").val()) > 12 ||Number($("#date3").val()) > 31 ){
-				swal("MGL","생년월일을 확인해주세요.");
+				swal("민턴in","생년월일을 확인해주세요.");
 				$("#m_birth").focus();
 				return;
 			}
 			var phone1 = $("#phone1").val();
 			if(phone1 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone1").focus();
 				return;
 			}else if(phone1.length < 3){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
 			var phone2 = $("#phone2").val();
 			if(phone2 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone2").focus();
 				return;
 			}else if(phone2.length < 3){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
 			var phone3 = $("#phone3").val();
 			if(phone3 == ""){
-				swal("MGL","휴대전화를 입력해주세요.");
+				swal("민턴in","휴대전화를 입력해주세요.");
 				$("#phone3").focus();
 				return;
 			}else if(phone3.length < 4){
-				swal("MGL","휴대전화 번호를 확인해주세요.");
+				swal("민턴in","휴대전화 번호를 확인해주세요.");
 				$("#phone1").focus();
 				return;
 			}
@@ -218,7 +218,7 @@ function ymdFocus(){
 			var email = $("#m_email").val();
 			var ex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 			if(email !="" && email.match(ex) == null){
-				swal("MGL","이메일 주소를 확인해주세요.");
+				swal("민턴in","이메일 주소를 확인해주세요.");
 				return;
 			}
 			
@@ -241,12 +241,12 @@ function ymdFocus(){
 						if(data.cnt == 0) {
 							$("#insertForm").submit();
 						}else{
-							swal("MGL","해당 정보로 등록된 아이디가 이미 있습니다.")
+							swal("민턴in","해당 정보로 등록된 아이디가 이미 있습니다.")
 							return;
 						}
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			
@@ -274,7 +274,7 @@ function ymdFocus(){
 				data: "temp="+new Date() + "&1_select=" + lcode,
 				dataType : "json",
 				error : function(){
-					swal("MGL","데이터를 정상적으로 호출하지 못하였습니다.");
+					swal("민턴in","데이터를 정상적으로 호출하지 못하였습니다.");
 				},
 				success : SetSelectClub,
 				type : "GET",
@@ -310,7 +310,7 @@ function ymdFocus(){
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo" onclick="location.href='/Member/LoginForm.techni'">
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo" onclick="location.href='/Member/LoginForm.techni'">
 				</div>
 				<div class="tit_top">
 					<h1>회원가입</h1>

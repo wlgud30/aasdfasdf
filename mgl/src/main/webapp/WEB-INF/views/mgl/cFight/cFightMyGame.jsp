@@ -24,7 +24,7 @@
 			<div class="content white_bg match_cont">
 				<!--divide_li end-->
 				<c:choose>
-					<c:when test="${list ne null }">
+					<c:when test="${!empty list }">
 						<c:forEach items="${list }" var="list">
 						<div class="head-data">
 							<div>
@@ -32,7 +32,9 @@
 									<li>${fn:substring(list.cf_w_date,0,5)}</li>
 									<li>${list.cf_t_nm } - ${fn:substring(list.cf_gidx,15,16)}조</li>
 									<li>
-										<c:choose>
+									<fmt:parseNumber var="pages" integerOnly="true" value="${list.cf_no/all_court+(1-(list.cf_no/all_court%1))%1}"/>
+									${pages }경기
+										<%-- <c:choose>
 											<c:when test="${fn:length(list.cf_no) < 2}">
 												00${list.cf_no }경기
 											</c:when>
@@ -42,7 +44,7 @@
 											<c:otherwise>
 												${list.cf_no}경기
 											</c:otherwise>
-										</c:choose>
+										</c:choose> --%>
 									</li>
 									<li>${list.cf_court }코트</li>
 								</ul>
@@ -93,7 +95,7 @@
 						</table>				
 				</c:forEach>
 				</c:when>
-					<c:otherwise>
+				<c:otherwise>
 					<div class="content white_bg">
 	                  <h3 class="guide_big">
 	                    <span class="icon-outline_4"></span>				

@@ -58,10 +58,24 @@ public class GameController {
 		JSONParser parser = new JSONParser();
         JSONObject json2 = (JSONObject) parser.parse(json);
         
+        MemberVO login = (MemberVO) session.getAttribute("login");
+        
         String cm_a1_id = (String) json2.get("cm_a1_id");
         String cm_a2_id = (String) json2.get("cm_a2_id");
         String cm_b1_id = (String) json2.get("cm_b1_id");
         String cm_b2_id = (String) json2.get("cm_b2_id");
+        
+        List<String> list = new ArrayList<String>();
+        
+        if(!cm_a1_id.equals(login.getM_id())) {
+        	list.add(cm_a1_id);
+        }else if(!cm_a2_id.equals(login.getM_id())) {
+        	list.add(cm_a2_id);
+        }else if(!cm_b1_id.equals(login.getM_id())) {
+        	list.add(cm_b1_id);
+        }else if(!cm_b2_id.equals(login.getM_id())) {
+        	list.add(cm_b2_id);
+        }
         
 		String c_idx = (String) session.getAttribute("c_idx");
 		
@@ -106,6 +120,16 @@ public class GameController {
 		int res = gService.clubGameSet(cmVO, map2);
 		
 		if(res>0){
+			Map<String,Object> param = new HashMap<String,Object>();
+			
+			param.put("list", list);
+			param.put("c_idx", c_idx);
+			param.put("c_nm", ucService.club_nm(c_idx));
+			param.put("al_division", "클럽게임");
+			param.put("al_url", "/Game/GameState.techni");
+			
+			mService.alarmInsert(session,param);
+			
 			map.put("cnt", 1);
 			map.put("m", "test");
 			
@@ -639,7 +663,7 @@ public class GameController {
 			
 			List<Object> list = new ArrayList<Object>();
 			List<Object> InsertList = new ArrayList<Object>();
-			
+			List<String> list2 = new ArrayList<String>();
 			for (int i = 0; i < json2.size(); i++) {
 				JSONObject j = (JSONObject) json2.get(i);
 				String u = "a" + i;
@@ -649,6 +673,8 @@ public class GameController {
 					map3.put("cm_a1_id", array[0].toString());
 					map3.put("cm_a2_id", array[1].toString());
 					list.add(map3);
+					list2.add(array[0].toString());
+					list2.add(array[1].toString());
 			}
 			String curTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			System.out.println(list);
@@ -682,6 +708,14 @@ public class GameController {
 								
 								return map;
 							}else{
+								Map<String,Object> param = new HashMap<String,Object> ();
+								param.put("list", list2);
+								param.put("al_division", "클럽게임");
+								param.put("al_url", "/Game/GameState.techni");
+								param.put("c_idx", c_idx);
+								param.put("c_nm", ucService.club_nm(c_idx));
+								
+								mService.alarmInsert(session,param);
 								map.put("cnt", 1);
 							}
 						}
@@ -698,6 +732,9 @@ public class GameController {
 		@ResponseBody
 		public Map<Object, Object> privateLeageInsert(HttpSession session, @RequestBody String json) throws ParseException{
 			Map<Object, Object> map2 = new HashMap<Object, Object>();
+			Map<String,Object> param = new HashMap<String,Object>();
+			
+			MemberVO mvo = (MemberVO) session.getAttribute("login");
 			
 			JSONParser parser = new JSONParser();
 	        JSONObject json2 = (JSONObject) parser.parse(json);
@@ -705,11 +742,17 @@ public class GameController {
 			String private_no = (String) json2.get("private_no");
 			String[] arr = user_id.split(",");
 			
+			ArrayList<String> list = new ArrayList<>(Arrays.asList(arr));
+			param.put("c_idx",session.getAttribute("c_idx").toString());
+			param.put("list", list);
+			param.put("al_division", "클럽게임");
+			param.put("al_send",mvo.getM_id());
+			param.put("al_url", "/Game/GameState.techni");
+			param.put("c_nm", ucService.club_nm(session.getAttribute("c_idx").toString()));
+			
 			List<Object> teamList = new ArrayList<Object>();
 			
 			List<Object> tList = new ArrayList<Object>();
-			
-			
 			
 			for(int i = 0 ;i<arr.length;i++) {
 				for(int j=i+1; j<arr.length;j++) {
@@ -866,6 +909,7 @@ public class GameController {
 								
 								return map2;
 							}else{
+								mService.alarmInsert(session,param);
 								map2.put("cnt", 1);
 							}
 				}

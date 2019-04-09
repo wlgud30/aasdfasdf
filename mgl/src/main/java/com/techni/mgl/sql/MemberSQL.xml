@@ -26,6 +26,17 @@
 		<result column="MGL_LOGINTIME" property="m_loginTime"/>
 		<result column="MGL_CLUB_IDX" property="c_idx"/>
 		<result column="MGL_REPRESENT_CLUB" property="m_represent"/>
+		<result column="MGL_ALARM_IDX" property="al_idx"/>
+		<result column="MGL_ALARM_DATE" property="al_date"/>
+		<result column="MGL_ALARM_DIVISION" property="al_division"/>
+		<result column="MGL_ALARM_SEND" property="al_send"/>
+		<result column="MGL_ALARM_RECEIVE" property="al_receive"/>
+		<result column="MGL_ALARM_URL" property="al_url"/>
+		<result column="MGL_ALARM_MSG" property="al_msg"/>
+		<result column="MGL_ALARM_READ" property="al_read"/>
+		<result column="MGL_CFIGHT_IDX" property="cf_idx"/>
+		<result column="MGL_CLUB_BBS_IDX" property="cb_idx"/>
+		<result column="MGL_CLUB_NM" property="c_nm"/>
 	</resultMap>
 	<sql id="memberFiled">
 		MGL_USER_IDX AS m_idx,
@@ -47,7 +58,20 @@
 		MGL_USING_CHK AS	 m_using_chk,
 		MGL_USER_DROPDATE AS m_dropDate,
 	</sql>
-	
+	<select id="pushList" resultMap="MemberVOMap">
+		SELECT 
+			MGL_CLUB_NM,MGL_USER_NM,MGL_USER_ID,MGL_USER_PUSHID FROM MGL_USER JOIN MGL_UCLUB USING(MGL_USER_ID) JOIN MGL_CLUB USING(MGL_CLUB_IDX)
+		WHERE 
+			MGL_CLUB_IDX = #{c_idx}
+		AND 
+			MGL_UCLUB_MNG != "가입대기"
+		AND 
+			MGL_UCLUB_MNG != "탈퇴"
+		AND 
+			MGL_USER_PUSHID IS NOT NULL 
+		AND 
+			MGL_USER_PUSHID != ""
+	</select>
 	<!-- 아이디 중복체크 -->
 	<select id="idCheck" resultType="int">
 			SELECT count(*) FROM MGL_USER WHERE MGL_USER_ID = #{m_id}
@@ -67,7 +91,7 @@
 	<!-- 아이디찾기 -->
 	<select id="searchID" resultMap="MemberVOMap">
 		select 
-			mgl_user_id 
+			mgl_user_id,mgl_user_nm
 		from 
 			mgl_user 
 		where 
@@ -75,7 +99,10 @@
 		and 
 			mgl_user_birth = #{m_birth}
 	</select>
-	
+	<update id="pwReset">
+		update mgl_user set mgl_user_pw = (select mgl_user_birth from (SELECT * from mgl_user) a where mgl_user_id=#{u_id})
+		where mgl_user_id = #{u_id}
+	</update>
 	<!-- 회원가입 -->
 	<insert id="insert">
 			INSERT INTO 
@@ -137,6 +164,15 @@
 			MGL_USER_ID = #{m_id}
 		AND
 			MGL_USER_PW = #{m_pw}
+	</select>
+	
+	<select id="pushLogin" resultMap="MemberVOMap">
+		SELECT 
+			* 
+		FROM
+			MGL_USER
+		WHERE
+			MGL_USER_PUSHID = #{m_push}
 	</select>
 	
 	<update id="pushUpdate">
@@ -285,7 +321,7 @@
 		WHERE 
 			MGL_USER_ID = #{m_id} 
 		AND 
-			LEFT(MGL_LOGINTIME,8) = date_format(now(),"%Y%m%d")
+			LEFT(MGL_LOGINTIME,10) = date_format(now(),"%Y-%m-%d")
 	</select>
 	
 	<insert id="todayLoginInsert">
@@ -310,7 +346,7 @@
 						"",
 						"",
 						SYSDATE(),
-						"/resources/img/man_face.svg",
+						#{m_photo},
 						#{m_club_gd},
 						#{m_club_gd},
 						#{m_club_gd},
@@ -319,7 +355,8 @@
 						NULL,
 						"",
 						NULL,
-						NULL
+						NULL,
+						"N"
 				)
 	</insert>
 	
@@ -350,7 +387,8 @@
 						NULL,
 						"",
 						NULL,
-						NULL
+						NULL,
+						"N"
 				)	
 	</insert>
 	
@@ -366,8 +404,49 @@
 	<select id="represent" resultMap="MemberVOMap">
 		SELECT MGL_REPRESENT_CLUB FROM MGL_USER WHERE MGL_USER_ID =#{u_id}
 	</select>
-	
-	
+	<select id="alarmSelect" resultMap="MemberVOMap">
+		SELECT * FROM MGL_ALARM WHERE MGL_ALARM_IDX = #{al_idx}
+	</select>
+	<update id="alarmYNUpdate">
+		UPDATE MGL_ALARM
+		SET MGL_ALARM_READ = "Y"
+		WHERE MGL_ALARM_IDX = #{al_idx}
+	</update>
+	<update id="alarmSeq">
+		update mgl_seq set mgl_alarm_seq = mgl_alarm_seq+1
+	</update>
+	<insert id="alarmInsert">
+		<selectKey resultType="hashmap" keyProperty="u_push,al_idx" order="BEFORE">
+			SELECT MGL_USER_PUSHID as u_push,concat("al",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_alarm_SEQ) FROM MGL_SEQ) NEXT),5,0)) as al_idx FROM MGL_USER WHERE MGL_USER_ID = #{al_receive}
+	   </selectKey>
+		INSERT INTO 
+				MGL_ALARM VALUES(
+						concat("al",cast(date_format(now(),"%Y%m%d") as char(8)),LPAD((SELECT * FROM(SELECT max(MGL_alarm_SEQ) FROM MGL_SEQ) NEXT),5,0)),
+						sysdate(),
+						#{al_division},
+						#{al_send},
+						#{al_receive},
+						#{al_url},
+						#{al_msg},
+						"N"	,
+						(SELECT MGL_USER_PUSHID FROM MGL_USER WHERE MGL_USER_ID = #{al_receive}),
+						#{c_idx},
+						#{cb_idx},
+						#{cf_idx}
+				)	
+	</insert>
+	<!-- 개인 알림 리스트 -->
+	<select id="alarmList" resultMap="MemberVOMap">
+		SELECT * FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id}
+	</select>
+	<!-- 알림 삭제 -->
+	<delete id="alarmDel">
+		DELETE FROM MGL_ALARM WHERE MGL_ALARM_IDX=#{al_idx};
+	</delete>
+	<!-- 알림 모두삭제 -->
+	<delete id="alarmDelAll">
+		DELETE FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id}
+	</delete>
 	
 	
 </mapper>

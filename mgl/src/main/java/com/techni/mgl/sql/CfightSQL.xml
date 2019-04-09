@@ -29,6 +29,7 @@
 		<result column="MGL_USER_MID" property="c_u_mid"/>
 		<result column="MGL_USER_ID" property="u_id"/>
 		<result column="MGL_USER_NM" property="u_nm"/>
+		<result column="MGL_USER_SEX" property="u_sex"/>
 		<result column="MGL_USER_PHOTO" property="u_photo"/>
 		<result column="MGL_UCLUB_GRADE_CD" property="u_club_gd"/>
 		<result column="MGL_CFIGHT_TYPE_KIND" property="cf_t_kind"/>
@@ -65,9 +66,11 @@
 		USING
 			(MGL_CFIGHT_IDX) 
 		WHERE
-			MGL_CFIGHT_YN IS NULL 
+			B.MGL_CFIGHT_YN IS NULL 
 		OR 
-			MGL_CFIGHT_YN = "Y"
+			B.MGL_CFIGHT_YN = "Y"
+		AND
+			A.MGL_CFIGHT_YN = "N"
 		GROUP BY 
 			MGL_CFIGHT_IDX
 	</select>
@@ -82,6 +85,12 @@
 		AND 
 			MGL_CLUB_YN = "Y"
 	</select>
+	<!-- 대항전 삭제 -->
+	<update id="cFightDelete">
+		UPDATE MGL_CFIGHT
+		SET MGL_CFIGHT_YN = "Y"
+		WHERE MGL_CFIGHT_IDX = #{cf_idx}
+	</update>
 	<!-- 대항전 인서트 -->
 	<insert id="cFightInsert">
 		<selectKey keyProperty="cf_idx" resultType="String" order="BEFORE">
@@ -104,6 +113,7 @@
 				#{cf_body},
 				#{c_idx},
 				#{cf_nm},
+				"N",
 				"N"
 			)
 	</insert>
@@ -175,7 +185,7 @@
 	FROM
 		(
 		SELECT 
-			mgl_cfight_c_idx,c.mgl_user_mid,A.*,MGL_CLUB_NM 
+			MGL_CFIGHT_YN,mgl_cfight_c_idx,c.mgl_user_mid,A.*,MGL_CLUB_NM 
 		FROM 
 			MGL_CFIGHT_TYPE A 
 		JOIN 
@@ -284,15 +294,23 @@
 		ON 
 			JA.MGL_CFIGHT_IDX = JB.MGL_CFIGHT_IDX
 		LEFT JOIN
-			(
+			(	
 				SELECT 
-					COUNT(*)as c_count,MGL_CFIGHT_IDX 
-				FROM 
-					MGL_CFIGHT_USER 
-				WHERE 
-					MGL_CLUB_IDX = #{c_idx} 
-				AND 
-					MGL_CFIGHT_IDX=#{cf_idx}
+					c_count,A.MGL_CLUB_IDX,IFNULL(MGL_CFIGHT_IDX,#{cf_idx}) AS MGL_CFIGHT_IDX 
+				FROM
+					(
+						SELECT 
+							COUNT(*)AS c_count,MGL_CLUB_IDX  
+						FROM 
+							MGL_UCLUB WHERE MGL_CLUB_IDX = #{c_idx}
+						AND 
+							MGL_UCLUB_MNG !='가입대기'
+					)A 
+				LEFT JOIN 
+					(SELECT * from MGL_CFIGHT_USER WHERE MGL_CFIGHT_IDX=#{cf_idx}) B
+				ON 
+					A.MGL_CLUB_IDX COLLATE utf8mb4_general_ci=B.MGL_CLUB_IDX 
+				GROUP by mgl_club_idx
 			) JC
 		ON 
 			JB.MGL_CFIGHT_IDX = JC.MGL_CFIGHT_IDX
@@ -328,7 +346,7 @@
 				) JA LEFT JOIN
 				(	
 					SELECT 
-						B.MGL_USER_ID,A.MGL_CLUB_IDX,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") AS u_age,
+						MGL_USER_SEX,B.MGL_USER_ID,A.MGL_CLUB_IDX,concat(left(left(now(),4)-left(MGL_USER_BIRTH,4)+1,1),"0대") AS u_age,
 					 	A.MGL_UCLUB_GRADE_CD,B.MGL_USER_NM,B.MGL_USER_PHOTO
 					FROM 
 						MGL_UCLUB A 
@@ -1788,7 +1806,7 @@
 			LEFT JOIN 
 			( SELECT MGL_CFIGHT_USER_ID,MGL_CFIGHT_USER_NM as b1_id,MGL_CFIGHT_USER_AGE as b1_age,MGL_CFIGHT_USER_GD 
 			as b1_gd FROM MGL_CFIGHT_USER WHERE MGL_CFIGHT_IDX=#{cf_idx}) JE ON JC.MGL_CFIGHT_USER_B = JE.MGL_CFIGHT_USER_ID
-		group by jc.mgl_cfight_team_idx ORDER BY JA.MGL_CFIGHT_TYPE_IDX ,sum_aptn
+		group by jc.mgl_cfight_team_idx ORDER BY JA.MGL_CFIGHT_TYPE_IDX ,sum_aptn desc
 	</select>
 	<!-- 내 종목 리스트 -->
 	<select id="myTypeList" resultMap="CfightVOMap">
@@ -1939,7 +1957,7 @@ order by JA.MGL_CFIGHT_TYPE_IDX ,sum_aptn desc
 	</select>
 	<select id="all_match" resultMap="CfightVOMap">
 		SELECT 
-			MGL_CFIGHT_W_DAT,MGL_CFIGHT_STATUS,MGL_CFIGHT_COURT 
+			MGL_CFIGHT_GIDX,MGL_CFIGHT_W_DAT,MGL_CFIGHT_STATUS,MGL_CFIGHT_COURT 
 		FROM 
 			MGL_CFIGHT_WAIT 
 		WHERE 

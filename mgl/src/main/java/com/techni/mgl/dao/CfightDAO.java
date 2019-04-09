@@ -251,4 +251,8 @@ public class CfightDAO {
 	public List<CfightVO> cf_nm(String cf_idx){
 		return sqlSession.selectList(nameSpace+"cf_nm", cf_idx);
 	}
+	//대항전삭제
+	public int cFightDelete(String cf_idx) {
+		return sqlSession.update(nameSpace+"cFightDelete", cf_idx);
+	}
 }

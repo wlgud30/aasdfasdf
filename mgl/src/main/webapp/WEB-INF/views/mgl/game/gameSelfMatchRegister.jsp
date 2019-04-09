@@ -3,17 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout_sub1.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp" />
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script>
 	function multiInsert(kind){
 		var u_id=[];
@@ -34,7 +24,7 @@
 			success:function(data){
 				if(data.cnt > 0 ){
 					swal({
-						title : "MGL",
+						title : "민턴in",
 						text : "출전 "+str+"  되었습니다.",
 						type : "success"
 					})
@@ -42,11 +32,11 @@
 						location.href="/Game/selfMatchRegister.techni?cs_idx=${cs_idx}"
 					})
 				}else{
-					swal("MGL", "죄송합니다. 다시 시도 해주세요.");
+					swal("민턴in", "죄송합니다. 다시 시도 해주세요.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	
@@ -63,7 +53,7 @@
 			success:function(data){
 				if(data.cnt > 0 ){
 					swal({
-						title : "MGL",
+						title : "민턴in",
 						text : "출전 취소 되었습니다.",
 						type : "success"
 					})
@@ -71,31 +61,17 @@
 						location.href="/Game/selfMatchMultiJoin?cs_idx="+cs_idx;
 					})
 				}else if(data.list_nm != null){
-					swal("MGL",data.list_nm+"이 현재 팀에 참여중 입니다.")
+					swal("민턴in",data.list_nm+"이 현재 팀에 참여중 입니다.")
 				}else{
-					swal("MGL", "죄송합니다. 다시 시도 해주세요.");
+					swal("민턴in", "죄송합니다. 다시 시도 해주세요.");
 				}
 			},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 	}
 </script>
-<body>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="history.back();"></div>
-				<div class="tit_top">
-					<h1 class="game_title">선수등록</h1>
-				</div>
-				<!-- InstanceEndEditable -->
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="cat_gray_area">
 				<h4 class="title_s">
@@ -157,13 +133,4 @@
 			</c:if>
 			<!-- content end -->
 			<!-- InstanceEndEditable -->
-		</div>
-		<!-- container end -->
-		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
-		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-</html>
+		

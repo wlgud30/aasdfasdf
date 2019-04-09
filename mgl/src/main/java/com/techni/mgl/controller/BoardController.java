@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.xmlbeans.impl.jam.mutable.MSourcePosition;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +42,7 @@ import com.techni.mgl.domain.MemberVO;
 import com.techni.mgl.service.BoardService;
 import com.techni.mgl.service.CfightService;
 import com.techni.mgl.service.GameService;
+import com.techni.mgl.service.MemberService;
 import com.techni.mgl.service.UClubService;
 
 @Controller
@@ -47,11 +51,15 @@ public class BoardController {
 	@Autowired
 	BoardService brdService;
 	@Autowired
+	MemberService mService;
+	@Autowired
 	CfightService cfService;
 	@Autowired
 	UClubService ucService;
 	@Autowired
 	GameService gService;
+	
+	MemberController mc = new MemberController();
 	
 	@RequestMapping("/Install/apkDownload.techni")
 	public String apkDownload(){
@@ -171,7 +179,51 @@ public class BoardController {
 		
 		return "board/boardList.pag";
 	}
-	
+	@RequestMapping("/Board/BoardListRepresent.techni")
+	public String boardListRepresent(HttpSession session , Model model){
+		String c_idx = (String) session.getAttribute("represent_idx");
+		if(c_idx==null) {
+			c_idx = (String) session.getAttribute("c_idx");
+		}
+		MemberVO mvo = (MemberVO) session.getAttribute("login");
+		session.setAttribute("c_idx", c_idx);
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("c_idx", c_idx);
+		map.put("u_id", mvo.getM_id());
+		List<BoardVO> list = brdService.bbsList(map);
+		List<CfightVO> list2 = cfService.cFightList(c_idx);
+		List<ClubMatchVO> list3 = gService.selfMatchList(c_idx);
+		
+		int count = ucService.clubCount(c_idx);
+		
+		Map<String,Object> map2 = new HashMap<String,Object>();
+		
+		map2.put("c_nm",list.get(0).getC_nm());
+		map2.put("count", count);
+		
+		session.setAttribute("cvo", map2);
+		System.out.println(list2.toString());
+		model.addAttribute("list", list);
+		model.addAttribute("list2",list2);
+		model.addAttribute("list3",list3);
+		int res = 0;
+		int res2 = 0;
+			for(BoardVO bvo : list){
+					if(bvo.getCb_yn() != null){
+					if(bvo.getCb_yn().equals("Y")){
+						res++;
+					}else{
+						res2++;
+					}
+				}
+			}
+			model.addAttribute("nBbs", res2);
+			model.addAttribute("sBbs", res);
+		
+		return "board/boardList.pag";
+	}
 
 	/*@RequestMapping("/Board/BoardList.techni")
 	public String boardList(HttpServletRequest req, HttpSession session, ModelAndView mv){
@@ -222,11 +274,19 @@ public class BoardController {
 			brdService.hitInsert(map);
 		}
 		BoardVO bvo = brdService.bbsDetail(cb_idx);
+		
+		String bbs_yn = "n";
+		
+		if(bvo.getU_id().equals(mvo.getM_id())) {
+			bbs_yn = "y";
+		}
+		
 		model.addAttribute("id", mvo.getM_id());
 		model.addAttribute("bvo", bvo);
 		model.addAttribute("list", list);
+		model.addAttribute("bbs_yn", bbs_yn);
 		
-		return "board/boardDetail";
+		return "board/boardDetail.pag";
 	}
 	
 	//게시글 수정 폼
@@ -237,7 +297,7 @@ public class BoardController {
 		
 		model.addAttribute("bvo", bvo);
 		
-		return "board/boardUpdateForm";
+		return "board/boardUpdateForm.pag";
 	}
 	
 	//게시글 수정
@@ -341,7 +401,7 @@ public class BoardController {
 		mv.addObject("CIDX", cIdx);
 		mv.addObject("UID", uId);
 		mv.addObject("list", list);
-		mv.setViewName("board/boardWriteForm");
+		mv.setViewName("board/boardWriteForm.pag");
 		return mv;
 	}
 	
@@ -362,7 +422,7 @@ public class BoardController {
 					param1.add("notitype", "noti");
 					param1.add("oscode", "a");
 					param1.add("token", bvo.getU_push());
-					param1.add("title", "MGL");
+					param1.add("title", "민턴in");
 					param1.add("desc", bvo.getC_nm()+"의 공지가 등록되었습니다.");
 					param1.add("dataval", "http://mgl.techni.co.kr:8081/Member/HandlerIndex.techni?c_idx="+c_idx+"&gubun=board");
 					mc.token(param1);
@@ -383,16 +443,32 @@ public class BoardController {
 	public Map<Object,Object> boardWriteProc(HttpSession session, @RequestBody BoardVO brdVO){		
 		
 		Map<Object,Object>map = new HashMap<Object,Object>();
+		Map<String,Object> param = new HashMap<String,Object>();
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
-		
+        
 		String c_idx = (String) session.getAttribute("c_idx");
 		String u_id = mvo.getM_id();
-		
+		System.out.println(c_idx);
 		brdVO.setC_idx(c_idx);
 		brdVO.setU_id(u_id);
+		
 		int res = brdService.bbsInsert(brdVO);
+		String yn = brdVO.getCb_yn();
 		if(res>0){
+			param.put("c_idx", c_idx);
+			if(yn.equals("Y")) {
+				param.put("al_division", "주요공지");
+			}else if(yn.equals("N")) {
+				param.put("al_division", "공지");
+			}
+			param.put("al_send",mvo.getM_id());
+			param.put("al_url", "/Board/BoardDetail.techni");
+			param.put("cb_idx", brdVO.getCb_idx());
 			map.put("cnt", 1);
+			List<BoardVO> list = brdService.pushList(c_idx);
+			System.out.println(list);
+			param.put("list", list);
+			mService.alarmInsert(session, param);
 			/*if(brdVO.getCb_yn().equals("Y")){
 				MemberController mc = new MemberController();
 				MultiValueMap<String,String> param1 = new LinkedMultiValueMap<>();
@@ -405,7 +481,7 @@ public class BoardController {
 					param1.add("notitype", "noti");
 					param1.add("oscode", "a");
 					param1.add("token", bvo.getU_push());
-					param1.add("title", "MGL");
+					param1.add("title", "민턴in");
 					param1.add("desc", bvo.getC_nm()+"의 공지가 등록되었습니다.");
 					param1.add("dataval", "http://mgl.techni.co.kr:8081");
 					mc.token(param1);

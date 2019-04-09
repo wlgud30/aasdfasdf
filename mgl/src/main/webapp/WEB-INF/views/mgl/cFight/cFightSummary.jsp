@@ -12,76 +12,63 @@
 					</tr>
 					<tr>
 						<td>
-							<div class="col_2input">
-								<div>
-									<p class="guide_text">대회일자</p>${list[0].cf_start }
-								</div>
-								<div>
-									<p class="guide_text">대회시간</p>${fn:substring(list[0].cf_sTime,0,5)}~${fn:substring(list[0].cf_eTime,0,5)}
-								</div>
+							<div>
+								<span class="guide_text">대회일자 : </span>${list[0].cf_start }(${fn:substring(list[0].cf_sTime,0,5)}~${fn:substring(list[0].cf_eTime,0,5)})
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<div class="col_2input wauto">
-								<div>
-									<span class="guide_text left_guide">점수</span>${list[0].cf_point }
-								</div>
-								<div>
-									<span class="guide_text left_guide">소요분</span>${list[0].cf_time }
-								</div>
+							<div>
+								<span class="guide_text">대회장소 : </span>${list[0].cf_cnm }(${list[0].cf_location } )
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<span class="guide_text left_guide">등록마감</span>${list[0].cf_end }
+							<div>
+								<span class="guide_text">대회방식 : </span>${list[0].cf_meth }(${list[0].cf_point }점)
+							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							${list[0].cf_cnm }
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<span class="guide_text">대회방식</span>
-							<ul class="list_check">
-								<li>${list[0].cf_meth }</li>
-							</ul>
+							<div>
+								<span class="guide_text">등록마감 : </span>${list[0].cf_end }
+							</div>
 						</td>
 					</tr>
 				</table>
-				<p class="guide_text">주최클럽</p>
 				<table class="line_no_t_td">
 					<tr>
-						<td>
-							<span class="club_name-long">${list2[0].c_nm}</span>
-							<span class="name3 bracket">${list2[0].c_count }명)</span>
+						<td class="max-ws_td">
+							<span class="guide_text">주최클럽 : </span>
+							<span class="club_name-long el_club_side">${list2[0].c_nm}</span>
+							<span class="side_rt_db">(${list2[0].c_count }명)</span>
 						</td>
-						<c:if test="${cfm eq '매니저'}">
+						<%-- <c:if test="${cfm eq '매니저'}">
 							<td class="btn_td">
 								<span class="btn_st btn_wh btn_small" onclick="location.href='/Cfight/CfightRegister.techni?cf_idx=${list2[0].cf_idx}'">선수등록</span>
-								<span class="btn_st btn_wh btn_small"onclick="location.href='/Cfight/CfightRegisterT.techni?cf_idx=${list2[0].cf_idx}&cf_t_kind=${list2[0].cf_t_kind }&cf_t_idx=${list2[0].cf_t_idx }'">팀등록</span>
+								<span class="btn_st btn_wh btn_small"onclick="location.href='/Cfight/CfightRegisterT.techni?cf_idx=${list2[0].cf_idx}&cf_t_kind=${list2[0].cf_t_kind}&cf_t_idx=${list2[0].cf_t_idx}'">팀등록</span>
 							</td>
-						</c:if>
+						</c:if> --%>
 					</tr>
 				</table>
-				<p class="guide_text">참여클럽</p>
 				<table class="line_no_t_td">
 					<c:forEach items="${list }" var="list">
 					<c:if test="${list.cf_yn eq null or list.cf_yn eq 'Y' }">
 						<tr>
-							<td class="club_long">
-								<span class="club_name-long">${list.c_nm }</span> (${list.c_count }명)
+							<td class="max-ws_td">
+								<span class="guide_text">참여클럽 : </span>
+								<span class="club_name-long el_club_side">${list.c_nm }</span>
+								<span class="side_rt_db">(${list.c_count }명)</span>
 							</td>
-							<c:if test="${mYn eq list.c_u_mid and list.cf_yn eq 'Y'}">
+							<%-- <c:if test="${mYn eq list.c_u_mid and list.cf_yn eq 'Y'}">
 								<td class="btn_td">
 									<span class="btn_st btn_wh btn_small" onclick="location.href='/Cfight/CfightRegister.techni?cf_idx=${list.cf_idx}'">선수등록</span>
-									<span class="btn_st btn_wh btn_small"onclick="location.href='/Cfight/CfightRegisterT.techni?cf_idx=${list.cf_idx}&cf_t_kind=${list.cf_t_kind }&cf_t_idx=${list.cf_t_idx }'">팀등록</span>
+									<span class="btn_st btn_wh btn_small"onclick="location.href='/Cfight/CfightRegisterT.techni?cf_idx=${list.cf_idx}&cf_t_kind=${list2[0].cf_t_kind }&cf_t_idx=${list2[0].cf_t_idx }'">팀등록</span>
 								</td>
-							</c:if>
+							</c:if> --%>
 						</tr>
 					</c:if>
 					</c:forEach>
@@ -127,5 +114,38 @@
 				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
 			</ul>
 		</div>
-</body>
-</html>
+<script>
+function cfightDel(cf_idx){
+	swal({
+		title : "민턴in",
+		text : "대항전을 삭제 하시겠습니까?",
+		buttons : {
+			confirm : "OK",
+			cancel : "NO"
+		}
+	})
+	.then((value) => {
+		if(value){
+			$.ajax({
+				async : true,
+				type:"post",
+				data : JSON.stringify({"cf_idx" : cf_idx}),
+				url : "/Cfight/CfightDelete.techni",
+				datatype : "json",
+				contentType : "application/json; charset=UTF-8",
+				success : function(data){
+					if(data.cnt>0){
+						location.href="/Board/BoardList.techni"
+					}else{
+						swal("민턴in","죄송합니다. 다시 시도해 주세요.")
+					}
+				},
+				error : function(error){
+					swal("민턴in","error : "+error);
+				}
+			}) 
+		}
+	})
+	
+}
+</script>

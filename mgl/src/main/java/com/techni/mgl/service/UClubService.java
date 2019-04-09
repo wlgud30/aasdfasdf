@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.techni.mgl.dao.MemberDAO;
 import com.techni.mgl.dao.UClubDAO;
+import com.techni.mgl.domain.BoardVO;
 import com.techni.mgl.domain.ClubVO;
 import com.techni.mgl.domain.UClubVO;
 import com.techni.mgl.dto.UClubViewDTO;
@@ -23,6 +24,8 @@ public class UClubService {
 	public UClubDAO ucDAO;
 	@Autowired
 	public MemberDAO mDAO;
+	@Autowired
+	public BoardService brdService;
 	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
@@ -64,15 +67,9 @@ public class UClubService {
 	public int user_insert(UClubVO uVO){
 		
 	if(ucDAO.representCheck(uVO.getU_id())>0) {
-		if(ucDAO.user_insert(uVO) > 0) {
-			Map<String,String> map = new HashMap<String,String>();
-			
-			map.put("u_id", uVO.getU_id());
-			map.put("c_idx", uVO.getC_idx());
-			return mDAO.clubupdate2(map);
-		}
+		return ucDAO.user_insert(uVO);
 	}
-		return 0;
+		return ucDAO.user_insert(uVO);
 	}
 	
 	@Transactional
@@ -123,6 +120,14 @@ public class UClubService {
 	}
 	@Transactional
 	public int cJoinOK(Map<String,String> map){
+		BoardVO bvo = new BoardVO();
+		bvo.setC_idx(map.get("c_idx"));
+		bvo.setCb_yn("N");
+		bvo.setCb_title(map.get("u_id")+"님이 가입하셨습니다.");
+		bvo.setCb_content(map.get("u_id")+"님이 가입하셨습니다.");
+		bvo.setU_id(map.get("u_id"));
+		brdService.bbsInsert(bvo);
+		
 		return ucDAO.cJoinOK(map);
 	}
 	@Transactional
@@ -264,10 +269,18 @@ public class UClubService {
 	public List<UClubVO> sameClubGdRank(String u_id){
 		return ucDAO.sameClubGdRank(u_id);
 	}		
+	//헤더화면
+	@Transactional
+	public UClubVO headerSelect(Map<String,String> map){
+		return ucDAO.headerSelect(map);
+	}	
 	
-	
-	
-	
+	//클럽이름
+	@Transactional
+	public String club_nm(String c_idx){
+		return ucDAO.club_nm(c_idx);
+	}
+
 	
 	public UClubViewDTO getUClubDetail(String idx, HttpSession session){
 		//세션에 클럽인덱스를 넣어두자!!

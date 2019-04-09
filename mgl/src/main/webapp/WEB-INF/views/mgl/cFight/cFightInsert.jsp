@@ -43,10 +43,10 @@ function minus(t,i){
 function clubAttend(nm,idx){
 	nm = $("#"+nm).val();
 	if(nm == ""){
-		swal("MGL","클럽 이름을 입력해 주세요.");
+		swal("민턴in","클럽 이름을 입력해 주세요.");
 		return false;
 	}else{
-		alert(nm)
+		swal("민턴in","참여 가능한 클럽입니다.");
 	$.ajax({
 		async : true,
 		type:"post",
@@ -59,11 +59,11 @@ function clubAttend(nm,idx){
 				$("#"+idx).val(data.c_idx);
 			}else{
 				$("#"+idx).val("");
-				swal("MGL","클럽 이름을 확인해주세요.")
+				swal("민턴in","클럽 이름을 확인해주세요.")
 			}
 		},
 		error : function(error){
-			swal("MGL","error : "+error);
+			swal("민턴in","error : "+error);
 		}
 	}) 
 	}

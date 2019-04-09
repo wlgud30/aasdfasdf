@@ -7,7 +7,7 @@
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo"
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo"
 						onClick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
@@ -77,7 +77,7 @@
 	</div>
 	<div class="bin_space"></div>
 	<div>
-		<span class="btn_st" onclick="location.href='#;'">게임등록</span>
+		<span class="btn_st" onclick="privateLeagueInsert()">게임등록</span>
 	</div>
 </div>
 <!-- content end -->
@@ -159,7 +159,7 @@
 			<c:forEach items="${list}" var="list">
 				<c:set var="i" value="${i+1}" />
 				<li
-					onclick="appendUl('${list.u_id }','${list.u_nm}','${list.u_photo}','${fn:substring(list.u_age,0,1)}0대','${list.u_club_gd}','${list.u_sex }','${i}')"
+					onclick="appendUl('${list.u_id }','${list.u_nm}','${list.u_photo}','${fn:substring(list.u_age,0,1)}0','${list.u_club_gd}','${list.u_sex }','${i}')"
 					id="${list.u_id }"
 					class="no_${i} v_all ${list.u_sex } ${fn:substring(list.u_age,0,1)}0 ${list.u_club_gd }">
 					<div class="photo_name">
@@ -174,7 +174,7 @@
 									<c:otherwise></c:otherwise>
 								</c:choose>
 							 
-							<span class="age_rank">(${fn:substring(list.u_age,0,1)}0대-${list.u_club_gd})</span>
+							<span class="age_rank">(${fn:substring(list.u_age,0,1)}0-${list.u_club_gd})</span>
 						</div>
 						<div class="small_s">
 							<span class="btn_st btn_wh btn_wh_color1 btn_small"
@@ -196,7 +196,7 @@
 				<h1 class="game_title">게스트 등록</h1>
 			</div>
 			<div class="bt_top">
-				<span class="btn_i la la-close" onclick="location.href='#'"></span>
+				<span class="btn_i la la-close" onclick=""></span>
 			</div>
 		</div>
 		<!-- title_popupp end -->
@@ -208,10 +208,10 @@
 				<tr>
 					<td><ul class="list_check">
 							<li><input type="radio" name="choice" class="check_circle"
-								id="check_1" value="m"> <label for="check_1">남자</label>
+								id="check_1" value="M"> <label for="check_1">남자</label>
 							</li>
 							<li><input type="radio" name="choice" class="check_circle"
-								id="check_2" value="f"> <label for="check_2">여자</label>
+								id="check_2" value="F"> <label for="check_2">여자</label>
 							</li>
 						</ul></td>
 				</tr>
@@ -247,10 +247,10 @@
 			<hr class="line_both">
 			<div class="btn_full col2_lay">
 				<div>
-					<span class="btn_st btn_colorg close_popup " onclick="">취소</span>
+					<span class="btn_st close_popup" onClick="guestInsert();">등록</span>
 				</div>
 				<div>
-					<span class="btn_st close_popup" onClick="guestInsert();">등록</span>
+					<span class="btn_st close_popup" onClick="guestInsert();">등록 후 계속</span>
 				</div>
 			</div>
 			<!-- col2_lay end -->
@@ -272,7 +272,7 @@
 <!-- wrap end -->
 <script type="text/javascript">
 		$(document).ready(function(){
-			$(".prettydropdown ul li").each(function(){
+			$(".prettydropdown:eq(0) ul li").each(function(){
 				var n = Number($(this).attr('data-value'));
 				if(n != 0){
 					$(this).css('display','none');
@@ -320,9 +320,9 @@
 		}
 		function privateLeagueInsert(){
 			if($("#appendUl li").length < 4){
-				swal("MGL" ,"최소 4명이 필요합니다.")
+				swal("민턴in" ,"최소 4명이 필요합니다.")
 			}else if($("#private_no").val() == 0 ){
-				swal("MGL","게임 수를 선택해 주세요.")
+				swal("민턴in","게임 수를 선택해 주세요.")
 			}else{
 				var user_id ="";
 				$("#user_id").val();
@@ -330,17 +330,16 @@
 					user_id += $(this).attr("id").substring(3,$(this).attr("id").length)+",";
 				});
 				$("#user_id").val(user_id.substring(0,user_id.length-1));
-				
 				$.ajax({
 					type:"POST",
 					url:"/Game/PrivateLeagueInsert.techni",
 					dataType:'json',
-					data : JSON.stringify({"user_id" : user_id.substring(0,user_id.length-1), "private_no" : $("#private_no").val() }),
+					data : JSON.stringify({"user_id" : user_id.substring(0,user_id.length-1), "private_no" : $("#private_no").val(),"c_nm" : "${list[0].c_nm }" }),
 					contentType : "application/json; charset=UTF-8",
 					success:function(data){
 						if(data.cnt > 0 ){
 							swal({
-								title : "MGL",
+								title : "민턴in",
 								text : "게임 등록 되었습니다.",
 								type : "success"
 							})
@@ -348,11 +347,11 @@
 								location.href="/Game/GameState.techni"
 							})
 						}else{
-							swal("MGL", "죄송합니다. 다시 시도 해주세요.");
+							swal("민턴in", "죄송합니다. 다시 시도 해주세요.");
 						}
 					},
 					error : function(error){
-						swal("MGL","error : " + error);
+						swal("민턴in","error : " + error);
 					}
 				});
 			}
@@ -423,11 +422,11 @@
 					if(data.cnt > 0 ){
 						location.href="/UClub/AttendList.techni"
 					}else{
-						swal("MGL", "이미 출석된 회원입니다.");
+						swal("민턴in", "이미 출석된 회원입니다.");
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}
 			});
 		}
@@ -440,11 +439,11 @@
 					if(data.cnt > 0 ){
 						location.href="/UClub/AttendList.techni"
 					}else{
-						swal("MGL", "이미 퇴실 상태입니다.");
+						swal("민턴in", "이미 퇴실 상태입니다.");
 					}
 				},
 				error : function(error){
-					swal("MGL","error : " + error);
+					swal("민턴in","error : " + error);
 				}
 			});
 		}
@@ -459,15 +458,14 @@
 			var yyyy = today.getFullYear();
 			
 			g_age = yyyy-g_age;
-			alert(g_age);
 			if(g_id == null || g_id ==""){
-				swal("MGL","이름을 입력해주세요.")
+				swal("민턴in","이름을 입력해주세요.")
 			}else if(g_sex == null || g_sex ==""){
-				swal("MGL","성별을 입력해주세요.")
+				swal("민턴in","성별을 입력해주세요.")
 			}else if(g_age == null || g_age ==""){
-				swal("MGL","연령대를 입력해주세요.")
+				swal("민턴in","연령대를 입력해주세요.")
 			}else if(g_gd == null || g_gd ==""){
-				swal("MGL","급수를 입력해주세요.")
+				swal("민턴in","급수를 입력해주세요.")
 			}else{
 				$.ajax({
 					async : true,
@@ -478,13 +476,13 @@
 					contentType : "application/json; charset=UTF-8",
 					success : function(data){
 						if(data.cnt>0){
-							location.href="/UClub/GameTeamStateInfo.techni"
+							location.href="/UClub/GamePrivateStateInfo.techni"
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				}); 
 			}

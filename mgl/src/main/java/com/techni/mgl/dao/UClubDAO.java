@@ -246,9 +246,15 @@ public class UClubDAO {
 	public List<UClubVO> sameClubGdRank(String u_id){
 		return sqlSession.selectList("mgl.UClub.sameClubGdRank", u_id);
 	}	
-	
-	
-	
+	//헤더화면
+	public UClubVO headerSelect(Map<String, String> map){
+		return sqlSession.selectOne("mgl.UClub.headerSelect", map);
+	}	
+	//클럽이름
+	public String club_nm(String c_idx){
+		return sqlSession.selectOne("mgl.UClub.club_nm",c_idx);
+	}	
+		
 	
 	
 	

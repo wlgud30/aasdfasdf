@@ -31,7 +31,8 @@
 									<div>
 										<ul class="li_col-nol impot">
 											<li>${fn:substring(list2.cf_w_date,0,5)}</li>
-											<li>${list2.cf_no}경기</li>
+											<fmt:parseNumber var="pages" integerOnly="true" value="${list2.cf_no/all_court+(1-(list2.cf_no/all_court%1))%1}"/>
+											<li>${pages}경기</li>
 											<li>${list2.cf_t_nm } - ${fn:substring(list2.cf_gidx,15,16)}조</li>
 											<li>토너먼트</li>
 										</ul>

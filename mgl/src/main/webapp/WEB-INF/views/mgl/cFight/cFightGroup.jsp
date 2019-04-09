@@ -39,9 +39,9 @@ function bun(){
 		eval("data."+q+"="+"arr");
 		json.push(data);
 	}
-	alert(json);
 	var jsonData = JSON.stringify(json);
 	alert(jsonData);
+	return false;
 	 $.ajax({
 		async : true,
 		type:"post",
@@ -51,20 +51,13 @@ function bun(){
 		contentType : "application/json; charset=UTF-8",
 		success : function(data){
 			if(data.cnt>0){
-				swal({
-					title : "MGL",
-					text : "d",
-					type : "success"
-				})
-				.then((value) =>{
-					
-				})
+				location.href="/Cfight/CfightTypeList.techni"
 			}else{
-				swal("MGL","죄송합니다. 다시 시도해 주세요.")
+				swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 			}
 		},
 		error : function(error){
-			swal("MGL","error : "+error);
+			swal("민턴in","error : "+error);
 		}
 	})  
 }

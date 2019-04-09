@@ -1,23 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<!doctype html>
-<html>
-<!-- InstanceBegin template="/Templates/layout.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<!-- InstanceBeginEditable name="doctitle" -->
-<title>MGL</title>
-<!-- InstanceEndEditable -->
-<jsp:include page="/WEB-INF/views/mgl/ajax/header.jsp"/>
-<!-- InstanceBeginEditable name="head" -->
-<!-- InstanceEndEditable -->
-</head>
+
 <script>
 
 	function bbsDel(){
 		var cb_idx = "${bvo.cb_idx}";
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "글을 삭제 하시겠습니까?",
 			buttons : true
 		})
@@ -33,19 +23,19 @@
 						success : function(data){
 							if(data.cnt>0){
 								swal({
-									title:"MGL",
+									title:"민턴in",
 									text : "글이 삭제 되었습니다."
 								})
 								.then((value) =>{
 									location.href='/Board/BoardList.techni'
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 							
 						},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 		};
@@ -55,7 +45,7 @@
 	
 	function replyDel(cr_idx){
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "댓글을 삭제 하시겠습니까?",
 			buttons : true
 		})
@@ -71,19 +61,19 @@
 						success : function(data){
 							if(data.cnt>0){
 								swal({
-									title:"MGL",
+									title:"민턴in",
 									text : "댓글이 삭제 되었습니다."
 								})
 								.then((value) =>{
 									location.href='/Board/BoardDetail.techni?cb_idx=${bvo.cb_idx}'
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 							
 						},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 		};
@@ -93,7 +83,7 @@
 	
 	function reply(){
 		if($("#cr_content").val() == "" ){
-			swal("MGL","댓글을 입력해주세요.")
+			swal("민턴in","댓글을 입력해주세요.")
 			return
 		}else{
 		$.ajax({
@@ -106,36 +96,19 @@
 				if(data.cnt>0){
 						location.href='/Board/BoardDetail.techni?cb_idx=${bvo.cb_idx}'
 				}else{
-					swal("MGL","죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 				}
 				
 				},
 		error : function(error){
-		swal("MGL","error : " + error);
+		swal("민턴in","error : " + error);
 		}
 	});
 	}
 	}
 </script>
-<body>
+
 <% pageContext.setAttribute("newLineChar", "\n"); %>
-	<div id="wrap">
-		<header>
-			<div class="head_top">
-				<!-- InstanceBeginEditable name="head_top" -->
-				<div class="btn_back" onClick="location.href='/Board/BoardList.techni'"></div>
-				<div class="tit_top"><h2 class="write_title">${bvo.cb_title }</h2></div>
-				<!-- InstanceEndEditable -->
-				<c:if test="${bvo.u_id == id }">
-					<div class="bt_top">
-							<span class="icon-note btn_i i-text" onclick="location.href='/Board/BoardBbsUpdateForm.techni?cb_idx=${bvo.cb_idx}'">수정</span>
-							<span class="icon-dump icon-f btn_i i-text" onclick="bbsDel()">삭제</span>
-					</div>
-				</c:if>
-			</div>
-			<!-- head_top end -->
-		</header>
-		<div id="container">
 			<!-- InstanceBeginEditable name="container" -->
 			<div class="title_area">
 				<div>
@@ -186,7 +159,6 @@
 			</div>
 			</c:if>
 			<!-- InstanceEndEditable -->
-		</div>
 		<!-- container end -->
 		<div id="ft_area">
 			<!-- InstanceBeginEditable name="ft_area" -->
@@ -198,8 +170,3 @@
 			</div>
 			<!-- InstanceEndEditable -->
 		</div>
-	</div>
-	<!-- wrap end -->
-</body>
-<!-- InstanceEnd -->
-</html>

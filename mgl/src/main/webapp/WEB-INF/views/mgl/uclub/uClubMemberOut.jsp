@@ -21,7 +21,7 @@ $(document).ready(function() {
 	var uc_mng = $("#uc_mng option:selected").val();
 	
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "탈퇴 승인 하시겠습니까?",
 			buttons : true
 		})
@@ -37,19 +37,19 @@ $(document).ready(function() {
 						success : function(data){
 							if(data.cnt>0){
 								swal({
-									title:"MGL",
+									title:"민턴in",
 									text : "탈퇴 승인 되었습니다."
 								})
 								.then((value) =>{
 									location.href='/UClub/UclubMUserList.techni'
 								})
 							}else{
-								swal("MGL","죄송합니다. 다시 시도해 주세요.")
+								swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 							}
 							
 						},
 		error : function(error){
-			swal("MGL","error : " + error);
+			swal("민턴in","error : " + error);
 		}
 	});
 		};
@@ -60,7 +60,7 @@ $(document).ready(function() {
 		var u_id = "${uvo.u_id}";
 		var c_idx = "${uvo.c_idx}";
 			swal({
-				title : "MGL",
+				title : "민턴in",
 				text : "탈퇴 거절 하시겠습니까?",
 				buttons : true
 			})
@@ -76,19 +76,19 @@ $(document).ready(function() {
 							success : function(data){
 								if(data.cnt>0){
 									swal({
-										title:"MGL",
+										title:"민턴in",
 										text : "탈퇴 거절 되었습니다."
 									})
 									.then((value) =>{
 										location.href='/UClub/UclubMUserList.techni'
 									})
 								}else{
-									swal("MGL","죄송합니다. 다시 시도해 주세요.")
+									swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 								}
 								
 							},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 			};

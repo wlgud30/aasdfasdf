@@ -44,6 +44,14 @@ public class CfightVO {
 	public String u_photo;
 	public String u_age;
 	public String u_club_gd;
+	public String u_sex;
+	public String getU_sex() {
+		return u_sex;
+	}
+	public void setU_sex(String u_sex) {
+		this.u_sex = u_sex;
+	}
+
 	public String cf_t_kind;
 	public String cf_u_weight;
 	public String cf_t_a_nm;

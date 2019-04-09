@@ -23,17 +23,17 @@ function pSubmit(){
 
 	if(aScore == ""||bScore ==""||aScore == null||bScore==null){
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "점수를 입력해주세요."
 		})
 	}else if(aScore == bScore){
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "점수가 같습니다. 다시 확인해주세요."
 		})
 	}else{
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "점수를 등록하시겠습니까?",
 			buttons : {
 				confirm : "OK",
@@ -52,7 +52,7 @@ function pSubmit(){
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title : "MGL",
+								title : "민턴in",
 								text : "점수가 등록되었습니다.",
 								type : "success"
 							})
@@ -66,11 +66,11 @@ function pSubmit(){
 								location.href='/Cfight/CfightReferee.techni'
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 					},
 					error : function(error){
-						swal("MGL","error : "+error);
+						swal("민턴in","error : "+error);
 					}
 				}) 
 			}

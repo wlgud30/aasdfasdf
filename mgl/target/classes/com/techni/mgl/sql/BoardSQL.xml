@@ -137,6 +137,9 @@
 	
 	<!-- 게시글 생성 -->
 	<insert id="bbsInsert">
+	<selectKey resultType="string" keyProperty="cb_idx" order="BEFORE">
+			SELECT concat("CB",cast(date_format(now(),"%Y%m%d")as char(8)),LPAD((SELECT * FROM(SELECT MAX(MGL_CLUB_BBS_SEQ) FROM MGL_SEQ) NEXT),3,0))
+	</selectKey>
 		INSERT INTO 
 			MGL_CLUB_BBS VALUES (
 				concat("CB",cast(date_format(now(),"%Y%m%d")as char(8)),LPAD((SELECT * FROM(SELECT MAX(MGL_CLUB_BBS_SEQ) FROM MGL_SEQ) NEXT),3,0)),

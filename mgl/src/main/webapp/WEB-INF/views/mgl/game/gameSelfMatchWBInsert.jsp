@@ -207,11 +207,11 @@
 				if(data.cnt > 0){
 					/* location.href = "/Game/GameState.techni" */
 				}else{
-					swal("MGL","죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error){
-				swal("MGL","error : "+error);
+				swal("민턴in","error : "+error);
 			}
 		})
 		

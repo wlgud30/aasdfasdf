@@ -21,16 +21,16 @@
 		var content = $("#b_content").val().sTrim();
 		
 		if(title == ""){
-			swal("MGL","제목을 입력해주세요");
+			swal("민턴in","제목을 입력해주세요");
 			return false;
 		}
 		if(content == ""){
-			swal("MGL","내용을 입력해주세요");
+			swal("민턴in","내용을 입력해주세요");
 			return false;
 		}
 		
 		swal({
-			title : "MGL",
+			title : "민턴in",
 			text : "글을 저장 하시겠습니까?",
 			buttons : true
 		})
@@ -45,19 +45,19 @@
 					success : function(data){
 						if(data.cnt>0){
 							swal({
-								title:"MGL",
+								title:"민턴in",
 								text : "글이 수정 되었습니다."
 							})
 							.then((value) =>{
 								location.href='/Board/BoardList.techni'
 							})
 						}else{
-							swal("MGL","죄송합니다. 다시 시도해 주세요.")
+							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
 						
 					},
 			error : function(error){
-				swal("MGL","error : " + error);
+				swal("민턴in","error : " + error);
 			}
 		});
 			};

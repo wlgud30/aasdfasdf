@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
-<title>MGL</title>
+<title>민턴in</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="stylesheet" href="/resources/css/login.css?ver4" type="text/css"/>
@@ -14,13 +14,13 @@
 </head>
 <body>
 	<div id="wrap">
-    	<header id="header">
+    	<header id="header" class="head_el">
     		<tiles:insertAttribute name="header" ignore="true"/>
-    		<tiles:insertAttribute name="header_2" ignore="true"/>
     	</header>
+    	<tiles:insertAttribute name="header_2" ignore="true"/>
     	<div id="container">
     		<%-- <div id="header_2"><tiles:insertAttribute name="header_2" ignore="true"/></div> --%>
-	    	<div id="body"><tiles:insertAttribute name="body" ignore="true"/></div>
+	    	<tiles:insertAttribute name="body" ignore="true"/>
 	    </div>
 	</div>
  

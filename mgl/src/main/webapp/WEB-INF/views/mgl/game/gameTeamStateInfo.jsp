@@ -9,7 +9,7 @@
 			<div class="head_top">
 				<!-- InstanceBeginEditable name="head_top" -->
 				<div class="logo_top">
-					<img src="/resources/img/logo.svg" alt="MGL" class="logo"
+					<img src="/resources/img/logo.svg" alt="민턴in" class="logo"
 						onClick="location.href='/UClub/UClubAllList.techni'">
 				</div>
 				<div class="tit_top">
@@ -211,7 +211,7 @@
 			<c:forEach items="${list}" var="list">
 				<c:set var="i" value="${i+1}" />
 				<li
-					onclick="te('${list.u_id }','${list.u_nm}','${list.u_photo}','${fn:substring(list.u_age,0,1)}0대','${list.u_club_gd}','${list.u_sex }','${i}')"
+					onclick="te('${list.u_id }','${list.u_nm}','${list.u_photo}','${fn:substring(list.u_age,0,1)}0','${list.u_club_gd}','${list.u_sex }','${i}')"
 					id="${list.u_id }"
 					class="no_${i} v_all ${list.u_sex } ${fn:substring(list.u_age,0,1)}0 ${list.u_club_gd }">
 					<div class="photo_name">
@@ -223,7 +223,7 @@
 									<c:when test="${list.end_count ne 0}"><em class="game_nb-tiny">${list.end_count }</em></c:when>
 									<c:when test="${list.wait_count > 0 }"><em class="game_nb-tiny">0</em></c:when>
 									<c:otherwise></c:otherwise>
-								</c:choose> <span class="age_rank">(${fn:substring(list.u_age,0,1)}0대-${list.u_club_gd})</span>
+								</c:choose> <span class="age_rank">(${fn:substring(list.u_age,0,1)}0-${list.u_club_gd})</span>
 						</div>
 					</div> <!--photo_name end-->
 				</li>
@@ -268,10 +268,10 @@
 				<tr>
 					<td><ul class="list_check">
 							<li><input type="radio" name="choice" class="check_circle"
-								id="check_1" value="m"> <label for="check_1">남자</label>
+								id="check_1" value="M"> <label for="check_1">남자</label>
 							</li>
 							<li><input type="radio" name="choice" class="check_circle"
-								id="check_2" value="f"> <label for="check_2">여자</label>
+								id="check_2" value="F"> <label for="check_2">여자</label>
 							</li>
 						</ul></td>
 				</tr>
@@ -371,7 +371,7 @@
 			checkV()
 			$('.la-close').click();
 		} else {
-			swal("MGL", "자리가 꽉 찼습니다.")
+			swal("민턴in", "자리가 꽉 찼습니다.")
 		}
 	}
 	function remove(i, t) {
@@ -473,7 +473,7 @@
 		/* $("#dis").attr("style","display:''") */
 		if (team1 != 0 && team2 != 0) {
 			if (no == 6) {
-				swal("MGL", "최대 5팀까지 선택 가능합니다.")
+				swal("민턴in", "최대 5팀까지 선택 가능합니다.")
 			} else {
 				team1 = 0;
 				team2 = 0;
@@ -531,7 +531,7 @@
 				$("#acd_count").text($("#teamTable > tr").length + "/5팀 참여");
 			}
 		} else {
-			swal("MGL", "팀원을 선택해 주세요.")
+			swal("민턴in", "팀원을 선택해 주세요.")
 		}
 	}
 	function deleteTable(tid) {
@@ -555,7 +555,7 @@
 	}
 	function gameInsert() {
 		if (no < 3) {
-			swal("MGL", "최소 2팀이상 등록해주세요.");
+			swal("민턴in", "최소 2팀이상 등록해주세요.");
 			return false;
 		}
 		var team_a = "";
@@ -572,7 +572,6 @@
 					json.push(data);
 				})
 		var jsonData = JSON.stringify(json);
-		alert(jsonData);
 		$.ajax({
 			async : true,
 			type : "post",
@@ -584,11 +583,11 @@
 				if (data.cnt > 0) {
 					location.href = "/Game/GameState.techni"
 				} else {
-					swal("MGL", "죄송합니다. 다시 시도해 주세요.")
+					swal("민턴in", "죄송합니다. 다시 시도해 주세요.")
 				}
 			},
 			error : function(error) {
-				swal("MGL", "error : " + error);
+				swal("민턴in", "error : " + error);
 			}
 		});
 
@@ -604,15 +603,14 @@
 		var yyyy = today.getFullYear();
 
 		g_age = yyyy - g_age;
-		alert(g_age);
 		if (g_id == null || g_id == "") {
-			swal("MGL", "이름을 입력해주세요.")
+			swal("민턴in", "이름을 입력해주세요.")
 		} else if (g_sex == null || g_sex == "") {
-			swal("MGL", "성별을 입력해주세요.")
+			swal("민턴in", "성별을 입력해주세요.")
 		} else if (g_age == null || g_age == "") {
-			swal("MGL", "연령대를 입력해주세요.")
+			swal("민턴in", "연령대를 입력해주세요.")
 		} else if (g_gd == null || g_gd == "") {
-			swal("MGL", "급수를 입력해주세요.")
+			swal("민턴in", "급수를 입력해주세요.")
 		} else {
 			$.ajax({
 				async : true,
@@ -630,11 +628,11 @@
 					if (data.cnt > 0) {
 						location.href = "/UClub/GameTeamStateInfo.techni"
 					} else {
-						swal("MGL", "죄송합니다. 다시 시도해 주세요.")
+						swal("민턴in", "죄송합니다. 다시 시도해 주세요.")
 					}
 				},
 				error : function(error) {
-					swal("MGL", "error : " + error);
+					swal("민턴in", "error : " + error);
 				}
 			});
 		}
