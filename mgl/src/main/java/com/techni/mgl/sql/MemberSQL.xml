@@ -448,5 +448,9 @@
 		DELETE FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id}
 	</delete>
 	
+	<select id="alarmCount" resultType="int">
+		SELECT COUNT(*) FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id} AND MGL_ALARM_READ = "N"
+	</select>
+	
 	
 </mapper>

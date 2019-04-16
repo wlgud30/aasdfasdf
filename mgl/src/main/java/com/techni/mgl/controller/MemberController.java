@@ -365,6 +365,7 @@ public class MemberController {
 			if(ucService.representCheck(m_id)>0) {
 				session.setAttribute("c_idx",mvo.getM_represent());
 				session.setAttribute("represent_idx", mvo.getM_represent());
+				session.setAttribute("al_count", mService.alarmCount(m_id));
 				
 				map.put("c_idx", mvo.getM_represent());
 				map.put("u_id",mvo.getM_id());
@@ -960,11 +961,22 @@ public class MemberController {
 	public String pushController(HttpSession session,String al_idx,RedirectAttributes redirectAttributes) {
 		
 		String redirect_url = "redirect:";
-		
+		System.out.println(al_idx);
+		mService.alarmYNUpdate(al_idx);
+		System.out.println(al_idx);
 		MemberVO mVO = mService.alarmSelect(al_idx);
 		
 		MemberVO login = mService.pushLogin(mVO.getM_push());
 		
+		if(mService.todayLogin(login.getM_id()) == 0) {
+			int res = mService.todayLoginInsert(login.getM_id());
+			System.out.println("성공");
+			if(res <= 0) {
+				System.out.println("실패");
+			}
+		}
+		
+		session.setAttribute("al_count", mService.alarmCount(login.getM_id()));
 		String division = mVO.getAl_division();
 		
 		session.setAttribute("c_idx", mVO.getC_idx());

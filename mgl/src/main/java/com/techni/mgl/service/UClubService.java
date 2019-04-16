@@ -123,8 +123,8 @@ public class UClubService {
 		BoardVO bvo = new BoardVO();
 		bvo.setC_idx(map.get("c_idx"));
 		bvo.setCb_yn("N");
-		bvo.setCb_title(map.get("u_id")+"님이 가입하셨습니다.");
-		bvo.setCb_content(map.get("u_id")+"님이 가입하셨습니다.");
+		bvo.setCb_title(map.get("u_nm")+"님이 가입하셨습니다.");
+		bvo.setCb_content(map.get("u_nm")+"님이 가입하셨습니다.");
 		bvo.setU_id(map.get("u_id"));
 		brdService.bbsInsert(bvo);
 		

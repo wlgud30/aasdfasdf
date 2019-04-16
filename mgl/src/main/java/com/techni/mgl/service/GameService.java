@@ -160,11 +160,7 @@ public class GameService {
 	@Transactional
 	public int deleteW(String c_gidx,Map<String,String> map){
 		
-		if(gDAO.deleteW(c_gidx) >0){
-			return gDAO.gameJoinSChange(map);
-		}else{
-			return 0;
-		}
+		return gDAO.deleteW(c_gidx);
 	}
 	//자체대회 생성
 	@Transactional

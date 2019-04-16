@@ -33,7 +33,7 @@ $(document).ready(function(){
 				if(data.cnt>0){
 					swal("민턴in","가입 대기중 입니다.")
 				}else{
-					swal("민턴in","가입 신청 되었습니다.")
+					location.href='/UClub/UClubJoin.techni?c_idx=${club[0].c_idx }'
 				}
 			},
 			error : function(error){
@@ -151,38 +151,28 @@ $(document).ready(function(){
 			</div>
 		</c:if>
 	</div>
-	<hr class="line_div">
-	<table class="table_form line_no">
-		<tr>
-			<td class="td_ti"><b>회 장</b></td>
-			<td>${club[0].u_nm }(<c:choose>
-					<c:when test="${fn:length(string1) eq 11 }">
-									${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
-								</c:when>
-					<c:otherwise>
-									${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
-								</c:otherwise>
-				</c:choose> )
-			</td>
-		</tr>
-		<c:forEach items="${club }" var="list">
-			<c:if test="${list.ga_nm ne null }">
-				<tr>
-					<c:set var="string1" value="${list.ga_tel }"></c:set>
-					<td class="td_ti"><b>총 무</b></td>
-					<td>${list.ga_nm }(<c:choose>
-							<c:when test="${fn:length(string1) eq 11 }">
-									${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
-								</c:when>
-							<c:otherwise>
-									${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
-								</c:otherwise>
-						</c:choose>)
-					</td>
-				</tr>
-			</c:if>
-		</c:forEach>
-	</table>
+	<c:if test="${empty list }">
+		<hr class="line_div">
+		<table class="table_form line_no">
+			<c:forEach items="${club }" var="list">
+				<c:if test="${list.ga_nm ne null }">
+					<tr>
+						<c:set var="string1" value="${list.ga_tel }"></c:set>
+						<td class="td_ti"><b>${list.ga}</b></td>
+						<td>${list.ga_nm }(<c:choose>
+								<c:when test="${fn:length(string1) eq 11 }">
+										${fn:substring(string1,0,3)}-${fn:substring(string1,3,7)}-${fn:substring(string1,7,11) }
+									</c:when>
+								<c:otherwise>
+										${fn:substring(string1,0,3)}-${fn:substring(string1,3,6)}-${fn:substring(string1,6,10) }
+									</c:otherwise>
+							</c:choose>)
+						</td>
+					</tr>
+				</c:if>
+			</c:forEach>
+		</table>
+	</c:if>
 	<hr class="line_div">
 	<%-- <div class="tit_main cet_lay">
 					<ul>

@@ -112,7 +112,7 @@ public class MemberDAO {
 	}
 	
 	public int alarmYNUpdate(String al_idx) {
-		return sqlSession.update(nameSpace+"alarmYNUpdate");
+		return sqlSession.update(nameSpace+"alarmYNUpdate",al_idx);
 	}
 	public int alarmSeq() {
 		return sqlSession.update(nameSpace+"alarmSeq");
@@ -132,6 +132,10 @@ public class MemberDAO {
 	
 	public int alarmDelAll(String u_id) {
 		return sqlSession.delete(nameSpace+"alarmDelAll", u_id);
+	}
+	
+	public int alarmCount(String u_id) {
+		return sqlSession.selectOne(nameSpace+"alarmCount", u_id);
 	}
 	
 	

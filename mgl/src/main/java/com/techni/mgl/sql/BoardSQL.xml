@@ -133,6 +133,7 @@
 			MGL_CLUB_BBS_IDX = #{cb_idx}
 		AND
 			MGL_CLUB_REPLY_CH = "N"
+		ORDER BY MGL_CLUB_REPLY_DATE DESC
 	</select>
 	
 	<!-- 게시글 생성 -->

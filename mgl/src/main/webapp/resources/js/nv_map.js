@@ -22,7 +22,7 @@
 	 
 	 var contentString = [
         '<div class="iw_inner">',
-        '       <a href="04-01_club_info_view1-4.html">',		
+        '       <a href="04-01_club_info_view4.html">',		
         '   <h4>클럽명 타이틀</h4>',
         '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br />',
         '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',

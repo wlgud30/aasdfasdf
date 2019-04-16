@@ -52,15 +52,12 @@ function pushTok(token,u_nm,msg,url){
 	} 
 	$(document).ready(function(){
 		var ag = navigator.userAgent;
-		/* var msg = "${msg}";
+		 var msg = "${msg}";
 		var push = "${u_push}";
 		var nm = "${u_nm}";
 		if(msg !="" && msg!=null){
 			swal("민턴in",msg);
-			if(push !="" && push !=null){
-				pushTok(push,nm,nm+"님이 가입을 신청하였습니다.","http://mgl.techni.co.kr:8081/UClub/UclubMUserList.techni?c_idx=${c_idx}");
-			}
-		} */
+		} 
 		var filter = "win16|win32|win64|mac";
 		
 		if(toYN != -1){

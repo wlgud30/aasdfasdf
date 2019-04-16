@@ -193,7 +193,7 @@
 				GROUP BY A.MGL_USER_ID
 				)	 ja
 				on e.mgl_club_idx = ja.mgl_club_idx
-				order by cm_p_total is null ASC,field(ja.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"),ja.cm_p_total desc	
+				order by cm_p_total is null ASC,field(ja.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"),ja.cm_p_total desc, MGL_USER_NM	
 </select>
 	<!-- 클럽내의 이달 랭킹 유저(남) 리스트 -->
 	<select id="selectUClubM" resultMap="uClubVO">
@@ -219,7 +219,7 @@
 					<!-- AND D.MGL_CLUB_IDX=#{c_idx} -->
 					group by a.mgl_user_id
 					order by sum(case when MID(MGL_CLUB_MATCH_IDX,2,4)=#{ym}  AND D.MGL_CLUB_IDX = #{c_idx} then MGL_CLUB_MATCH_APTN end) is null ASC,
-							field(A.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"), cm_p_total desc
+							field(A.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"), cm_p_total desc, MGL_USER_NM
 	</select>
 	<!-- 클럽내의 이달 랭킹 유저(여) 리스트 -->
 	<select id="selectUClubF" resultMap="uClubVO">
@@ -245,7 +245,7 @@
 					<!-- AND D.MGL_CLUB_IDX=#{c_idx} -->
 					group by a.mgl_user_id
 					order by sum(case when MID(MGL_CLUB_MATCH_IDX,2,4)=#{ym}  AND D.MGL_CLUB_IDX = #{c_idx} then MGL_CLUB_MATCH_APTN end) is null ASC,
-							field(A.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"), cm_p_total desc
+							field(A.mgl_uclub_grade_cd,"S","A","B","C","D","초심","왕초","무급"), cm_p_total desc , MGL_USER_NM
 	</select>
 	<!-- 매니저가 보는 유저 리스트 화면 -->
 	<select id="UClubMList" resultMap="uClubVO">
@@ -257,7 +257,7 @@
 					AND MGL_UCLUB_MNG !="가입대기"
 					AND MGL_UCLUB_MNG !="탈퇴"
 					AND MGL_UCLUB_MNG !="탈퇴대기"
-					ORDER BY field (MGL_UCLUB_MNG,"매니저","회장","부회장","고문","감사","총무","재무","경기이사","관리이사","홍보이사","회원"),MGL_USER_JOINDATE
+					ORDER BY field (MGL_UCLUB_MNG,"매니저","회장","부회장","고문","감사","총무","재무","경기이사","관리이사","홍보이사","회원"),MGL_USER_NM 
 	</select>
 	<!-- 매니저가 보는 가입대기 리스트 화면 -->
 	<select id="UClubJoinWaitList" resultMap="uClubVO">
@@ -1602,7 +1602,7 @@ WHERE MGL_USER_ID = #{u_id} AND A.MGL_CLUB_IDX = #{c_idx})D
 ON A.MGL_USER_ID = D.MGL_USER_ID)
 	</select>
 	<!-- 클럽 이름 -->
-	<select id="club_nm" resultMap="uClubVO">
-		SELECT CLUB_NM FROM MGL_CLUB WHERE MGL_CLUB_IDX = #{c_idx}
+	<select id="club_nm" resultType="String">
+		SELECT MGL_CLUB_NM FROM MGL_CLUB WHERE MGL_CLUB_IDX = #{c_idx}
 	</select>
 </mapper>

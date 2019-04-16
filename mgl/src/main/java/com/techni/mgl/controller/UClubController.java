@@ -278,7 +278,8 @@ public class UClubController {
 			ClubVO cvo = cService.selectOneClub(c_idx);
 			param.put("u_id", cvo.getU_mid());
 			mService.alarmInsert(session,param);
-			return "uclub/uClubList.page";
+			model.addAttribute("msg","가입신청 되었습니다.");
+			return "redirect:/UClub/UClubAllList.techni";
 		} else {
 			redirect.addAttribute("가입신청", "죄송합니다. 다시 시도해주세요.");
 			redirect.addAttribute("c_idx", c_idx);
@@ -430,14 +431,14 @@ public class UClubController {
 		String u_id = (String) json2.get("u_id");
 		String c_idx = (String) json2.get("c_idx");
 		String uc_mng = (String) json2.get("uc_mng");
-
+		String u_nm = (String) json2.get("u_nm");
 		Map<Object, Object> map1 = new HashMap<Object, Object>();
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("u_id", u_id);
 		map.put("c_idx", c_idx);
 		map.put("uc_mng", uc_mng);
-
+		map.put("u_nm", u_nm);
 		int res = ucService.cJoinOK(map);
 
 		if (res > 0) {
