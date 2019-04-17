@@ -19,7 +19,6 @@
     	</header>
     	<tiles:insertAttribute name="header_2" ignore="true"/>
     	<div id="container">
-    		<%-- <div id="header_2"><tiles:insertAttribute name="header_2" ignore="true"/></div> --%>
 	    	<tiles:insertAttribute name="body" ignore="true"/>
 	    </div>
 	</div>

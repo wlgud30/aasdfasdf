@@ -1171,4 +1171,73 @@ public class MemberController {
         
 		return "";
 	}
+	@RequestMapping("/Member/LoginContest.techni")
+	public String LoginContest(HttpServletResponse response,HttpSession session,@RequestParam(required = false) String m_push, @RequestParam String m_id,
+			@RequestParam String m_pw, HttpServletRequest request, Model model) throws IOException{
+
+		String ua = request.getHeader("user-Agent").toLowerCase(); 
+		if(m_push != null){
+			m_push = m_push.replaceAll(" ", "");
+		}
+		
+		m_id = m_id.replace(" ", "");
+		m_pw = m_pw.replace(" ","");
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("m_id", m_id);
+		map.put("m_pw", m_pw);
+		map.put("m_push", m_push);
+		
+		if(ua.indexOf("MacIntel") == -1 && ua.indexOf("win16") == -1 && ua.indexOf("win32") == -1 && ua.indexOf("win64") == -1 && ua.indexOf("mac") == -1){
+			mService.pushUpdate(map);
+		}
+		
+		MemberVO mvo = mService.login(map);
+		
+		
+		if(mvo!=null){
+			System.out.println("로그인");
+			session.setAttribute("login", mvo);
+			if(mService.todayLogin(m_id) == 0) {
+				int res = mService.todayLoginInsert(m_id);
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
+			if(ucService.representCheck(m_id)>0) {
+				session.setAttribute("c_idx",mvo.getM_represent());
+				session.setAttribute("represent_idx", mvo.getM_represent());
+				session.setAttribute("al_count", mService.alarmCount(m_id));
+				
+				map.put("c_idx", mvo.getM_represent());
+				map.put("u_id",mvo.getM_id());
+				
+				UClubVO uvo = ucService.userMng(map);
+				UClubVO uvo2 = ucService.headerSelect(map);
+				
+				Map<String,Object> mvo2 = new HashMap<String,Object>();
+				
+				mvo2.put("aptn", uvo2.getCm_p_total());
+				mvo2.put("c_nm", uvo2.getC_nm());
+				mvo2.put("u_nm", mvo.getM_nm());
+				mvo2.put("c_gd", uvo2.getU_club_gd());
+				mvo2.put("u_photo", mvo.getM_photo());
+				mvo2.put("c_idx",mvo.getM_represent());
+				
+				session.setAttribute("mvo", mvo2);
+				
+				session.setAttribute("mng", uvo.getUc_mng());
+				
+				return "contest/contestMain.page";
+			}else {
+				return "contest/contestMain.page";
+			}
+			
+		}else{
+			
+		return "contest/contestMain.page";
+		}
+	}
 }

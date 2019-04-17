@@ -4,7 +4,45 @@
 <%
 	Map<String, Object> map = (Map<String, Object>) session.getAttribute("mvo");
 %>
-
+<%
+if(session.getAttribute("login")==null){
+%>
+<script>
+var ua = navigator.userAgent
+var a = navigator.userAgent.indexOf("AL:");
+var b = navigator.userAgent.indexOf("ID:");
+var c = navigator.userAgent.indexOf("PW:")
+var d = navigator.userAgent.indexOf("TOKEN:")
+var au = "${au}";
+if(ua.substr(a+3,1) == "1"&&au != "1"){
+	location.href='/Member/LoginContest.techni?m_id='+ua.substr(b+3,c-b-3)+'&m_pw='+ua.substr(c+3)+"&m_push="+ua.substr(d+6,a-d-6)
+}
+var lo = window.location.pathname;
+if(lo.includes("/Contest/ContestMain.techni")){
+	
+	
+	
+}
+</script>
+<div class="head_top" id="head1">
+	<div class="bt_top menu_quick noti_btn_is">
+		<div class="btn_more">
+			<i class="more_menu la la-navicon"></i>
+			<ul class="me_ul">
+				<li onClick="location.href='http://localhost:8081'"><i
+					class="icon-main icon-f"></i>메인</li>
+				<li onClick=""><i class="icon-club icon-f"></i>로그인</li>
+			</ul>
+		</div>
+	</div>
+	<div class="logo_top" id="main_logo">
+		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo"
+			onClick="location.href='/Contest/ContestMain.techni'">
+	</div>
+</div>
+<%
+}else{
+%>
 <!-- <div class="head_top"> 
     <div class="bt_top"><i class="la la-navicon btn_i"></i> </div>
       <div class="logo_top" id="main_logo"><img src="/resources/img/logo_b.svg"  alt="MGLB" class="logo"  onClick="location.href='/Member/home.techni'"></div>
@@ -23,12 +61,12 @@
 		<div class="btn_more">
 			<i class="more_menu la la-navicon"></i>
 			<ul class="me_ul">
+				<li onClick="location.href='http://localhost:8081'"><i
+					class="icon-main icon-f"></i>메인</li>
 				<li onClick="location.href='/Board/BoardListRepresent.techni'"><i
-					class="icon-main icon-f"></i>홈</li>
-				<li onClick="location.href='/UClub/UClubAllList.techni'"><i
 					class="icon-club icon-f"></i>클럽</li>
-				<li onClick="location.href='/UClub/UClubMemberDetail.techni'"><i
-					class="icon-user"></i>프로필</li>
+				<li onClick="location.href=''"><i
+					class="icon-user"></i>대회신청</li>
 				<li onclick="logout()"><i class="icon-out icon-f"></i>로그아웃</li>
 			</ul>
 		</div>
@@ -50,6 +88,7 @@
          
         </div>
 		<%
+		
 			if ((String) session.getAttribute("represent_idx") != null) {
 		%>
 		<span class="icon-f icon-p_set" id="pr_up_btn"></span>
@@ -145,7 +184,7 @@
 	<!-- move_ct end -->
 </div>
 <%
-	}
+	}}
 %>
 <!--     <div id="main_nav_area">
       <ul id="main_nav">

@@ -40,7 +40,22 @@
         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
     </definition>  
     
+    <definition name="base3" template="/WEB-INF/tiles/templateContest.jsp">
+        <put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+        <put-attribute name="contestHeader" value="/WEB-INF/tiles/contestHeader.jsp" />
+    </definition>
+ 
+    <definition name="*.pa" extends="base3">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>
+ 
+     <definition name="*/*.pa" extends="base3">
+         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+     </definition>
     
+    <definition name="*/*/*.pa" extends="base3">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>  
     <!-- 메뉴 미표시 -->
     <definition name="baseEmpty" template="/WEB-INF/tiles/templateEmpty.jsp">
     </definition>
