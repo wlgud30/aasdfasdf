@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgl.Cfight">
+
+	<resultMap type="com.techni.mgl.domain.ContestVO" id="ContestVOMap">
+
+
+	</resultMap>
+	
+	<insert id="contestCreate">
+		INSERT INTO MGL_CONTEST VALUES(
+			CONCAT("CT",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CONTEST_SEQ) FROM MGL_SEQ) NEXT),3,0)),
+			#{ct_start},
+			#{ct_end},
+			#{ct_startline},
+			#{ct_deadline},
+			#{ct_point},
+			#{ct_time},
+			#{ct_homepage},
+			#{ct_nm},
+			#{ct_host},
+			#{ct_supervision},
+			#{ct_support},
+			#{ct_sponsor},
+			#{ct_points},
+			#{ct_attach},
+			#{ct_inquiry},
+			#{ct_court},
+			#{ct_location},
+			#{ct_match_yn},
+			#{ct_yn}
+		)
+	</insert>
+
+</mapper>
