@@ -2,13 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 <ul class="accordion_ul">
 	<%-- <c:forEach items="${list }" var="list"> --%>
 	<li>
@@ -86,5 +79,3 @@
 	</li>
 </ul>
 <!-- accd_head end --> 
-</body>
-</html>

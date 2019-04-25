@@ -33,12 +33,28 @@ public class MemberVO {
 	public String cb_idx;
 	public String cf_idx;
 	public String c_nm;
+	public String m_user_temp_yn;
+	public String m_club_temp_nm;
 	
 	
 	
 	
-	
-	
+	public String getM_user_temp_yn() {
+		return m_user_temp_yn;
+	}
+
+	public void setM_user_temp_yn(String m_user_temp_yn) {
+		this.m_user_temp_yn = m_user_temp_yn;
+	}
+
+	public String getM_club_temp_nm() {
+		return m_club_temp_nm;
+	}
+
+	public void setM_club_temp_nm(String m_club_temp_nm) {
+		this.m_club_temp_nm = m_club_temp_nm;
+	}
+
 	public String getC_nm() {
 		return c_nm;
 	}
@@ -409,6 +425,7 @@ public class MemberVO {
 				+ uc_grade_cd + ", uc_mng=" + uc_mng + ", uc_regidate=" + uc_regidate + ", age=" + age + ", ageGroup="
 				+ ageGroup + ", gameStatus=" + gameStatus + "]";
 	}
+
 }
 
 

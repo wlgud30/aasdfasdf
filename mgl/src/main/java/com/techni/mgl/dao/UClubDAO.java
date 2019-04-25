@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,7 @@ import com.techni.mgl.dto.UClubViewDTO;
 public class UClubDAO {
 
 	@Autowired
+	@Resource(name="sqlSession")
 	public SqlSessionTemplate sqlSession;
 
 	public List<ClubVO> selectList(String m_id) {

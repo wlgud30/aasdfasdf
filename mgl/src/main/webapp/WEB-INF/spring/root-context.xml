@@ -44,11 +44,6 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<!-- transaction 처리 -->
-	<bean id="transationManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-	
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="*" read-only="false"/>
@@ -59,6 +54,49 @@
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<!-- 콘테스트db -->
+	<bean id="dataSourceSpied_ct" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+  		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+  		<property name="url" value="jdbc:mysql://118.129.196.68/mgl_contest?allowMultiQueries=true&amp;autoReconnect=true"/>
+  		<property name="username" value="root"/>
+  		<property name="password" value=""/>
+  		<property name="validationQuery" value="select 2"/>
+ 	</bean>
+ 	
+ 	<bean id="dataSource_ct" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceSpied_ct" />
+    </bean>
+	
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+  		<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+  		<property name="url" value="jdbc:mysql://localhost:3306/mgl_db" />
+  		<property name="username" value="root"/>
+  		<property name="password" value="techni"/>
+ 	</bean> -->
+	
+	<bean id="sqlSessionFactory_ct" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource_ct" />
+		<property name="configLocation">
+			<value>classpath:/com/techni/mgl/mybatis/mybatis-config.xml</value> 
+		</property>
+	</bean>
+	
+	<bean id="transactionManager_ct" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_ct" />
+	</bean>
+	
+	<tx:advice id="txAdvice_ct" transaction-manager="transactionManager_ct">
+		<tx:attributes>
+			<tx:method name="*" read-only="false"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:annotation-driven />
+	
+	<bean id="sqlSession_ct" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory_ct" />
 	</bean>
 	
 	<!-- tiles -->

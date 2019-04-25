@@ -128,7 +128,9 @@
 						#{m_push},
 						NULL,
 						NULL,
-						"N"
+						"N",
+						"N",
+						NULL
 				)	
 	</insert>
 	
@@ -356,7 +358,9 @@
 						"",
 						NULL,
 						NULL,
-						"N"
+						"N",
+						"N",
+						NULL
 				)
 	</insert>
 	
@@ -388,7 +392,9 @@
 						"",
 						NULL,
 						NULL,
-						"N"
+						"N",
+						"N",
+						NULL
 				)	
 	</insert>
 	

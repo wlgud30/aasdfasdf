@@ -164,7 +164,7 @@ public class MemberController {
 		return "member/loginForm";
 	}
 	@RequestMapping("/Member/Logout.techni")
-	public String Logout(HttpSession session,Model model){
+	public String Logout(HttpSession session,RedirectAttributes redirectAttributes){
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("m_push", null);
@@ -173,17 +173,7 @@ public class MemberController {
 		mService.pushUpdate(map);
 		session.invalidate();
 		
-		model.addAttribute("au", "1");
-		
-		
-		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
-		String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
-
-		System.out.println("구글:" + url);
-
-		model.addAttribute("google_url", url);
-		
-		return "member/loginForm";
+		return "redirect:/";
 	}
 	@RequestMapping("/Member/birthTelCheck.techni")
 	@ResponseBody

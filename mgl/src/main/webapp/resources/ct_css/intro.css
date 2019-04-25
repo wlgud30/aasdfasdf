@@ -1,0 +1,9 @@
+@charset "utf-8";
+* {margin:0; padding:0;}
+html, body{height:100%}
+a {text-decoration: none; color: inherit;} *:focus {outline: none;} a img{border:none} ul{list-style: none;} img {max-width:100%}
+:after, :before,* {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+#intro_bg{display:table;width: 100%;}#intro_bg #intro_wrap{display:table-cell; vertical-align:middle} 
+#intro_area{vertical-align: middle;display: table;table-layout: fixed;text-align: center;margin: 0 auto;height:100%;max-width: 480px;max-height: 860px;
+background-image: url(../img/intro_bg.png),url(../img/intro_bg_b.png);background-repeat: no-repeat, repeat-y;background-position: center top, center bottom;width: 100%;background-size:cover} 
+@media only screen and (max-width:680px),(max-device-width :768px) and (orientation : landscape){#intro_area{ max-height:100%}}

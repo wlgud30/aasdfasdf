@@ -2,13 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 <script>	
 	$(document).ready(function(){	
 		var aa = $(location).attr('pathname').slice(-6, -5); 
@@ -55,5 +48,3 @@
 	</table>
 </div>
 <%-- </c:forEach> --%>
-</body>
-</html>

@@ -11,9 +11,8 @@ ul{list-style: none;}
 strong, b {font-weight:600;} img {max-width:100%}
 :after, :before,* {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
 select, span[class*='btn']{cursor:pointer} 
-input:-webkit-autofill,#login_cont input[type="text"]:-webkit-autofill, #login_cont input[type="password"]:-webkit-autofill
-{-webkit-box-shadow: 0 0 0 1000px #f5f6f7 inset} 
-input,select,textarea{-webkit-appearance: none; -webkit-border-radius:0;-moz-appearance: none;}
+input:-webkit-autofill{-webkit-box-shadow: 0 0 0 1000px #f5f6f7 inset;} 
+input,select,textarea{-webkit-appearance: none; -webkit-border-radius:0;-moz-appearance: none;appearance: none;margin: 0;}
 
 /*로그인*/
 #login_bg{display:table;width: 100%;} #login_bg #wrap{display:table-cell; vertical-align:middle}
@@ -26,7 +25,7 @@ input,select,textarea{-webkit-appearance: none; -webkit-border-radius:0;-moz-app
 ::-moz-placeholder { /* Firefox 19+ */color:#666;opacity:1 !important}
 #login_cont input:-ms-input-placeholder { /* IE 10+ */color:#666;}
 ::-ms-input-placeholder { /* Edge */color:#666;}
-.logo_box {letter-spacing: 0.4px;} .logo_img{max-width:170px}
+.logo_box {letter-spacing: 0.4px;} .logo_img{max-width:180px}
 
 /*로그인 폰트*/
 .login_title{font-size:1.67em;color:#333;padding-top:12%; text-align:left;margin-bottom:8px}
@@ -42,6 +41,14 @@ input,select,textarea{-webkit-appearance: none; -webkit-border-radius:0;-moz-app
 /*sns 로그인*/
 #sns-login-li{width:100%;display:table;font-size:0.93em;text-align:center;letter-spacing: -0.7px;margin-top: 20px;border:1px solid #b1b4c4;} 
 #sns-login-li li{display:table-cell;vertical-align:middle;padding-top:10px;padding-bottom: 8px;} #sns-login-li img{width:26px;display: block;margin: 0 auto 3px;} #sns-login-li li ~ li{border-left:1px solid #b1b4c4;}
+
+/*팝업*/
+[class*='popwin_btn']{cursor:pointer}
+.popwin_wrap{position: fixed;background: rgba(0, 0, 0, 0.3);top: 0;z-index: 13;bottom: 0;left: 0;right: 0;padding:12px} .popwin_wrap .popwin_size{display:block}
+.popwin_size{max-width: 400px;margin: 0 auto; position:relative;box-shadow: 0.5px 0.5px 2px rgba(0, 0, 0,.4); display:none} .wsize-300{max-width:320px}
+.scroll_wrap{overflow-y: auto;padding:0 12px 12px} .popup_body{padding:0 12px 12px}
+.title_popup{border-bottom: 1px solid #ac68cc; padding-left:12px; padding-right:12px; margin-bottom:9px;background: #ebedfa; height:38px} .title_popup .game_title{font-size: 1.1em}
+.ht-5{max-height: 20em}
 
 @media only screen and (max-width:680px),(max-device-width :768px) and (orientation : landscape){
 #login_bg #wrap{background: #f5f6f7;} #login_form{border:none} #login_cont{ padding-left:40px; padding-right:40px}}

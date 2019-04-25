@@ -42,6 +42,7 @@
     
     <definition name="base3" template="/WEB-INF/tiles/templateContest.jsp">
         <put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+        <put-attribute name="header_ct" value="/WEB-INF/tiles/header_ct.jsp" />
         <put-attribute name="contestHeader" value="/WEB-INF/tiles/contestHeader.jsp" />
     </definition>
  

@@ -2,13 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 <div class="cat_area">
 	<h4 class="title_m">심판요청사항</h4>
 </div>
@@ -89,5 +83,3 @@
 	<%-- </c:forEach> --%>
 </div>
   <!-- content end --> 
-</body>
-</html>
