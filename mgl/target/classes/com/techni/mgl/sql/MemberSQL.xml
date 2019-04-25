@@ -128,6 +128,8 @@
 						#{m_push},
 						NULL,
 						NULL,
+						"N",
+						"N",
 						"N"
 				)	
 	</insert>
@@ -356,6 +358,8 @@
 						"",
 						NULL,
 						NULL,
+						"N",
+						"N",
 						"N"
 				)
 	</insert>
@@ -388,6 +392,8 @@
 						"",
 						NULL,
 						NULL,
+						"N",
+						"N",
 						"N"
 				)	
 	</insert>
@@ -437,7 +443,7 @@
 	</insert>
 	<!-- 개인 알림 리스트 -->
 	<select id="alarmList" resultMap="MemberVOMap">
-		SELECT * FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id}
+		SELECT * FROM MGL_ALARM WHERE MGL_ALARM_RECEIVE = #{u_id} order by MGL_ALARM_DATE DESC
 	</select>
 	<!-- 알림 삭제 -->
 	<delete id="alarmDel">

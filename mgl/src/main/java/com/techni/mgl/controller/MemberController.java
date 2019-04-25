@@ -403,6 +403,71 @@ public class MemberController {
 		}
 	}
 	
+	@RequestMapping("/Member/pushLogin.techni")
+	public String pushLogin(HttpServletResponse response,HttpSession session,@RequestParam(required = false) String m_push, HttpServletRequest request, Model model) throws IOException{
+
+		String ua = request.getHeader("user-Agent").toLowerCase(); 
+		if(m_push != null){
+			m_push = m_push.replaceAll(" ", "");
+		}
+		if(m_push=="") {
+			return "member/loginForm";
+		}
+		MemberVO mvo = mService.pushLogin(m_push);
+		Map<String,String> map = new HashMap<String,String>();
+		
+		
+		if(mvo!=null){
+			map.put("m_push", m_push);
+			map.put("m_id", mvo.getM_id());
+			if(ua.indexOf("MacIntel") == -1 && ua.indexOf("win16") == -1 && ua.indexOf("win32") == -1 && ua.indexOf("win64") == -1 && ua.indexOf("mac") == -1){
+				mService.pushUpdate(map);
+			}
+			
+			System.out.println("로그인");
+			session.setAttribute("login", mvo);
+			if(mService.todayLogin(mvo.getM_id()) == 0) {
+				int res = mService.todayLoginInsert(mvo.getM_id());
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
+			if(ucService.representCheck(mvo.getM_id())>0) {
+				session.setAttribute("c_idx",mvo.getM_represent());
+				session.setAttribute("represent_idx", mvo.getM_represent());
+				session.setAttribute("al_count", mService.alarmCount(mvo.getM_id()));
+				
+				map.put("c_idx", mvo.getM_represent());
+				map.put("u_id",mvo.getM_id());
+				
+				UClubVO uvo = ucService.userMng(map);
+				UClubVO uvo2 = ucService.headerSelect(map);
+				
+				Map<String,Object> mvo2 = new HashMap<String,Object>();
+				
+				mvo2.put("aptn", uvo2.getCm_p_total());
+				mvo2.put("c_nm", uvo2.getC_nm());
+				mvo2.put("u_nm", mvo.getM_nm());
+				mvo2.put("c_gd", uvo2.getU_club_gd());
+				mvo2.put("u_photo", mvo.getM_photo());
+				mvo2.put("c_idx",mvo.getM_represent());
+				
+				session.setAttribute("mvo", mvo2);
+				
+				session.setAttribute("mng", uvo.getUc_mng());
+				
+				return "redirect:/Board/BoardList.techni";
+			}else {
+				return "redirect:/UClub/UClubAllList.techni";
+			}
+			
+		}else{
+			
+		return "member/loginForm";
+		}
+	}
+	
 	@RequestMapping("/Member/GuestInsert.techni")
 	@ResponseBody
 	public Map<String,Object> guestInsert(HttpSession session, @RequestBody String json) throws ParseException{
@@ -989,9 +1054,10 @@ public class MemberController {
 			redirect_url += "/Game/GameState.techni";
 		}else if(division.equals("채팅")) {
 			redirect_url += "/Board/BoardDetail.techni";
-		}else if(division.equals("가입")) {
+		}else if(division.equals("가입신청")) {
 			redirect_url += "/UClub/UclubMUserList.techni";
-		}else if(division.equals("")) {
+		}else if(division.equals("가입승인")) {
+			redirectAttributes.addAttribute("cb_idx", mVO.getCb_idx());
 			redirect_url += "/Board/BoardDetail.techni";
 		}
 		System.out.println(redirect_url);
@@ -1126,7 +1192,7 @@ public class MemberController {
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 		String u_id = mvo.getM_id();
 		List<MemberVO> list = mService.alarmList(u_id);
-		
+		session.setAttribute("al_count", mService.alarmCount(u_id));
 		model.addAttribute("list", list);
 		
 		
@@ -1142,7 +1208,7 @@ public class MemberController {
         
         String al_idx = (String) json2.get("al_idx");
         int res = 0;
-        if(al_idx == null||al_idx =="") {
+        if(al_idx == null||al_idx.equals("")) {
         	MemberVO mvo = (MemberVO) session.getAttribute("login");
         	res = mService.alarmDelAll(mvo.getM_id());
         }else {

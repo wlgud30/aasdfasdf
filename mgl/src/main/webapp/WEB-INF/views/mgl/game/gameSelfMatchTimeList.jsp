@@ -27,7 +27,6 @@
 									<li>${list2.cs_court }코트</li>
 									<li>${list2.cs_no}경기</li>
 									<li>${list2.cs_k_nm }</li>
-									<li>토너먼트</li>
 								</ul>
 							</div>
 							<div>
@@ -44,7 +43,7 @@
 						<!-- head-data end-->
 						<table class="line_no td-pt">
 							<tr>
-								<td class="club_td"><span class="club_name"></span></td>
+								<td class="club_td"><span class="club_name">${c_nm }</span></td>
 								<td class="name3-2_td">
 									<ul class="name_row">
 										<li>
@@ -66,7 +65,7 @@
 							</tr>
 							<tr>
 								<td class="club_td">
-									<span class="club_name"></span>
+									<span class="club_name">${c_nm }</span>
 								</td>
 								<td class="name3-2_td">
 									<ul class="name_row">
@@ -101,7 +100,7 @@
 			<!-- InstanceBeginEditable name="ft_tag" -->
 			<!-- InstanceEndEditable -->
 			<ul id="ft_nv2" class="ft_menu">
-				<li onClick="location.href='/Cfight/CfightSummary.techni'"><span>개요</span></li>
+				<li onClick="location.href='/Game/selfMatchSummary.techni'"><span>개요</span></li>
 				<li onClick="location.href='/Game/selfMatchEntryType.techni'"><span>선수</span></li>
 				<li onClick="location.href='/Game/selfMatchDetail.techni'" class="active_tab"><span>대진표</span></li>
 				<li onClick="location.href='/Game/selfMatchMyRank.techni'"><span>순위</span></li>

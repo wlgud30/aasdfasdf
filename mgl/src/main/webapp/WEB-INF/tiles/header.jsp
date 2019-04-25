@@ -34,10 +34,18 @@
 		</div>
 	</div>
 	<div class="logo_top" id="main_logo">
+	<% if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {%>
 		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo"
 			onClick="location.href='/Board/BoardListRepresent.techni'">
+	<%}}else{ %>
+		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo">
+	<%} %>
 	</div>
 	<div class="bt_top">
+		
+		<%
+			if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {
+		%>
 		<div class="alarm" onClick="location.href='/Member/Alarm.techni'">
           <span class="icon-bell btn_i" ></span>
          
@@ -49,19 +57,16 @@
           	%>
          
         </div>
-		<%
-			if ((String) session.getAttribute("represent_idx") != null) {
-		%>
 		<span class="icon-f icon-p_set" id="pr_up_btn"></span>
 		<%
-			}
+			}}
 		%>
 		<!-- btn_more end -->
 	</div>
 </div>
 <!-- head_top end -->
 <%
-	if ((String) session.getAttribute("represent_idx") != null) {
+if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {
 %>
 <div class="move_ct_area">
 	<div class="white_bg move_ct" style="top: -249px;">
@@ -145,7 +150,7 @@
 	<!-- move_ct end -->
 </div>
 <%
-	}
+	}}
 %>
 <!--     <div id="main_nav_area">
       <ul id="main_nav">

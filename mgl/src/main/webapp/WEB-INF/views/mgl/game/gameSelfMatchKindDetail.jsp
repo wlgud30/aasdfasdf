@@ -802,9 +802,9 @@
 						</tr>
 					</thead>
 					<c:forEach items="${list3}" var="list">
-						<c:set var="i" value="${i+1}" />
+						
 						<tr>
-							<td class="no_td">${i}</td>
+							<td class="no_td"><c:choose><c:when test="${list.win_count/2 eq 0 and list.lose_count/2 eq 0 }">-</c:when><c:otherwise><c:set var="i" value="${i+1}" />${i}</c:otherwise></c:choose></td>
 							<td class="na_row_td"><span class="name3">${list.a1_id }</span><span class="name3">${list.b1_id }</span></td>
 							<td class="td_1"><fmt:parseNumber var="var3" value="${list.win_count/2}" integerOnly="true" />${var3 }</td>
 							<td class="td_1"><fmt:parseNumber var="var3" value="${list.lose_count/2}" integerOnly="true" />${var3 }</td>
@@ -827,7 +827,7 @@
 							<li>${fn:substring(list.cs_w_date,0,5)}</li>
 							<li>${list.cs_court }코트 230</li>
 							<li>${list.cs_k_nm }</li>
-							<li>토너먼트</li>
+							<li></li>
 						</ul>
 					</div>
 					<div>
@@ -844,7 +844,7 @@
 				<!-- head-data end-->
 				<table class="line_no td-pt">
 					<tr>
-						<td class="club_td"><span class="club_name"></span></td>
+						<td class="club_td"><span class="club_name">${c_nm}</span></td>
 						<td class="name3-2_td"><ul class="name_row">
 								<li><span class="name3 name_max">${list.a1_id }</span> <span
 									class="age_rank side_right">(${list.a1_age }-${list.a1_gd })</span></li>
@@ -859,7 +859,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="club_td"><span class="club_name"></span></td>
+						<td class="club_td"><span class="club_name">${c_nm}</span></td>
 						<td class="name3-2_td"><ul class="name_row">
 								<li><span class="name3 name_max">${list.b1_id }</span> <span
 									class="age_rank side_right">(${list.b1_age }-${list.b1_gd })</span></li>
@@ -881,8 +881,13 @@
 <!-- 		</div> -->
 		<!-- container end -->
 		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
+			<ul id="ft_nv2" class="ft_menu">
+				<li onClick="location.href='/Game/selfMatchSummary.techni'"><span>개요</span></li>
+				<li onClick="location.href='/Game/selfMatchEntryType.techni'"><span>선수</span></li>
+				<li onClick="location.href='/Game/selfMatchDetail.techni'" class="active_tab"><span>대진표</span></li>
+				<li onClick="location.href='/Game/selfMatchMyRank.techni'"><span>순위</span></li>
+				<li onClick="location.href='/Board/BoardList.techni'"><span>클럽</span></li>
+			</ul>
 		</div>
 <!-- 	</div> -->
 	<script type="text/javascript">

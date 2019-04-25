@@ -51,20 +51,7 @@
 		
 	}
 	
-	function matchSetting(){
-		var path = "/Game/selfMatchTypeInsertForm.techni"
-		var cs_kind = $("#cs_kind").text();
-			var form = document.createElement("form");
-			form.setAttribute("method","POST");
-			form.setAttribute("action",path)
-			var hiddenField = document.createElement("input");
-			hiddenField.setAttribute("type","hidden");
-			hiddenField.setAttribute("name","cs_kind");
-			hiddenField.setAttribute("value",cs_kind);
-			form.appendChild(hiddenField);
-			document.body.appendChild(form);
-			form.submit();
-	}
+	
 </script>
 
 			<!-- InstanceBeginEditable name="container" -->
@@ -160,6 +147,5 @@
 			<!-- InstanceEndEditable -->
 		<!-- container end -->
 		<div id="ft_area">
-			<!-- InstanceBeginEditable name="ft_area" -->
-			<!-- InstanceEndEditable -->
+			
 		</div>

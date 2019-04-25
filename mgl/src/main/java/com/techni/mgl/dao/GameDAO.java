@@ -268,8 +268,8 @@ public class GameDAO {
 			return sqlSession.selectList(nameSpace+"kindMatchList", cs_idx);
 		}
 		//종목 디테일
-		public List<ClubMatchVO> kindMatchDetail(String cs_g_idx){
-			return sqlSession.selectList(nameSpace+"kindMatchDetail", cs_g_idx);
+		public List<ClubMatchVO> kindMatchDetail(Map<String,String> map){
+			return sqlSession.selectList(nameSpace+"kindMatchDetail", map);
 		}
 		//참가자 보기(종목리스트)
 		public List<ClubMatchVO> entryKindList(String cs_idx){
@@ -337,6 +337,11 @@ public class GameDAO {
 		public List<ClubMatchVO> all_match(String cs_idx){
 			return sqlSession.selectList(nameSpace+"all_match", cs_idx);
 		}
+		
+	//팀리스트
+	public List<ClubMatchVO> teamList(String cs_idx){
+		return sqlSession.selectList(nameSpace+"teamList", cs_idx);
+	}
 		
 	//전적비교할때 게임인덱스
 	public List<ClubMatchVO> getGidx(Map<String, String> map){

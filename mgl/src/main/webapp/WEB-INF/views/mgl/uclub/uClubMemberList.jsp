@@ -174,7 +174,7 @@ function chat(){
 							</thead>
 							<tbody>
 								<c:forEach items="${list2 }" var="list">
-									<tr>
+									<tr id="${list.u_id }">
 										<td class="name2_td popwin_btn1" onclick="modal('${list.u_id }','${list.u_nm }','${fn:substring(list.u_age,0,1)}0','${list.u_sex }','${list.u_photo }','${list.uc_mng }','${list.u_email }','${list.u_club_gd }','${list.u_join_date }','${list.u_birth }','join')">
 											<div class="photo_name">
 												<div class="thum_area">
@@ -244,8 +244,8 @@ function chat(){
 							</thead>
 							<tbody>
 								<c:forEach items="${list3 }" var="list">
-									<tr>
-										<td class="name2_td popwin_btn1" onclick="modal('${list.u_id }','${list.u_nm }','${fn:substring(list.u_age,0,1)}0','${list.u_sex }','${list.u_photo }','${list.uc_mng }','${list.u_email }','${list.u_club_gd }','${list.u_join_date }','${list.u_birth }','exit')">
+									<tr  id="${list.u_id }">
+										<td id="${list.u_id }" class="name2_td popwin_btn1" onclick="modal('${list.u_id }','${list.u_nm }','${fn:substring(list.u_age,0,1)}0','${list.u_sex }','${list.u_photo }','${list.uc_mng }','${list.u_email }','${list.u_club_gd }','${list.u_join_date }','${list.u_birth }','exit')">
 											<div class="photo_name">
 												<div class="thum_area">
 										                  <div class="thum" style="background-image:url(${list.u_photo});"></div>
@@ -589,18 +589,8 @@ function chat(){
 								type : "success"
 							})
 							.then((value) =>{
-								pushTok(push,"${uvo.c_nm } 가입이 승인되었습니다.","${uvo.u_nm}","http://mgl.techni.co.kr:8081/UClub/UClubAllList.techni");
-								
-								form.setAttribute("method", method);
-								form.setAttribute("action", path);
-								var hiddenField = document.createElement("input");
-								hiddenField.setAttribute("type", "hidden");
-								hiddenField.setAttribute("name", "c_idx");
-								hiddenField.setAttribute("value", c_idx);
-								form.appendChild(hiddenField);
-								
-								document.body.appendChild(form);
-							    form.submit();
+								$("#"+u_id).remove();
+								location.reload();
 							})
 						}else{
 							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
@@ -621,7 +611,8 @@ function chat(){
 					contentType : "application/json; charset=UTF-8",
 					success : function(data){
 						if(data.cnt>0){
-							location.href='/UClub/UclubMUserList.techni'
+							$("#"+u_id).remove();
+							location.reload();
 						}else{
 							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
 						}
@@ -651,7 +642,8 @@ function chat(){
 								text : "탈퇴 승인 되었습니다."
 							})
 							.then((value) =>{
-								location.href='/UClub/UclubMUserList.techni'
+								$("#"+u_id).remove();
+								location.reload();
 							})
 						}else{
 							swal("민턴in","죄송합니다. 다시 시도해 주세요.")
@@ -678,7 +670,8 @@ function chat(){
 									text : "탈퇴 거절 되었습니다."
 								})
 								.then((value) =>{
-									location.href='/UClub/UclubMUserList.techni'
+									$("#"+u_id).remove();
+									location.reload();
 								})
 							}else{
 								swal("민턴in","죄송합니다. 다시 시도해 주세요.")

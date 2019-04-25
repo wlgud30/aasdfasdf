@@ -26,6 +26,8 @@ public class UClubService {
 	public MemberDAO mDAO;
 	@Autowired
 	public BoardService brdService;
+	@Autowired
+	public MemberService mService;
 	
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
@@ -119,7 +121,7 @@ public class UClubService {
 		return ucDAO.UClubJoinWaitDetail(map);
 	}
 	@Transactional
-	public int cJoinOK(Map<String,String> map){
+	public int cJoinOK(Map<String,String> map,HttpSession session){
 		BoardVO bvo = new BoardVO();
 		bvo.setC_idx(map.get("c_idx"));
 		bvo.setCb_yn("N");
@@ -127,7 +129,13 @@ public class UClubService {
 		bvo.setCb_content(map.get("u_nm")+"님이 가입하셨습니다.");
 		bvo.setU_id(map.get("u_id"));
 		brdService.bbsInsert(bvo);
-		
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put("c_idx", map.get("c_idx"));
+		param.put("al_division", "가입승인");
+		param.put("al_url", "/Board/BoardList.techni");
+		param.put("u_id", map.get("u_id"));
+		param.put("cb_idx", bvo.getCb_idx());
+		mService.alarmInsert(session, param);
 		return ucDAO.cJoinOK(map);
 	}
 	@Transactional

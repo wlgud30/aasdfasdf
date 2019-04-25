@@ -5,16 +5,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!-- InstanceBeginEditable name="container" -->
-<div class="tab_btn_b_area">
-	<ul class="tab_btn_b">
-		<li class="active_tab" onClick="location.href='/Game/selfMatchTypeInsertForm.techni'"><span>조별(종목)</span>
-		</li>
-		<li onClick="location.href='/Game/selfMatchWBInsertForm.techni'"><span>선수구분</span>
-		</li>
-		<li onClick="location.href='/Game/selfMatchBlueTeamInsertForm.techni'"><span>출전신청</span>
-		</li>
-	</ul>
-</div>
 <form id="frm">
 	<div class="content white_bg">
 		<hr class="gap_m">

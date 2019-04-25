@@ -48,12 +48,12 @@
 					})
 				});
 				function detail(param){
-					$("#cs_k_idx").val(param.substring(0,12));
+					$("#cs_k_idx").val(param.substring(0,22));
 					$("#frm").submit();
 				}
 			</script>
 			<ul id="ft_nv2" class="ft_menu">
-				<li onClick="location.href='/Cfight/CfightSummary.techni'"><span>개요</span></li>
+				<li onClick="location.href='/Game/selfMatchSummary.techni'"><span>개요</span></li>
 				<li onClick="location.href='/Game/selfMatchEntryType.techni'"><span>선수</span></li>
 				<li onClick="location.href='/Game/selfMatchDetail.techni'" class="active_tab"><span>대진표</span></li>
 				<li onClick="location.href='/Game/selfMatchMyRank.techni'"><span>순위</span></li>

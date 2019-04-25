@@ -443,7 +443,7 @@ jQuery(document).ready(function($) {
       });
 
     });
-
+    $("#a_score").focus();
   });
 
   // 게시판 텍스트 말줄임	

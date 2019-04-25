@@ -5,19 +5,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!-- InstanceBeginEditable name="container" -->
-<div class="tab_btn_b_area">
-	<ul class="tab_btn_b">
-		<li class="active_tab" onClick="matchSetting()"><span>조별(종목)</span>
-		</li>
-		<li id="c_li" onClick="teamSetting('${cs_kind}');"><span id="c_li2">선수구분</span>
-		</li>
-	</ul>
-</div>
 <form id="frm">
 	<div class="content white_bg">
 		<hr class="gap_m">
 		<c:choose>
-			<c:when test="${list ne null }">
+			<c:when test="${list[0].cs_k_num eq 1}">
 				<table class="game_td thead_td cet_lay td_pd_l0">
 					<thead>
 						<tr>
@@ -27,29 +19,39 @@
 						</tr>
 					</thead>
 					<tbody id="trAppend">
-					<c:set var="i" value="0" />
-					<c:forEach items="${list}" var="list">
-						<c:set var="i" value="${i+1}" />
-						<tr id="abcd_${i}">
-							<td class="no_td"><input type="number" class='no cet_lay'  name="no" id="no_${i}" value="${list.cs_k_num }"></td>
-							<td class="ga_title"><input type="text" class='type'
-								placeholder="구분(종목) 입력" id="type_${i}" name="type" value="${list.cs_k_nm }"></td>
-							<td class="i_btn_td"><span id="ad_${i}" onclick="minus(this,${i})"
-								class="i_btn i-minus"></span></td>
-						</tr>
-					</c:forEach>
-						<tr id="abcd_${i+1}">
-							<td class="no_td"><input type="number" class='no cet_lay'
-								value="${i+1}" name="no" id="no_${i+1}"></td>
-							<td class="ga_title"><input type="text" class='type'
-								placeholder="구분(종목) 입력" id="type_${i+1}" name="type"></td>
-							<td class="i_btn_td"><span id="ad_${i+1}" onclick="append(${i+1},this)"
-								class="i_btn i-plus"></span></td>
-						</tr>
+						<c:set var="i" value="0" />
+						<c:forEach items="${list}" var="list" varStatus="index">
+							<c:set var="i" value="${i+1}" />
+							<c:choose>
+								<c:when test="${!index.last}">
+									<tr id="abcd_${i}">
+										<td class="no_td"><input type="number" class='no cet_lay'
+											name="no" id="no_${i}" value="${list.cs_k_num }"></td>
+										<td class="ga_title"><input type="text" class='type'
+											placeholder="구분(종목) 입력" id="type_${i}" name="type"
+											value="${list.cs_k_nm }"></td>
+										<td class="i_btn_td"><span id="ad_${i}"
+											onclick="minus(this,${i})" class="i_btn i-minus"></span></td>
+									</tr>
+								</c:when>
+								<c:otherwise>
+									<tr id="abcd_${i}">
+										<td class="no_td"><input type="number" class='no cet_lay'
+											name="no" id="no_${i}" value="${list.cs_k_num }"></td>
+										<td class="ga_title"><input type="text" class='type'
+											placeholder="구분(종목) 입력" id="type_${i}" name="type"
+											value="${list.cs_k_nm }"></td>
+										<td class="i_btn_td"><span id="ad_${i}"
+											onclick="append(${i},this)" class="i_btn i-plus"></span></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
 					</tbody>
 				</table>
 			</c:when>
 			<c:otherwise>
+			<c:set var="i" value="${i+1}" />
 				<table class="game_td thead_td cet_lay td_pd_l0">
 					<thead>
 						<tr>
@@ -64,8 +66,7 @@
 								value="1" name="no" id="no_1"></td>
 							<td class="ga_title"><input type="text" class='type'
 								placeholder="구분(종목) 입력" id="type_1" name="type"></td>
-							<td class="i_btn_td"><span id="ad_1" onclick="append(1,this)"
-								class="i_btn i-plus"></span></td>
+							<td class="i_btn_td"><span id="ad_1"onclick="append(${i},this)" class="i_btn i-plus"></span></td>
 						</tr>
 					</tbody>
 				</table>
@@ -96,10 +97,8 @@ function matchSetting(){
 		form.submit();
 }
 function teamSetting(kind){
-	alert(kind);
-	
 	if(kind=="개인리그전"){
-		var path = "/Game/selfMatchPrivateInsertForm.techni"
+		var path = "D"
 	}else{
 		var path = "/Game/selfMatchTeamInsertForm.techni"	
 	}
@@ -121,7 +120,7 @@ function teamSetting(kind){
 			$("#c_li").attr("onclick","");
 		}
 	});
-	var q = ${i+1}
+	var q = ${i}
 	function append(i, t) {
 		q++;
 		t.className = "i_btn i-minus"

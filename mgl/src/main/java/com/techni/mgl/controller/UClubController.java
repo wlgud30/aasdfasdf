@@ -439,16 +439,10 @@ public class UClubController {
 		map.put("c_idx", c_idx);
 		map.put("uc_mng", uc_mng);
 		map.put("u_nm", u_nm);
-		int res = ucService.cJoinOK(map);
+		int res = ucService.cJoinOK(map,session);
 
 		if (res > 0) {
 			map1.put("cnt", 1);
-			Map<String,Object> param = new HashMap<String,Object>();
-			param.put("c_idx", c_idx);
-			param.put("al_division", "가입승인");
-			param.put("al_url", "/Board/BoardList.techni");
-			param.put("u_id", u_id);
-			mService.alarmInsert(session, param);
 			int res2 = ucService.representCheck(u_id);
 			if(res2 == 0) {
 				mService.clubUpdate2(map);

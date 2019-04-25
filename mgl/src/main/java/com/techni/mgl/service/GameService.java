@@ -359,8 +359,8 @@ public class GameService {
 	}
 	//종목 디테일
 	@Transactional
-	public List<ClubMatchVO> kindMatchDetail(String cf_g_idx){
-		return gDAO.kindMatchDetail(cf_g_idx);
+	public List<ClubMatchVO> kindMatchDetail(Map<String,String> map){
+		return gDAO.kindMatchDetail(map);
 	}
 	//참가자보기(종목리스트)
 	@Transactional
@@ -456,6 +456,11 @@ public class GameService {
 	public List<ClubMatchVO> getGidx(Map<String, String> map){
 			return gDAO.getGidx(map);
 	}	
+	//팀리스트
+	@Transactional
+	public List<ClubMatchVO> teamList(String cs_idx){
+		return gDAO.teamList(cs_idx);
+	}
 	/*
 	 * |||||||||||||||||||||||||||||||| Alpha 세션 관리를 위해 따로 만들것을 추천하지만, 임시로 각 서비스단에서 관리중 ||||||||||||||||||||||||||||||||
 	 */	

@@ -9,6 +9,16 @@ public class UClubVO {
 	private String uc_mng;
 	private String u_nm;
 	private int u_age;
+	public String u_age_;
+	public String getU_age_() {
+		return u_age_;
+	}
+
+
+	public void setU_age_(String u_age_) {
+		this.u_age_ = u_age_;
+	}
+
 	public String u_photo;
 	public int uc_mCount;
 	public String u_tel;

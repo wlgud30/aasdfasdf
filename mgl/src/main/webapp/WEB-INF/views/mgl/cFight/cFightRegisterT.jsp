@@ -175,7 +175,7 @@ function teamDelete(idx){
 	</div>
 	<div>
 		<span class="btn_st btn_small"
-			onclick="location.href='/Cfight/CfightTeamList.techni?cf_idx=${cf_idx}'">전체확인</span>
+			onclick="location.href='/Cfight/CfightTeamList.techni'">전체확인</span>
 	</div>
 </div>
 <div class="tit_select">
