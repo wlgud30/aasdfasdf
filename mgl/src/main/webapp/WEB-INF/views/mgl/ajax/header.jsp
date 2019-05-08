@@ -11,57 +11,13 @@
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="msapplication-TileImage" content="/resources/img/favicon_144.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/resources/css/css.css?ver3" type="text/css" />
-<link rel="stylesheet" href="/resources/css/swiper.css">
+<link rel="stylesheet" href="/resources/css/css.css?ver4" type="text/css" />
 <script src="/resources/js/jquery-3.3.1.min.js"></script>
-<script src="/resources/js/js_st.js?ver4"></script>
+<script src="/resources/js/js_st.js?ver5"></script>
 <script src="/resources/js/jquery.form.min.js"></script>
-<script src="/resources/js/Navi.js?ver5"></script>
-<script src="/resources/js/sweetalert.min.js?ver2"></script>
+<script src="/resources/js/Navi.js?ver6"></script>
+<script src="/resources/js/sweetalert.min.js?ver3"></script>
 <link rel="stylesheet" href="/resources/css/prettydropdowns.css?ver3" type="text/css" />
 <script src="/resources/js/jquery.prettydropdowns.js?ver3"></script>
-<%
-if(session.getAttribute("login")==null){
-%>
-<script>
-var ua = navigator.userAgent
-var a = navigator.userAgent.indexOf("AL:");
-var b = navigator.userAgent.indexOf("ID:");
-var c = navigator.userAgent.indexOf("PW:")
-var d = navigator.userAgent.indexOf("TOKEN:")
-var au = "${au}";
-if(au != "1"){
-	location.href='/Member/pushLogin.techni?m_push='+ua.substr(d+6,a-d-6)
-}else{
-	location.href='/Member/LoginForm.techni'
-}
-</script>
-<%
-}
-%>
-<script type="text/javascript">
-function pushTok(token,msg,url){
-	var PostString_link ="";
-	
-	PostString_link = "sendtype=push"
-	PostString_link = PostString_link+"&appcode=techni_mglb"
-	PostString_link = PostString_link+"&notitype=noti"
-	PostString_link = PostString_link+"&oscode=a"
-	PostString_link = PostString_link+"&token="+token
-	PostString_link = PostString_link+"&title=MGL"
-	PostString_link = PostString_link+"&desc="+encodeURI(msg)
-	PostString_link = PostString_link+"&dataval="+encodeURI(url)
-	
-	$.ajax({
-		url : "/Member/token.techni",
-		type : 'post',
-		data : PostString_link,
-		contentType : "application/x-www-form-urlencoded",
-		charset : "UTF-8",
-		success : function(){
-		}
-	})
 
-}
-</script>
 

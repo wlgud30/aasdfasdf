@@ -34,6 +34,20 @@
     <!-- 파일업로드 디렉토리-->
     	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadImg"/>
 	</beans:bean>
+	<beans:bean id="uploadPath2" class="java.lang.String">
+    <!-- 파일업로드 디렉토리-->
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\upload"/>
+	</beans:bean>
+	
+	<beans:bean id="uploadPath3" class="java.lang.String">
+    <!-- 파일업로드 디렉토리-->
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadContest"/>
+	</beans:bean>
+	
+	<beans:bean id="uploadPath4" class="java.lang.String">
+    <!-- 파일업로드 디렉토리-->
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadCtImg"/>
+	</beans:bean>
 	
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
 		<beans:property name="order" value="0" />
@@ -49,6 +63,7 @@
 	<beans:bean id="brdDAO" class="com.techni.mgl.dao.BoardDAO" />	
 	<beans:bean id="gDAO" class="com.techni.mgl.dao.GameDAO"/>
 	<beans:bean id="cfDAO" class="com.techni.mgl.dao.CfightDAO"/>
+	<beans:bean id="ctDAO" class="com.techni.mgl.dao.ContestDAO"/>
 	<!-- Data Acess Object단 관리 Omega -->
 	
 	<!-- 서비스단 관리 Alpha-->
@@ -57,6 +72,7 @@
 	<beans:bean id="brdService" class="com.techni.mgl.service.BoardService" />
 	<beans:bean id="gService" class="com.techni.mgl.service.GameService" />
 	<beans:bean id="cfService" class="com.techni.mgl.service.CfightService" />
+	<beans:bean id="ctService" class="com.techni.mgl.service.ContestService" />
 	<!-- 서비스단 관리 Omega -->
 	
 	<!-- tiles -->

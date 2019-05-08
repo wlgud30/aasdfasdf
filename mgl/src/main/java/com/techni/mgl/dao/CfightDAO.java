@@ -3,6 +3,8 @@ package com.techni.mgl.dao;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import com.techni.mgl.domain.CfightVO;
 @Repository
 public class CfightDAO {
 	@Autowired
+	@Resource(name="sqlSession")
 	public SqlSessionTemplate sqlSession;
 	private String nameSpace="mgl.Cfight.";
 	

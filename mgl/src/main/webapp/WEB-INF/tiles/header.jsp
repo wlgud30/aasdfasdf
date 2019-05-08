@@ -4,7 +4,39 @@
 <%
 	Map<String, Object> map = (Map<String, Object>) session.getAttribute("mvo");
 %>
-
+<%
+	if (session.getAttribute("login") == null) {
+%>
+<script>
+	var ua = navigator.userAgent
+	var a = navigator.userAgent.indexOf("AL:");
+	var b = navigator.userAgent.indexOf("ID:");
+	var c = navigator.userAgent.indexOf("PW:")
+	var d = navigator.userAgent.indexOf("TOKEN:")
+	var au = "${au}";
+	if (ua.substr(a + 3, 1) == "1" && au != "1") {
+		
+	}
+</script>
+<div class="head_top" id="head1">
+	<div class="bt_top menu_quick noti_btn_is">
+		<div class="btn_more">
+			<i class="more_menu la la-navicon"></i>
+			<ul class="me_ul">
+				<li onClick="location.href='http://mgl.techni.co.kr:8081'"><i
+					class="icon-main icon-f"></i>메인</li>
+				<li onClick=""><i class="icon-club icon-f"></i>로그인</li>
+			</ul>
+		</div>
+	</div>
+	<div class="logo_top" id="main_logo">
+		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo"
+			onClick="location.href='/Contest/ContestMain.techni'">
+	</div>
+</div>
+<%
+	} else {
+%>
 <!-- <div class="head_top"> 
     <div class="bt_top"><i class="la la-navicon btn_i"></i> </div>
       <div class="logo_top" id="main_logo"><img src="/resources/img/logo_b.svg"  alt="MGLB" class="logo"  onClick="location.href='/Member/home.techni'"></div>
@@ -23,50 +55,53 @@
 		<div class="btn_more">
 			<i class="more_menu la la-navicon"></i>
 			<ul class="me_ul">
-				<li onClick="location.href='/Board/BoardListRepresent.techni'"><i
-					class="icon-main icon-f"></i>홈</li>
+				<li onClick="location.href='http://mgl.techni.co.kr:8081'"><i
+					class="icon-main icon-f"></i>메인</li>
 				<li onClick="location.href='/UClub/UClubAllList.techni'"><i
 					class="icon-club icon-f"></i>클럽</li>
-				<li onClick="location.href='/UClub/UClubMemberDetail.techni'"><i
+				<li onClick="location.href='/Contest/ContestMain.techni'"><i
+					class="icon-playing icon-f"></i>대회</li>
+				<li onclick="location.href='/UClub/UClubMemberDetail.techni'"><i
 					class="icon-user"></i>프로필</li>
 				<li onclick="logout()"><i class="icon-out icon-f"></i>로그아웃</li>
 			</ul>
 		</div>
 	</div>
 	<div class="logo_top" id="main_logo">
-	<% if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {%>
 		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo"
 			onClick="location.href='/Board/BoardListRepresent.techni'">
-	<%}}else{ %>
-		<img src="/resources/img/logo1.svg" alt="Minton-in" class="logo">
-	<%} %>
 	</div>
 	<div class="bt_top">
-		
-		<%
-			if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {
-		%>
 		<div class="alarm" onClick="location.href='/Member/Alarm.techni'">
-          <span class="icon-bell btn_i" ></span>
-         
-          	<%if(session.getAttribute("al_count") !=null){if((int)session.getAttribute("al_count") > 0 ){
-          	%> <span class="notice_ub">
-          	<% 		out.print("N"); %>
-          		</span>
-          	<%	}}
-          	%>
-         
-        </div>
+			<span class="icon-bell btn_i"></span>
+
+			<%
+				if (session.getAttribute("al_count") != null) {
+						if ((int) session.getAttribute("al_count") > 0) {
+			%>
+			<span class="notice_ub"> <%
+ 	out.print("N");
+ %>
+			</span>
+			<%
+				}
+					}
+			%>
+
+		</div>
+		<%
+			if ((String) session.getAttribute("represent_idx") != null) {
+		%>
 		<span class="icon-f icon-p_set" id="pr_up_btn"></span>
 		<%
-			}}
+			}
 		%>
 		<!-- btn_more end -->
 	</div>
 </div>
 <!-- head_top end -->
 <%
-if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribute("represent_idx") != null) {
+	if ((String) session.getAttribute("represent_idx") != null) {
 %>
 <div class="move_ct_area">
 	<div class="white_bg move_ct" style="top: -249px;">
@@ -150,7 +185,8 @@ if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribu
 	<!-- move_ct end -->
 </div>
 <%
-	}}
+	}
+	}
 %>
 <!--     <div id="main_nav_area">
       <ul id="main_nav">
@@ -178,7 +214,7 @@ if(session.getAttribute("represent_idx") !=null){if ((String) session.getAttribu
 		if (toYN != -1) {
 			if (navigator.platform) {
 				if (0 > filter.indexOf(navigator.platform.toLowerCase())) {
-					window.Android.appcall("0", "null", "null");
+					
 					location.href = "/Member/Logout.techni"
 				} else {
 					location.href = "/Member/Logout.techni"

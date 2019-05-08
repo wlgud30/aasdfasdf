@@ -97,7 +97,6 @@ function onlyNumber(){
 									if(navigator.userAgent.indexOf("TOKEN:") != -1){
 										if(navigator.platform){
 											if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-												window.Android.appcall(0,"null","null");
 												location.href="/Member/Logout.techni"
 											}else{
 												location.href="/Member/Logout.techni"

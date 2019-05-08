@@ -18,6 +18,7 @@
 		<typeAlias alias="gttVO" type="com.techni.mgl.domain.GTempTeamVO"/>
 		<typeAlias alias="cstVO" type="com.techni.mgl.domain.CStadiumVO"/>
 		<typeAlias alias="cfVO" type="com.techni.mgl.domain.CfightVO"/>
+		<typeAlias alias="ctVO" type="com.techni.mgl.domain.ContestVO"/>
 	</typeAliases>
 	
 	<mappers>
@@ -27,6 +28,7 @@
 		<mapper resource="com/techni/mgl/sql/GameSQL.xml"/>
 		<mapper resource="com/techni/mgl/sql/ClubSQL.xml"/>
 		<mapper resource="com/techni/mgl/sql/CfightSQL.xml"/>
+		<mapper resource="com/techni/mgl/sql/ContestSQL.xml"/>
 	</mappers>
 	
 </configuration>

@@ -3,6 +3,8 @@ package com.techni.mgl.dao;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ public class ClubDAO {
 	
 
 	@Autowired
+	@Resource(name="sqlSession")
 	public SqlSessionTemplate sqlSession;
 	private String nameSpace="mgl.Club.";
 	
@@ -40,6 +43,10 @@ public class ClubDAO {
 	//클럽삭제
 	public int clubDel(String c_idx){
 		return sqlSession.update(nameSpace+"clubDel",c_idx);
+	}
+	
+	public int clubCheck(String c_nm) {
+		return sqlSession.selectOne(nameSpace+"clubCheck", c_nm);
 	}
 	
 

@@ -12,6 +12,25 @@ String cs_nm=(String)session.getAttribute("cs_nm");
 String cs_idx=(String)session.getAttribute("cs_idx");
 String mng=(String)session.getAttribute("mng");
 %>
+<%
+if(session.getAttribute("login")==null){
+%>
+<script>
+var ua = navigator.userAgent
+var a = navigator.userAgent.indexOf("AL:");
+var b = navigator.userAgent.indexOf("ID:");
+var c = navigator.userAgent.indexOf("PW:")
+var d = navigator.userAgent.indexOf("TOKEN:")
+var au = "${au}";
+if(ua.substr(a+3,1) == "1"&&au != "1"){
+	location.href='/Member/Login.techni?m_id='+ua.substr(b+3,c-b-3)+'&m_pw='+ua.substr(c+3)+"&m_push="+ua.substr(d+6,a-d-6)
+}else{
+	location.href='/Member/LoginForm.techni'
+}
+</script>
+<%
+}
+%>
 <div class="title_head head_el" style="top:40px;">
 	<div class="head_top" id="head_top">
       <div class="tit_top">

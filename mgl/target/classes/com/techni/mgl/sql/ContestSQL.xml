@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mgl.Contest">
+
+	<resultMap type="com.techni.mgl.domain.ContestVO" id="ContestVOMap">
+		<result column="MGL_CONTEST_IDX" property="ct_idx"/>
+		<result column="MGL_CONTEST_START" property="ct_start"/>
+		<result column="MGL_CONTEST_END" property="ct_end"/>
+		<result column="MGL_CONTEST_STARTLINE" property="ct_startline"/>
+		<result column="MGL_CONTEST_DEADLINE" property="ct_deadline"/>
+		<result column="MGL_CONTEST_POINT" property="ct_point"/>
+		<result column="MGL_CONTEST_TIME" property="ct_time"/>
+		<result column="MGL_CONTEST_HOMEPAGE" property="ct_homepage"/>
+		<result column="MGL_CONTEST_NM" property="ct_nm"/>
+		<result column="MGL_CONTEST_HOST" property="ct_host"/>
+		<result column="MGL_CONTEST_SUPERVISION" property="ct_supervision"/>
+		<result column="MGL_CONTEST_SUPPORT" property="ct_support"/>
+		<result column="MGL_CONTEST_SPONSOR" property="ct_sponsor"/>
+		<result column="MGL_CONTEST_POINTS" property="ct_points"/>
+		<result column="MGL_CONTEST_ATTACH" property="ct_attach"/>
+		<result column="MGL_CONTEST_INQUIRY" property="ct_inquiry"/>
+		<result column="MGL_CONTEST_OR_IMG" property="ct_or_img"/>
+		<result column="MGL_CONTEST_st_IMG" property="ct_st_img"/>
+		<result column="MGL_CONTEST_COURT" property="ct_court"/>
+		<result column="MGL_CONTEST_LOCATION" property="ct_location"/>
+		<result column="MGL_CONTEST_MATCH_YN" property="ct_match_yn"/>
+		<result column="MGL_CONTEST_YN" property="ct_yn"/>
+		<result column="MGL_CONTEST_APPEAL" property="ct_appeal"/>
+		<result column="MGL_CONTEST_ACCOUNT" property="ct_account"/>
+		<result column="MGL_CONTEST_ENTRY_FEE" property="ct_entry_fee"/>
+		<result column="MGL_CT_TYPE_IDX" property="ct_k_idx"/>
+		<result column="MGL_CT_TYPE_NM" property="ct_k_nm"/>
+		<result column="MGL_CT_TYPE_KIND" property="ct_k_kind"/>
+		<result column="MGL_CT_TYPE_NUM" property="ct_k_num"/>
+		<result column="MGL_CT_GROUP_SPLIT" property="ct_g_split"/>
+		<result column="MGL_CT_USER_IDX" property="ct_u_idx"/>
+		<result column="MGL_CT_USER_ID" property="ct_u_id"/>
+		<result column="MGL_CT_USER_NM" property="ct_u_nm"/>
+		<result column="MGL_CT_USER_PHOTO" property="ct_u_photo"/>
+		<result column="MGL_CT_USER_BIRTH" property="ct_u_birth"/>
+		<result column="MGL_CT_USER_SEX" property="ct_u_sex"/>
+		<result column="MGL_CT_USER_GD" property="ct_u_gd"/>
+		<result column="MGL_CT_CLUB_NM" property="ct_club_nm"/>
+		<result column="MGL_CT_REP_ID" property="ct_u_rep_id"/>
+		<result column="MGL_CT_TEAM_IDX" property="ct_t_idx"/>
+		<result column="MGL_CT_GROUP_IDX" property="ct_g_idx"/>
+		<result column="MGL_CT_USER_A" property="ct_t_user_a"/>
+		<result column="MGL_CT_USER_B" property="ct_t_user_b"/>
+		<result column="MGL_CONTEST_HIT" property="ct_hit"/>
+	</resultMap>
+	
+	<insert id="contestInsert">
+		<selectKey keyProperty="ct_idx" resultType="String" order="BEFORE">
+			SELECT 
+				CONCAT("CT",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CONTEST_SEQ) FROM mgl_db.MGL_SEQ) NEXT),3,0))	
+		</selectKey>
+		INSERT INTO mgl_contest.MGL_CONTEST VALUES(
+			CONCAT("CT",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CONTEST_SEQ) FROM mgl_db.MGL_SEQ) NEXT),3,0)),
+			#{ct_start},
+			#{ct_end},
+			#{ct_startline},
+			#{ct_deadline},
+			#{ct_appeal},
+			#{ct_point},
+			#{ct_time},
+			#{ct_homepage},
+			#{ct_nm},
+			#{ct_host},
+			#{ct_supervision},
+			#{ct_support},
+			#{ct_sponsor},
+			#{ct_points},
+			#{ct_attach},
+			#{ct_or_img},
+			#{ct_st_img},
+			#{ct_inquiry},
+			#{ct_court},
+			#{ct_location},
+			"N",
+			"N",
+			"N",
+			#{ct_host_user},
+			#{ct_account},
+			#{ct_entry_fee},
+			0
+		)
+	</insert>
+	<update id="ct_seq">
+		update mgl_seq set mgl_contest_seq = mgl_contest_seq+1
+	</update>
+	<update id="ct_hit">
+		update mgl_contest set mgl_contest_hit = mgl_contest_hit+1 where mgl_contest_idx = #{ct_idx}
+	</update>
+	<update id="ct_user_seq">
+		update mgl_contest.${ct_idx}_seq set MGL_CT_USER_SEQ = MGL_CT_USER_SEQ+1
+	</update>
+	<update id="ct_team_seq">
+		update mgl_contest.${ct_idx}_seq set MGL_CT_TEAM_SEQ = MGL_CT_TEAM_SEQ+1
+	</update>
+	<select id="createKindTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createGroupTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createTeamTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createUserTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createWaitTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createMatchEndTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createSeqTable" parameterType="map">
+		${sql}
+	</select>
+	<insert id="insertSeq">
+		INSERT INTO mgl_contest.${ct_idx}_seq VALUES(1,1)
+	</insert>
+	<insert id="contestKindInsert">
+		INSERT INTO mgl_contest.${ct_idx}_kind VALUES
+		<foreach collection="list" item="item" separator="," index="index">
+		(
+			CONCAT("CT_K",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((#{index}),3,0)),
+			#{ct_idx},
+			#{item.ct_k_nm},
+			#{item.ct_k_kind},
+			#{item.ct_k_num},
+			#{item.ct_g_split}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="selectCt" resultMap="ContestVOMap">
+		SELECT *
+		FROM mgl_contest.mgl_contest
+		WHERE MGL_CONTEST_IDX = #{ct_idx}
+	</select>
+	<!-- 종목이름 리스트 -->
+	<select id="selectCtKindName" resultMap="ContestVOMap">
+		SELECT 
+			MGL_CT_TYPE_NM
+		FROM 
+			mgl_contest.${ct_idx}_kind
+	</select>
+	<select id="selectCtIngList" resultMap="ContestVOMap">
+		SELECT *
+		FROM mgl_contest.mgl_contest
+		<![CDATA[
+		WHERE MGL_CONTEST_MATCH_YN = 'Y'
+		AND MGL_CONTEST_END > NOW()
+		]]>
+		ORDER BY MGL_CONTEST_START
+	</select>
+	
+	<select id="selectCtPreList" resultMap="ContestVOMap">
+		SELECT *
+		FROM mgl_contest.mgl_contest
+		<![CDATA[
+		WHERE MGL_CONTEST_MATCH_YN = 'N'
+		AND MGL_CONTEST_END > NOW()
+		]]>
+		ORDER BY MGL_CONTEST_START
+	</select>
+	
+	<select id="selectCtLastList" resultMap="ContestVOMap">
+		SELECT *
+		FROM mgl_contest.mgl_contest
+		<![CDATA[
+		WHERE MGL_CONTEST_END < NOW()
+		]]>
+		ORDER BY MGL_CONTEST_START
+	</select>
+	<!-- 출전선수 보기 (종목리스트)  -->
+	<select id="selectCtKindList" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CT_TYPE_IDX, A.MGL_CT_TYPE_NM, group_count
+		FROM 
+			mgl_contest.${ct_idx}_kind A
+		LEFT JOIN
+			(
+				SELECT 
+					count(*) AS GROUP_COUNT, MGL_CT_TYPE_IDX 
+				FROM 
+					mgl_contest.${ct_idx}_team
+				where 
+					MGL_CT_IDX = #{ct_idx}
+	 			group by 
+	 				MGL_CT_TYPE_IDX
+			) B
+		ON 
+			A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX
+	</select>
+	<!-- 출전선수 보기 (종목리스트2)  -->
+	<select id="selectCtKindList2" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CT_TYPE_IDX, A.MGL_CT_CLUB_NM, B.MGL_CT_USER_NM AS ct_u_nm1, B.MGL_CT_USER_GD AS ct_u_gd1, C.MGL_CT_USER_NM AS ct_u_nm2, C.MGL_CT_USER_GD AS ct_u_gd2
+		FROM
+			(
+				SELECT 
+					MGL_CT_TYPE_IDX, MGL_CT_TEAM_IDX, MGL_CT_USER_A, MGL_CT_USER_B, MGL_CT_CLUB_NM
+				FROM 
+					mgl_contest.${ct_idx}_team
+				WHERE 
+					MGL_CT_IDX = #{ct_idx}
+			) A
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user B
+		ON 
+			A.MGL_CT_USER_A = B.MGL_CT_USER_ID
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user C
+		ON 
+			A.MGL_CT_USER_B = C.MGL_CT_USER_ID
+		WHERE 
+			B.MGL_CT_IDX = #{ct_idx}
+		AND 
+			C.MGL_CT_IDX = #{ct_idx}
+		GROUP BY 
+			MGL_CT_TEAM_IDX
+	</select>
+	
+	<!-- 출전선수 보기 (클럽리스트)  -->
+	<select id="selectCtClubList" resultMap="ContestVOMap">
+		SELECT 
+			count(*) AS group_count, MGL_CT_CLUB_NM
+		FROM 
+			mgl_contest.${ct_idx}_user
+		where 
+			MGL_CT_IDX = #{ct_idx}
+		group by 
+			MGL_CT_CLUB_NM
+	</select>
+	<!-- 출전선수 보기 (클럽리스트2)  -->
+	<select id="selectCtClubList2" resultMap="ContestVOMap">
+		SELECT 
+			AA.MGL_CT_USER_A, AA.MGL_CT_USER_B,	AB.MGL_CT_USER_NM AS ct_u_nm1, AB.MGL_CT_USER_GD AS ct_u_gd1, AC.MGL_CT_USER_NM AS ct_u_nm2, AC.MGL_CT_USER_GD AS ct_u_gd2, MGL_CT_TYPE_NM, AA.MGL_CT_CLUB_NM
+		FROM
+			(
+				SELECT 
+					A.MGL_CT_USER_A,A.MGL_CT_USER_B,B.MGL_CT_TYPE_NM,A.MGL_CT_CLUB_NM
+				FROM 
+					mgl_contest.${ct_idx}_team A 
+				LEFT JOIN 
+					mgl_contest.${ct_idx}_kind B 
+				ON 
+					A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX
+				WHERE 
+					A.MGL_CT_IDX = #{ct_idx}
+				AND 
+					B.MGL_CT_IDX = #{ct_idx}
+			) AA
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user AB
+		ON 
+			AA.MGL_CT_USER_A = AB.MGL_CT_USER_ID
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user AC
+		ON 
+			AA.MGL_CT_USER_B = AC.MGL_CT_USER_ID
+		WHERE 
+			AB.MGL_CT_IDX = #{ct_idx}
+		AND 
+			AC.MGL_CT_IDX = #{ct_idx}
+		AND
+			AB.MGL_CT_CLUB_NM = AC.MGL_CT_CLUB_NM
+	</select>
+	<select id="selectCtTypeIdx" resultMap="ContestVOMap">
+		SELECT MGL_CT_TYPE_IDX
+		FROM mgl_contest.${ct_idx}_kind 
+		WHERE MGL_CT_IDX = #{ct_idx} AND MGL_CT_TYPE_NM = #{ct_k_nm};
+	</select>
+	
+	<insert id="contestApplicationAct">
+		INSERT INTO mgl_contest.${ct_idx}_user VALUES(
+			CONCAT("CT_U",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CT_USER_SEQ) FROM mgl_contest.${ct_idx}_seq) NEXT),3,0)),
+			#{ct_idx},
+			#{ct_k_idx},
+			#{ct_u_id},
+			#{ct_u_nm},
+			#{ct_u_photo},
+			#{ct_u_birth},
+			#{ct_u_sex},
+			#{ct_u_gd},
+			#{ct_club_nm},
+			#{ct_u_rep_id}
+		)
+	</insert>
+	
+	<insert id="contestApplicationAct2">
+		<selectKey keyProperty="ct_u_id" resultType="String" order="BEFORE">
+			SELECT 
+				CONCAT(#{ct_idx},#{ct_u_birth},(SELECT COUNT(*) FROM mgl_contest.${ct_idx}_user b WHERE MGL_CT_USER_BIRTH = #{ct_u_birth}))
+		</selectKey>
+		INSERT INTO mgl_contest.${ct_idx}_user VALUES(
+			CONCAT("CT_U",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CT_USER_SEQ) FROM mgl_contest.${ct_idx}_seq) NEXT),3,0)),
+			#{ct_idx},
+			#{ct_k_idx},
+			CONCAT(#{ct_idx},#{ct_u_birth},(SELECT COUNT(*) FROM mgl_contest.${ct_idx}_user b WHERE MGL_CT_USER_BIRTH = #{ct_u_birth})),
+			#{ct_u_nm},
+			#{ct_u_photo},
+			#{ct_u_birth},
+			#{ct_u_sex},
+			#{ct_u_gd},
+			#{ct_club_nm},
+			#{ct_u_rep_id}
+		)
+	</insert>
+	
+	<insert id="contestTeamInsert">
+		INSERT INTO mgl_contest.${ct_idx}_team VALUES(
+			CONCAT("CT_T",CAST(date_format(now(),"%y%m%d") as char(6)),LPAD((SELECT * FROM(SELECT MAX(MGL_CT_TEAM_SEQ) FROM mgl_contest.${ct_idx}_seq) NEXT),3,0)),
+			#{ct_idx},
+			#{ct_k_idx},
+			#{ct_g_idx},
+			#{ct_club_nm},
+			#{ct_t_user_a},
+			#{ct_t_user_b}
+		)
+	</insert>
+	
+	<!-- 해당 이름으로된 참가자가 있는지 확인 -->
+	<select id="countSameName" resultType="int">
+		select count(*) from ${ct_idx}_user where MGL_CT_USER_NM = #{ct_u_nm} AND MGL_CT_TYPE_IDX = #{ct_k_idx}
+	</select>
+	<!-- 광고중인 대회 리스트 -->
+	<select id="contestAdList" resultMap="ContestVOMap">
+		SELECT * FROM MGL_CONTEST WHERE MGL_CONTEST_AD_YN = "Y"
+	</select>	
+	<!-- 출전팀, 출전클럽수 가져오기 -->
+	<select id="selectCtTeamCount" resultMap="ContestVOMap">
+		SELECT 
+			COUNT(MGL_CT_CLUB_NM) AS team_count, COUNT(DISTINCT MGL_CT_CLUB_NM) AS club_count
+		FROM 
+			mgl_contest.${ct_idx}_team
+	</select>
+</mapper>

@@ -57,6 +57,13 @@ public class ClubController {
 		Map<Object,Object> map = new HashMap<Object,Object>();
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 		cVO.setU_mid(mvo.getM_id());
+		
+		int check = cService.clubChcek(cVO.getC_nm());
+		if(check != 0) {
+			map.put("cnt", 3);
+			return map;
+		}
+		
 		int res = cService.clubInsert(cVO);
 		System.out.println(cVO.toString());
 		String idx = cVO.getC_idx();

@@ -16,6 +16,6 @@
 응답 uri : ${request_uri} <br>
 exception : ${exception} <br>
 servlet_name : ${servlet_name} <br>
-<button onclick="location.href='/UClub/UClubAllList.techni'">돌아가기</button>
+<button onclick="location.href='http://mgl.techni.co.kr:8081/'">돌아가기</button>
 </body>
 </html>

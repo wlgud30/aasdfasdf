@@ -40,7 +40,10 @@
 					dataType : "json",
 					contentType : "application/json; charset=UTF-8",
 					success : function(data){
-						if(data.cnt>0){
+						if(data.cnt == 3){
+							swal("민턴in","이미 사용중인 클럽 이름입니다.")
+						}
+						else if(data.cnt>0){
 							swal({
 								title:"민턴in",
 								text : "클럽이 생성 되었습니다."
@@ -87,8 +90,7 @@
 				<input  id="c_nm" name="c_nm"  type="text" placeholder="클럽(모임) 이름">
 				<p class="guide_text mb_t tit_mb">소개</p>
 			</div>
-			<div class="side_data">
-				<span class="btn_st btn_small vet_btn btn-gray" onclick="location.href='/UClub/UClubAllList.techni'">취소</span> 
+			<div class="side_data"> 
 				<span id="ClubInsert" class="btn_st btn_small vet_btn sub1_color">등록</span>
 			</div>
 		</div>

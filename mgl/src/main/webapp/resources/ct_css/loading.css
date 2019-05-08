@@ -1,0 +1,26 @@
+@import url('../font/notosanskr.css');
+.loader-wrap {position: absolute;left: 0;right: 0;top: 0;bottom: 0;margin: auto;z-index: 10000; background-color: rgba(50, 51, 51, 0.3);} 
+.loader {position: absolute;left: 0;right: 0;top: 0;bottom: 0;margin: auto;height: 20px;width: 70px;box-sizing: border-box;margin-top: 40px;} 
+.loader .loader-item {position: relative;float: left;height: 20px;width: 8px;margin: 0 3px;background-color: #ffffff;} 
+.loader-shape {border-radius:50%;width: 120px;height: 120px;margin: auto;position:  absolute;box-sizing: border-box;left: 0;right: 0;top: 0;bottom: 0;box-shadow: 0px 2px 0px rgba(255, 255, 255, 0.3);background-color: rgba(50, 51, 51, 0.6);} 
+.loader .loader-item:nth-child(1) {-webkit-animation: loader-item-1 1.4s linear infinite; animation: loader-item-1 1.4s linear infinite;} 
+.loader .loader-item:nth-child(2) {-webkit-animation: loader-item-2 1.4s linear infinite; animation: loader-item-2 1.4s linear infinite;} 
+.loader .loader-item:nth-child(3) {-webkit-animation: loader-item-3 1.4s linear infinite; animation: loader-item-3 1.4s linear infinite;} 
+.loader .loader-item:nth-child(4) {-webkit-animation: loader-item-4 1.4s linear infinite; animation: loader-item-4 1.4s linear infinite;} 
+.loader .loader-item:nth-child(5) {-webkit-animation: loader-item-5 1.4s linear infinite; animation: loader-item-5 1.4s linear infinite;} 
+.loader .loader-item:nth-child(6) {-webkit-animation: loader-item-6 1.4s linear infinite; animation: loader-item-6 1.4s linear infinite;} 
+.loader:after {content: 'Loading';font-family:'Noto Sans KR',sans-serif;text-transform:uppercase;letter-spacing:0.2px;font-size:15px;color: #ffffff;position: absolute;left: 0;right: 0;bottom: -30px;margin: auto;text-align: center;} 
+
+@keyframes loader-item-1 {1%{transform: scaleY(1);} 11%{transform: scaleY(1.4);} 21%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+@keyframes loader-item-2 {7%{transform: scaleY(1);} 17%{transform: scaleY(1.4);} 27%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+@keyframes loader-item-3 {13%{transform: scaleY(1);} 23%{transform: scaleY(1.4);} 33%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+@keyframes loader-item-4 {19%{transform: scaleY(1);} 29%{transform: scaleY(1.4);} 39%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+@keyframes loader-item-5 {25%{transform: scaleY(1);} 35%{transform: scaleY(1.4);} 45%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+@keyframes loader-item-6 {31%{transform: scaleY(1);} 41%{transform: scaleY(1.4);} 51%{transform: scaleY(1);} 100%{transform: scaleY(1);}} 
+
+@-webkit-keyframes loader-item-1 {1%{-webkit-transform: scaleY(1);} 11%{-webkit-transform: scaleY(1.4);} 21%{-webkit-transform: scaleY(1);} 100%{-webkit-transform: scaleY(1);}} 
+@-webkit-keyframes loader-item-2 {7%{-webkit-transform: scaleY(1);} 17%{-webkit-transform: scaleY(1.4);} 27%{-webkit-transform: scaleY(1);} 100%{-webkit-transform: scaleY(1);}} 
+@-webkit-keyframes loader-item-3 {13%{-webkit-transform: scaleY(1);} 23%{-webkit-transform: scaleY(1.4);} 33%{-webkit-transform: scaleY(1);} 100%{-webkit-transform: scaleY(1);}} 
+@-webkit-keyframes loader-item-4 {19%{-webkit-transform: scaleY(1);} 29%{-webkit-transform: scaleY(1.4);} 39%{-webkit-transform: scaleY(1);;} 100%{-webkit-transform: scaleY(1);}} 
+@-webkit-keyframes loader-item-5 {25%{-webkit-transform: scaleY(1);} 35%{-webkit-transform: scaleY(1.4);} 45%{-webkit-transform: scaleY(1);} 100%{-webkit-transform: scaleY(1);}} 
+@-webkit-keyframes loader-item-6 {31%{-webkit-transform: scaleY(1);} 41%{-webkit-transform: scaleY(1.4);} 51%{-webkit-transform: scaleY(1);} 100%{-webkit-transform: scaleY(1);}} 

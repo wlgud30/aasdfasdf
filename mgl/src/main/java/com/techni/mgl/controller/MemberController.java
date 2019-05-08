@@ -163,9 +163,8 @@ public class MemberController {
 		
 		return "member/loginForm";
 	}
-	
 	@RequestMapping("/Member/Logout.techni")
-	public String Logout(HttpSession session,Model model){
+	public String Logout(HttpSession session,RedirectAttributes redirectAttributes){
 		MemberVO mvo = (MemberVO) session.getAttribute("login");
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("m_push", null);
@@ -174,17 +173,7 @@ public class MemberController {
 		mService.pushUpdate(map);
 		session.invalidate();
 		
-		model.addAttribute("au", "1");
-		
-		
-		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
-		String url = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, googleOAuth2Parameters);
-
-		System.out.println("구글:" + url);
-
-		model.addAttribute("google_url", url);
-		
-		return "member/loginForm";
+		return "redirect:/";
 	}
 	@RequestMapping("/Member/birthTelCheck.techni")
 	@ResponseBody
@@ -382,7 +371,7 @@ public class MemberController {
 				mvo2.put("c_gd", uvo2.getU_club_gd());
 				mvo2.put("u_photo", mvo.getM_photo());
 				mvo2.put("c_idx",mvo.getM_represent());
-				
+				mvo2.put("u_id", mvo.getM_id());
 				session.setAttribute("mvo", mvo2);
 				
 				session.setAttribute("mng", uvo.getUc_mng());
@@ -404,18 +393,18 @@ public class MemberController {
 	}
 	
 	@RequestMapping("/Member/pushLogin.techni")
-	public String pushLogin(HttpServletResponse response,HttpSession session,@RequestParam(required = false) String m_push, HttpServletRequest request, Model model) throws IOException{
+	public String pushLogin(HttpServletResponse response,HttpSession session,@RequestParam(required = false) String m_push,@RequestParam(required = false) String kind, HttpServletRequest request, Model model) throws IOException{
 
 		String ua = request.getHeader("user-Agent").toLowerCase(); 
+
 		if(m_push != null){
 			m_push = m_push.replaceAll(" ", "");
 		}
-		if(m_push=="") {
+		if(m_push==""&&session.getAttribute("login")==null&&!kind.equals("contest")) {
 			return "member/loginForm";
 		}
 		MemberVO mvo = mService.pushLogin(m_push);
 		Map<String,String> map = new HashMap<String,String>();
-		
 		
 		if(mvo!=null){
 			map.put("m_push", m_push);
@@ -433,6 +422,7 @@ public class MemberController {
 					System.out.println("실패");
 				}
 			}
+			
 			if(ucService.representCheck(mvo.getM_id())>0) {
 				session.setAttribute("c_idx",mvo.getM_represent());
 				session.setAttribute("represent_idx", mvo.getM_represent());
@@ -452,20 +442,37 @@ public class MemberController {
 				mvo2.put("c_gd", uvo2.getU_club_gd());
 				mvo2.put("u_photo", mvo.getM_photo());
 				mvo2.put("c_idx",mvo.getM_represent());
-				
+				mvo2.put("u_id", mvo.getM_id());
 				session.setAttribute("mvo", mvo2);
 				
 				session.setAttribute("mng", uvo.getUc_mng());
 				
-				return "redirect:/Board/BoardList.techni";
+				if(kind.equals("game")) {
+					return "redirect:/Board/BoardList.techni";
+				}else if(kind.equals("contest")) {
+					return "redirect:/Contest/ContestMain.techni";
+				}
+				
+				
 			}else {
-				return "redirect:/UClub/UClubAllList.techni";
+				if(kind.equals("game")) {
+					return "redirect:/UClub/UClubAllList.techni";
+				}else if(kind.equals("contest")) {
+					return "redirect:/Contest/ContestMain.techni";
+				}
+				
 			}
 			
-		}else{
-			
-		return "member/loginForm";
 		}
+		
+		if(kind.equals("game")) {
+			return "member/loginForm";
+		}else if(kind.equals("contest")) {
+			return "redirect:/Contest/ContestMain.techni";
+		}else {
+			return "member/loginForm";
+		}
+		
 	}
 	
 	@RequestMapping("/Member/GuestInsert.techni")
@@ -1237,5 +1244,74 @@ public class MemberController {
         map.put("cnt", res);
         
 		return "";
+	}
+	@RequestMapping("/Member/LoginContest.techni")
+	public String LoginContest(HttpServletResponse response,HttpSession session,@RequestParam(required = false) String m_push, @RequestParam String m_id,
+			@RequestParam String m_pw, HttpServletRequest request, Model model) throws IOException{
+
+		String ua = request.getHeader("user-Agent").toLowerCase(); 
+		if(m_push != null){
+			m_push = m_push.replaceAll(" ", "");
+		}
+		
+		m_id = m_id.replace(" ", "");
+		m_pw = m_pw.replace(" ","");
+		
+		Map<String,String> map = new HashMap<String,String>();
+		
+		map.put("m_id", m_id);
+		map.put("m_pw", m_pw);
+		map.put("m_push", m_push);
+		
+		if(ua.indexOf("MacIntel") == -1 && ua.indexOf("win16") == -1 && ua.indexOf("win32") == -1 && ua.indexOf("win64") == -1 && ua.indexOf("mac") == -1){
+			mService.pushUpdate(map);
+		}
+		
+		MemberVO mvo = mService.login(map);
+		
+		
+		if(mvo!=null){
+			System.out.println("로그인");
+			session.setAttribute("login", mvo);
+			if(mService.todayLogin(m_id) == 0) {
+				int res = mService.todayLoginInsert(m_id);
+				System.out.println("성공");
+				if(res <= 0) {
+					System.out.println("실패");
+				}
+			}
+			if(ucService.representCheck(m_id)>0) {
+				session.setAttribute("c_idx",mvo.getM_represent());
+				session.setAttribute("represent_idx", mvo.getM_represent());
+				session.setAttribute("al_count", mService.alarmCount(m_id));
+				
+				map.put("c_idx", mvo.getM_represent());
+				map.put("u_id",mvo.getM_id());
+				
+				UClubVO uvo = ucService.userMng(map);
+				UClubVO uvo2 = ucService.headerSelect(map);
+				
+				Map<String,Object> mvo2 = new HashMap<String,Object>();
+				
+				mvo2.put("aptn", uvo2.getCm_p_total());
+				mvo2.put("c_nm", uvo2.getC_nm());
+				mvo2.put("u_nm", mvo.getM_nm());
+				mvo2.put("c_gd", uvo2.getU_club_gd());
+				mvo2.put("u_photo", mvo.getM_photo());
+				mvo2.put("c_idx",mvo.getM_represent());
+				mvo2.put("u_id", mvo.getM_id());
+				session.setAttribute("mvo", mvo2);
+				
+				session.setAttribute("mng", uvo.getUc_mng());
+				
+				return "contest/contestMain.page";
+			}else {
+				return "contest/contestMain.page";
+			}
+			
+		}else{
+			
+		return "contest/contestMain.page";
+		}
 	}
 }
