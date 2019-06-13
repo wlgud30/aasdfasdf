@@ -30,7 +30,7 @@ i{font-style:normal !important}
 header{padding:0 12px;position:relative; z-index:10;width:100%;position:fixed; background:#fff; max-width:480px;top:0; line-height:1em;box-shadow: 0px 1px 0px rgba(172, 104, 204,.1);} 
 header .logo {width:33px;margin-bottom:1px;} .rank_num{background:#ac68cc;color:#fff;font-size: 0.78em;border-radius: 0.2em;padding: 0 5px 0 4px;margin-left: 0.4em;text-align: center;display: inline-block;position:  relative;top: -1px;}
 .btn_logout{height:30px;width:31px;background:url(../img/logout_icon.png) no-repeat right center}
-.head_top > div {position:relative; display:table-cell; vertical-align:middle} .head_top .logo_top{width:33px;} .head_top .logob_top, .head_top .logob_top img{width:55px;} 
+.head_top > div {position:relative; display:table-cell; vertical-align:middle} .head_top .logo_top{width:33px;} .head_top .logob_top{width:84px;}  .head_top .logob_top img{width:100%}
 .head_top .btn_back{width:17px; color:#ac68cc; position:relative;} .head_top .btn_back + .tit_top{padding-left:6px}
 .head_top{display:table; width:100%;height:43px;} .head_top > div ~ div {padding-left:5px} .bt_top{text-align:right;width:60px;white-space:nowrap;color: #ac68cc;} .head_top > .tit_top{white-space:nowrap; max-width:50px}
 .bt_top .btn_st{height:26px;line-height: 1em;padding: 5px 0px 4px;border:none; box-shadow:none} header:before{content:'';position:absolute;border-bottom:1px solid #ac68cc;right:0;left:0;top:0;bottom:0;z-index:-1;}
@@ -38,7 +38,7 @@ header .logo {width:33px;margin-bottom:1px;} .rank_num{background:#ac68cc;color:
 .btn_circle + .btn_circle {margin-left:4px}.btn_circle.active_btn{color:#ac68cc}
 .btn_series:first-child{border-right:none;border-radius:2rem 0 0 2rem;} .btn_series ~ .btn_series{margin-left:0px !important} .btn_series + .btn_i{margin-left:5px}
 .btn_series ~ .btn_series:before{margin: 0 6px 0 3px; border-right: 1px solid; content: ''; height: 1em; display: inline-block; position: relative; top: 2px;}
-.tit_top > h1{font-size:1.29em;display:inline-block;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;letter-spacing: -0.2px;} 
+.tit_top > h1{font-size:1.28em;display:inline-block;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%;letter-spacing: -0.2px;} 
 .write_title{letter-spacing: -0.2px;font-size:1.2em;font-weight:normal; overflow:hidden;color:#333;white-space:nowrap;text-overflow:ellipsis;}
 .btn_back:before{content:"\e812"; font-family:'FontAwesome';font-weight:600;font-size:1.1em; line-height:1.07em;}
 .btn_i{font-size:20px; position:relative} .btn_i ~ .btn_i{margin-left:5px} .btn_i.la-paperclip{font-size:1.7em;top: 3px;position: relative;} .btn_i + .btn_st{margin-left:4px}

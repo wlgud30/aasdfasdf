@@ -26,7 +26,7 @@
 							<div class="col_2data">
 								<div class="max-ws_td el_date" onclick="alarmHref('${list.al_idx}')">${list.al_msg }</div>
 								<div class="td_1">
-									<i class="icon-minus btn_i sub_color" onclick="alarmDel()"></i>
+									<i class="icon-minus btn_i sub_color" onclick="alarmDel('${list.al_idx}')"></i>
 								</div>
 							</div>
 						</div>
@@ -49,6 +49,7 @@ function alarmDel(kind){
 		$.ajax({
 			async : true,
 			type : 'post',
+			data : JSON.stringify({"al_idx" : ""}),
 			url : "/Member/AlarmDel.techni",
 			dataType : "json",
 			contentType : "application/json; charset=UTF-8",
@@ -64,7 +65,7 @@ function alarmDel(kind){
 			}
 			});
 	}else{
-	$.ajax({
+		$.ajax({
 		async : true,
 		type : 'post',
 		data : JSON.stringify({"al_idx" : kind}),

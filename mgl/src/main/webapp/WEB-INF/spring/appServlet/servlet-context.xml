@@ -41,7 +41,12 @@
 	
 	<beans:bean id="uploadPath3" class="java.lang.String">
     <!-- 파일업로드 디렉토리-->
-    	<beans:constructor-arg value="C:\Users\wlgud\git\aasdfasdf\mgl\src\main\webapp\resources\uploadContest"/>
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadContest"/>
+	</beans:bean>
+	
+	<beans:bean id="uploadPath4" class="java.lang.String">
+    <!-- 파일업로드 디렉토리-->
+    	<beans:constructor-arg value="C:\Users\TechDev\git\aasdfasdf\mgl\src\main\webapp\resources\uploadCtImg"/>
 	</beans:bean>
 	
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">

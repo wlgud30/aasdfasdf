@@ -140,10 +140,116 @@ public class ClubMatchVO {
 	public String cs_at_id2;
 	public String cs_bt_id1;
 	public String cs_bt_id2;
+	public String a1;
+	public String a2;
+	public String b1;
+	public String b2;
+	public String cs_t_a_nm;
+	public String cs_t_a_age;
+	public String cs_t_a_gd;
+	public String cs_t_a_photo;
+	public String cs_t_b_nm;
+	public String cs_t_b_age;
+	public String cs_t_b_gd;
+	public String cs_t_b_photo;
 	
 	
-	
-	
+	public String getCs_t_a_nm() {
+		return cs_t_a_nm;
+	}
+
+	public void setCs_t_a_nm(String cs_t_a_nm) {
+		this.cs_t_a_nm = cs_t_a_nm;
+	}
+
+	public String getCs_t_a_age() {
+		return cs_t_a_age;
+	}
+
+	public void setCs_t_a_age(String cs_t_a_age) {
+		this.cs_t_a_age = cs_t_a_age;
+	}
+
+	public String getCs_t_a_gd() {
+		return cs_t_a_gd;
+	}
+
+	public void setCs_t_a_gd(String cs_t_a_gd) {
+		this.cs_t_a_gd = cs_t_a_gd;
+	}
+
+	public String getCs_t_a_photo() {
+		return cs_t_a_photo;
+	}
+
+	public void setCs_t_a_photo(String cs_t_a_photo) {
+		this.cs_t_a_photo = cs_t_a_photo;
+	}
+
+	public String getCs_t_b_nm() {
+		return cs_t_b_nm;
+	}
+
+	public void setCs_t_b_nm(String cs_t_b_nm) {
+		this.cs_t_b_nm = cs_t_b_nm;
+	}
+
+	public String getCs_t_b_age() {
+		return cs_t_b_age;
+	}
+
+	public void setCs_t_b_age(String cs_t_b_age) {
+		this.cs_t_b_age = cs_t_b_age;
+	}
+
+	public String getCs_t_b_gd() {
+		return cs_t_b_gd;
+	}
+
+	public void setCs_t_b_gd(String cs_t_b_gd) {
+		this.cs_t_b_gd = cs_t_b_gd;
+	}
+
+	public String getCs_t_b_photo() {
+		return cs_t_b_photo;
+	}
+
+	public void setCs_t_b_photo(String cs_t_b_photo) {
+		this.cs_t_b_photo = cs_t_b_photo;
+	}
+
+	public String getA1() {
+		return a1;
+	}
+
+	public void setA1(String a1) {
+		this.a1 = a1;
+	}
+
+	public String getA2() {
+		return a2;
+	}
+
+	public void setA2(String a2) {
+		this.a2 = a2;
+	}
+
+	public String getB1() {
+		return b1;
+	}
+
+	public void setB1(String b1) {
+		this.b1 = b1;
+	}
+
+	public String getB2() {
+		return b2;
+	}
+
+	public void setB2(String b2) {
+		this.b2 = b2;
+	}
+
 	public String getCs_at_id1() {
 		return cs_at_id1;
 	}

@@ -42,5 +42,9 @@ public class ClubService {
 	public int clubDel(String c_idx){
 		return dao.clubDel(c_idx);
 	}
-	
+	//클럽중복체크
+	@Transactional
+	public int clubChcek(String c_nm) {
+		return dao.clubCheck(c_nm);
+	}
 }

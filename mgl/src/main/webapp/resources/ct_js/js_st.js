@@ -37,8 +37,14 @@
 
   //댓글 쓰기 포커스
   if (window.location.hash === "#ft_area") {
-	 $("#ft_area textarea").trigger("keydown").focus();  
+    $("#ft_area textarea").trigger("keydown").focus();Keyboard.show();
   }
+
+  //옆으로 슬라이드 메뉴 페이지 활성화 해시링크 (대진표페이지)
+  var path_h = window.location.pathname.split("/").pop(),
+    swiper_nav = $('#swiper_nav .swiper-slide').filter('[onclick*="' + path_h + '"]');
+  swiper_nav.addClass('active_hash');
+
 })
 
 jQuery(document).ready(function($) {
@@ -83,7 +89,7 @@ jQuery(document).ready(function($) {
     var fix_top = document.getElementsByClassName('fix_top');
     if (fix_top.length > 0) {
       $fix_top_cont = $(fix_top).next('div');
-      $fix_top_cont.css("margin-top", $(fix_top).outerHeight());
+      $fix_top_cont.css("margin-top", $(fix_top).outerHeight(true));
     }
   }).trigger('resize');
 
@@ -185,6 +191,12 @@ jQuery(document).ready(function($) {
     }
   });
 
+  //체크박스 ul
+  var check_c = document.getElementsByClassName('check_circle');
+  $(check_c).each(function() {
+    $(this).closest('.list_check').addClass('radio_ul');
+  });
+
   //select 변경...
   var $select = document.getElementsByTagName('select');
   if ($select.length > 0) {
@@ -209,19 +221,6 @@ jQuery(document).ready(function($) {
       $(this).closest(tab_btn_b).addClass('wauto');
     }
   });
-
-  //더블메뉴
-  var tab_b_double = document.getElementsByClassName('tab_btn_b');
-  $(tab_b_double).children('li').each(function() {
-    var tab_b_span = $(this).children('span');
-    if (tab_b_span.length > 1) {
-      $(this).closest('li').addClass('tab_span_double');
-    }
-  });
-  //메뉴(현재 페이지 활성화)
-  var path = window.location.pathname.split("/").pop(),
-    menutarget = $('.tab_span_double span[onclick*="' + path + '"]');
-  menutarget.addClass('active_target');
 
   //탭
   var tab_nav = document.getElementsByClassName('tab_cont'),
@@ -396,7 +395,7 @@ jQuery(document).ready(function($) {
   //팝업(읽는 맴버,게스트등록,선수등록 등등)
   var popup_wrap = document.getElementsByClassName('popwin_wrap'),
     popup_s = document.getElementsByClassName('popwin_size'),
-    pop_btn = $("[class*='popwin_btn']");
+    pop_btn = $("[class*='popwin_btn'],[class*='login_btn']");
   $(popup_s).hide();
   $(pop_btn).on('click', function(e) {
     e.stopPropagation()
@@ -413,15 +412,18 @@ jQuery(document).ready(function($) {
       var popup_cont_h = $($popup_nb).outerHeight(),
         title_popup_h2 = $($popup_nb).children('.title_popup').outerHeight() / 2,
         popup_scrollwrap = $($popup_nb).find('.scroll_wrap'),
-		$popup_body = $($popup_nb).find('.popup_body');
+        $popup_body = $($popup_nb).find('.popup_body');
       if ($popup_nb.outerHeight() > $(window).height()) {
-		if (popup_scrollwrap.length > 0) {	
-        $(popup_scrollwrap).css('height', 70 + 'vh');
-        $($popup_nb).css('top', 'calc(50% - ' + 70 / 2 + 'vh - ' + title_popup_h2 + 'px)');
-		}else {
-        $($popup_body).css({'height': 90 + 'vh','overflow-y':'auto'});		  
-        $($popup_nb).css('top', 0);			
-		}
+        if (popup_scrollwrap.length > 0) {
+          $(popup_scrollwrap).css('height', 70 + 'vh');
+          $($popup_nb).css('top', 'calc(50% - ' + 70 / 2 + 'vh - ' + title_popup_h2 + 'px)');
+        } else {
+          $($popup_body).css({
+            'height': 90 + 'vh',
+            'overflow-y': 'auto'
+          });
+          $($popup_nb).css('top', 0);
+        }
       } else {
         $(popup_scrollwrap).css('height', 'auto');
         $($popup_nb).css('top', 'calc(50% - ' + popup_cont_h / 2 + 'px)');
@@ -477,7 +479,7 @@ jQuery(document).ready(function($) {
     });
   }
   var $txtbd = $('.row_tr').find('.txtbd');
-  if ($txtbd.length > 0) { //존재확인				 
+  if ($txtbd.length > 0) {
     $($txtbd).dotdotdot({
       ellipsis: '',
       height: 90,
@@ -492,7 +494,7 @@ jQuery(document).ready(function($) {
 
   // 클럽소개 글짤림 
   var $txtover = $('.txtover');
-  if ($txtover.length > 0) { //존재확인				 
+  if ($txtover.length > 0) {
     function createDots() {
       $txtover.dotdotdot({
         height: 90,
@@ -500,7 +502,6 @@ jQuery(document).ready(function($) {
         callback: function(isTruncated) {
           if ($(this).hasClass("is-truncated") === true) {
             $(this).prev('.guide_text').addClass('overview');
-            //var txtover_h = $(this).css('height', $(this).outerHeight());
           }
         }
       });
@@ -508,37 +509,24 @@ jQuery(document).ready(function($) {
 
     function destroyDots() {
       $txtover.trigger('destroy');
-      //txtover_hh = $txtover.css('height', $txtover.outerHeight());
-      $txtover.animate({
-        height: 'txtover_hh'
-      }, 200);
     }
     createDots();
     $('.overview').on('click', function() {
       var txtover = $(this).next($txtover),
         txtover_p = $(this).closest('.txtover_area');
       txtover_p.toggleClass('opened');
-      // animate('{height:"toggle"}');
       if (txtover_p.hasClass('opened')) {
         destroyDots();
-        // txtover.slideUp(200);
-        //   txtover.animate({
-        //  height:'100%'
-        //  }, 200);
       } else {
         createDots();
-        // txtover.slideDown(200);
-        //     txtover.animate({
-        // height: "txtover_h"
-        //  }, 200);
       }
       return false;
     });
   }
+
   // 임원 소개 글짤림 
   var $one_over = $('.one_over');
   if ($one_over.length > 0) {
-
     function createDots() {
       $one_over.dotdotdot({
         ellipsis: '',
@@ -546,7 +534,6 @@ jQuery(document).ready(function($) {
         callback: function(isTruncated) {
           if ($(this).hasClass("is-truncated") === true) {
             $(this).prev('.guide_text').addClass('one_over_view');
-            var one_over_h = $(this).css('height', $(this).outerHeight());
           }
         }
       });
@@ -616,20 +603,6 @@ jQuery(document).ready(function($) {
       });
     });
   }
-
-  //토터먼트
-  $('.tourna_match').each(function() {
-    $('.time-court').each(function() {
-      $timecourt_w = $(this).outerWidth() / 2;
-      $(this).not('.time_court_r').css('margin-left', -$timecourt_w);
-    });
-  });
-
-  var tourna_tds = $('.tourna_td').find('td').not(':first-child');
-  $(tourna_tds).each(function(e) {});
-  $('.win_line').each(function() {
-    $(this).closest('.match_unit').addClass('win_line_p');
-  });
 
   //오각형 대진표
   if ($('.figure5').length > 0) {
@@ -729,99 +702,44 @@ jQuery(document).ready(function($) {
   if ($(main_img).length > 0) {
     $(main_img).closest($container).prev(tie_head).addClass('main_top_tit');
   }
-  var main_top_tit = $('.main_top_tit');
-
-  //  $(window).on('load resize', function() {
-  //   var height_d =  $('.parallax').outerHeight();
-  //   $('.parallax').css('height', height_d);
-  //	 }).trigger('resize');
-  // Populate images from data attributes.
-  var scrolled = $container.scrollTop();
-  $(window).on('load resize', function() {
-    $('.parallax').each(function(index) {
-      var imageSrc = $(this).data('image-src');
-
-      // $(this).css('background-image','url(' + imageSrc + ')')
-
-      // Adjust the background position.
-      var initY = $(this).offset().top
-      var height = $(this).height();
-      // var diff = scrolled - initY
-      var diff = scrolled - initY
-      var ratio = Math.round((diff / height) * 100)
-      // $(this).css({'background-position':'center ' + parseInt(-(scrolled / 1)) + 'px', top:-parseInt(-(ratio * 1))})
-      $(this).css({
-        'background-position': 'center ' + parseInt(-(scrolled / 1)) + 'px'
-      })
-      // $(window).on('load resize', function() {
-      // var imageHeight = $(this).outerHeight() - parseInt(-(ratio * 1));
-      var imageHeight = $(this).outerHeight();
-      //  $(this).closest('.main_img').css('height', imageHeight);
-      //}).trigger('resize');		  
-    })
-  }).trigger('resize');
+  var main_top_tit = $('.main_top_tit'),
+    scrolled = $container.scrollTop();
+  $('.parallax').each(function(index) {
+    $(this).css('background-position', 'center calc(50% + ' + parseInt(scrolled / 3) + 'px )')
+  })
   // Attach scroll event to window. Calculate the scroll ratio of each element
-  // and change the image position with that ratio.
-  // https://codepen.io/lemagus/pen/RWxEYz
+  // and change the image position with that ratio. // https://codepen.io/lemagus/pen/RWxEYz
   $container.scroll(function() {
     var scrolled = $(this).scrollTop()
     $('.parallax').each(function(index, element) {
-      var initY = $(this).offset().top
-      var height = $(this).height()
-      var endY = initY + $(this).height()
-
-      // Check if the element is in the viewport.
-      var visible = isInViewport(this)
+      var visible = isInViewport(this); // Check if the element is in the viewport.
       if (visible) {
-        //var diff = scrolled - initY
-        var diff = scrolled - initY
-        var ratio = Math.round((diff / height) * 100)
-        $(this).css('background-position', 'center ' + parseInt(-(scrolled / 1)) + 'px')
+        $(this).css('background-position', 'center calc(50% + ' + parseInt(scrolled / 3) + 'px )')
       }
-
     })
-
     if (scrolled > $(main_img).height() - header_h) {
-      $(main_top_tit).css({
-        // position: 'absolute'
-      }).stop(true, false).animate({
-        //top: 0,
+      $(main_top_tit).css({}).stop(true, false).animate({
         'z-index': 10,
         opacity: 1
       }, 100);
     } else {
-      $(main_top_tit).css({
-        //  position:'fixed'
-      }).stop(true, false).animate({
-        //top: -$(tie_head).outerHeight(),
+      $(main_top_tit).css({}).stop(true, false).animate({
         'z-index': -1,
         opacity: 0
       }, 100);
     }
-
   })
 
-  // Check if the element is in the viewport.
-  // http://www.hnldesign.nl/work/code/check-if-element-is-visible/
   function isInViewport(node) {
-    // Am I visible? Height and Width are not explicitly necessary in visibility
-    // detection, the bottom, right, top and left are the essential checks. If an
-    // image is 0x0, it is technically not visible, so it should not be marked as
-    // such. That is why either width or height have to be > 0.
-    var rect = node.getBoundingClientRect()
+    var rect = node.getBoundingClientRect();
     return (
-      (rect.height > 0 || rect.width > 0) &&
-      rect.bottom >= 0 &&
-      rect.right >= 0 &&
-      rect.top <= $container.outerHeight() &&
-      rect.left <= $container.outerWidth()
+      (rect.height > 0 || rect.width > 0) && rect.bottom >= 0 && rect.right >= 0 && rect.top <= $container.outerHeight() && rect.left <= $container.outerWidth()
     )
   }
 
   //타이틀 검색바 토글
   var search_icon = $('.main_top_tit').find('#search_i');
   $(search_icon).click(function() {
-    // alert('hi');
     var search_zone = $(this).parents('.title_head');
     if (search_zone.hasClass('search_bar_view')) {
       search_zone.removeClass('search_bar_view');

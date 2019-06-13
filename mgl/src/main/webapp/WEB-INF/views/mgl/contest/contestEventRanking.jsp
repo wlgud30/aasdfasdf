@@ -2,18 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<script>	
-	$(document).ready(function(){	
-		var aa = $(location).attr('pathname').slice(-6, -5); 
-		$('.tab_btn_b').navi_depth({pageNum:aa});		
-	});
-</script>
 <div class="tab_btn_b_area">
 	<ul class="tab_btn_b">
 		<li onClick="location.href='/Contest/ContestMyRanking.techni'">
 			<span>나의 순위</span>
 		</li>
-		<li onClick="location.href='/Contest/ContestEventRanking.techni'">
+		<li class="active_tab" onClick="location.href='/Contest/ContestEventRanking.techni'">
 			<span>종목별 순위</span>
 		</li>
 		<li onClick="location.href='/Contest/ContestClubRanking.techni'">

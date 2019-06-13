@@ -5,31 +5,25 @@
 	Map<String, Object> map = (Map<String, Object>) session.getAttribute("mvo");
 %>
 <%
-if(session.getAttribute("login")==null){
+	if (session.getAttribute("login") == null) {
 %>
 <script>
-var ua = navigator.userAgent
-var a = navigator.userAgent.indexOf("AL:");
-var b = navigator.userAgent.indexOf("ID:");
-var c = navigator.userAgent.indexOf("PW:")
-var d = navigator.userAgent.indexOf("TOKEN:")
-var au = "${au}";
-if(ua.substr(a+3,1) == "1"&&au != "1"){
-	location.href='/Member/LoginContest.techni?m_id='+ua.substr(b+3,c-b-3)+'&m_pw='+ua.substr(c+3)+"&m_push="+ua.substr(d+6,a-d-6)
-}
-var lo = window.location.pathname;
-if(lo.includes("/Contest/ContestMain.techni")){
-	
-	
-	
-}
+	var ua = navigator.userAgent
+	var a = navigator.userAgent.indexOf("AL:");
+	var b = navigator.userAgent.indexOf("ID:");
+	var c = navigator.userAgent.indexOf("PW:")
+	var d = navigator.userAgent.indexOf("TOKEN:")
+	var au = "${au}";
+	if (ua.substr(a + 3, 1) == "1" && au != "1") {
+		
+	}
 </script>
 <div class="head_top" id="head1">
 	<div class="bt_top menu_quick noti_btn_is">
 		<div class="btn_more">
 			<i class="more_menu la la-navicon"></i>
 			<ul class="me_ul">
-				<li onClick="location.href='http://localhost:8081'"><i
+				<li onClick="location.href='http://mgl.techni.co.kr:8081'"><i
 					class="icon-main icon-f"></i>메인</li>
 				<li onClick=""><i class="icon-club icon-f"></i>로그인</li>
 			</ul>
@@ -41,7 +35,7 @@ if(lo.includes("/Contest/ContestMain.techni")){
 	</div>
 </div>
 <%
-}else{
+	} else {
 %>
 <!-- <div class="head_top"> 
     <div class="bt_top"><i class="la la-navicon btn_i"></i> </div>
@@ -61,12 +55,14 @@ if(lo.includes("/Contest/ContestMain.techni")){
 		<div class="btn_more">
 			<i class="more_menu la la-navicon"></i>
 			<ul class="me_ul">
-				<li onClick="location.href='http://localhost:8081'"><i
+				<li onClick="location.href='http://mgl.techni.co.kr:8081'"><i
 					class="icon-main icon-f"></i>메인</li>
-				<li onClick="location.href='/Board/BoardListRepresent.techni'"><i
+				<li onClick="location.href='/UClub/UClubAllList.techni'"><i
 					class="icon-club icon-f"></i>클럽</li>
-				<li onClick="location.href=''"><i
-					class="icon-user"></i>대회신청</li>
+				<li onClick="location.href='/Contest/ContestMain.techni'"><i
+					class="icon-playing icon-f"></i>대회</li>
+				<li onclick="location.href='/UClub/UClubMemberDetail.techni'"><i
+					class="icon-user"></i>프로필</li>
 				<li onclick="logout()"><i class="icon-out icon-f"></i>로그아웃</li>
 			</ul>
 		</div>
@@ -77,18 +73,23 @@ if(lo.includes("/Contest/ContestMain.techni")){
 	</div>
 	<div class="bt_top">
 		<div class="alarm" onClick="location.href='/Member/Alarm.techni'">
-          <span class="icon-bell btn_i" ></span>
-         
-          	<%if(session.getAttribute("al_count") !=null){if((int)session.getAttribute("al_count") > 0 ){
-          	%> <span class="notice_ub">
-          	<% 		out.print("N"); %>
-          		</span>
-          	<%	}}
-          	%>
-         
-        </div>
+			<span class="icon-bell btn_i"></span>
+
+			<%
+				if (session.getAttribute("al_count") != null) {
+						if ((int) session.getAttribute("al_count") > 0) {
+			%>
+			<span class="notice_ub"> <%
+ 	out.print("N");
+ %>
+			</span>
+			<%
+				}
+					}
+			%>
+
+		</div>
 		<%
-		
 			if ((String) session.getAttribute("represent_idx") != null) {
 		%>
 		<span class="icon-f icon-p_set" id="pr_up_btn"></span>
@@ -184,7 +185,8 @@ if(lo.includes("/Contest/ContestMain.techni")){
 	<!-- move_ct end -->
 </div>
 <%
-	}}
+	}
+	}
 %>
 <!--     <div id="main_nav_area">
       <ul id="main_nav">
@@ -212,7 +214,7 @@ if(lo.includes("/Contest/ContestMain.techni")){
 		if (toYN != -1) {
 			if (navigator.platform) {
 				if (0 > filter.indexOf(navigator.platform.toLowerCase())) {
-					window.Android.appcall("0", "null", "null");
+					
 					location.href = "/Member/Logout.techni"
 				} else {
 					location.href = "/Member/Logout.techni"

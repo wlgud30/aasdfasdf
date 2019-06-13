@@ -19,16 +19,20 @@
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="msapplication-TileImage" content="/resources/img/favicon_144.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/resources/ct_css/css.css?ver2" type="text/css" />
-<link rel="stylesheet" href="/resources/ct_css/swiper.css?ver6">
+<link rel="stylesheet" href="/resources/ct_css/css.css?ver8" type="text/css" />
+<link rel="stylesheet" href="/resources/ct_css/swiper.css?ver7">
 <script src="/resources/ct_js/jquery-3.3.1.min.js"></script>
-<script src="/resources/ct_js/swiper.min.js?ver1"></script>
-<script src="/resources/ct_js/js_st.js?ver2"></script>
+<script src="/resources/ct_js/swiper.min.js?ver2"></script>
+<script src="/resources/ct_js/js_st.js?ver6"></script>
 <script src="/resources/ct_js/jquery.form.min.js"></script>
-<script src="/resources/ct_js/Navi.js?ver2"></script>
-<script src="/resources/ct_js/sweetalert.min.js?ver2"></script>
-<link rel="stylesheet" href="/resources/ct_css/prettydropdowns.css?ver2" type="text/css" />
-<script src="/resources/ct_js/jquery.prettydropdowns.js?ver2"></script>
+<script src="/resources/ct_js/Navi.js?ver5"></script>
+<script src="/resources/ct_js/sweetalert.min.js?ver3"></script>
+<link rel="stylesheet" href="/resources/ct_css/prettydropdowns.css?ver3" type="text/css" />
+<script src="/resources/ct_js/jquery.prettydropdowns.js?ver3"></script>
+<link href="/resources/dist/css/material_blue.css?ver3" rel="stylesheet" type="text/css">
+<script src="/resources/dist/js/flatpickr.js?ver3"></script>
+<link  href="/resources/dist/css/picker.css?ver3" rel="stylesheet">
+<script src="/resources/dist/js/picker.js?ver3"></script>
 
 </head>
 <body>

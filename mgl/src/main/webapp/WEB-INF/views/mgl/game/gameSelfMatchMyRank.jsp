@@ -16,7 +16,6 @@
 				<ul class="tab_btn_b">
 					<li onClick="location.href='/Game/selfMatchMyRank.techni'" class="active_tab"><span>나의 순위</span></li>
 					<li onClick="location.href='/Game/selfMatchTypeRank.techni'"><span>종목별 순위</span></li>
-					<li onClick="location.href='/Cfight/CfightClubRank.techni'"><span>클럽별 순위</span></li>
 				</ul>
 			</div>
 			<c:forEach items="${list2}" var="list2">
@@ -50,11 +49,14 @@
 					<c:forEach items="${list }" var="list">
 					<c:if test="${list.cs_k_nm eq list2.cs_k_nm }">
 							<tr class="${list.cs_a_id} ${list.cs_b_id}">
-								<td class="no_td" id="aa">${i}
+								<td class="no_td" id="aa"><c:choose>
+										<c:when test="${list.sum_aptn eq null }">-</c:when>
+										<c:otherwise>${i}</c:otherwise>
+									</c:choose>
 									<input type="hidden" value="${i}" name="${list.cs_k_idx}" >
 									<input type="hidden" value="${i}" name="${list.cs_k_idx}" >
 								</td>
-								<td class="club_td"><span class="club_name"></span></td>
+								<td class="club_td"><span class="club_name">${c_nm }</span></td>
 								<td class="n3_rank"><span class="name3">${list.a1_id }</span> <span class="age_rank">(${list.a1_age }-${list.a1_gd })</span></td>
 								<td class="n3_rank"><span class="name3">${list.b1_id }</span> <span
 									class="age_rank">(${list.b1_age }-${list.b1_gd })</span></td>
@@ -86,7 +88,7 @@
 				});
 			</script>
 			<ul id="ft_nv2" class="ft_menu">
-				<li onClick="location.href='/Cfight/CfightSummary.techni'"><span>개요</span></li>
+				<li onClick="location.href='/Game/selfMatchSummary.techni'"><span>개요</span></li>
 				<li onClick="location.href='/Game/selfMatchEntryType.techni'"><span>선수</span></li>
 				<li onClick="location.href='/Game/selfMatchDetail.techni'"><span>대진표</span></li>
 				<li onClick="location.href='/Game/selfMatchMyRank.techni'" class="active_tab"><span>순위</span></li>

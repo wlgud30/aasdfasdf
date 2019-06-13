@@ -25,7 +25,8 @@ import com.techni.mgl.dto.LoginDTO;
 public class MemberService {
 	@Autowired
 	MemberDAO mDAO;
-
+	@Autowired
+	UClubService ucService;
 	@Transactional
 	public void alarmInsert(HttpSession session, @RequestBody Map<String, Object> param) {
 
@@ -67,7 +68,7 @@ public class MemberService {
 					map2.put("al_msg", "[" + bvo.getC_nm() + " - 공지] 새로운 글이 등록되었습니다.");
 					map2.put("al_receive", bvo.getU_id());
 					alarmInsert(map2);
-
+/*
 					param1.clear();
 					param1.add("sendtype", "push");
 					param1.add("appcode", "techni_mglb");
@@ -78,7 +79,7 @@ public class MemberService {
 					param1.add("desc", "[" + bvo.getC_nm() + " - 공지] 새로운 글이 등록되었습니다.");
 					param1.add("dataval",
 							"http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx=" + map2.get("al_idx"));
-					mc.token(param1);
+					mc.token(param1);*/
 				}
 			}
 		} else if (al_division.equals("주요공지")) {
@@ -91,7 +92,7 @@ public class MemberService {
 					map2.put("al_receive", bvo.getM_id());
 					alarmInsert(map2);
 
-					param1.clear();
+/*					param1.clear();
 					param1.add("sendtype", "push");
 					param1.add("appcode", "techni_mglb");
 					param1.add("notitype", "noti");
@@ -102,7 +103,7 @@ public class MemberService {
 					param1.add("dataval",
 							"http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx=" + map2.get("al_idx"));
 					System.out.println(map2.get("al_idx"));
-					mc.token(param1);
+					mc.token(param1);*/
 				}
 			}
 		} else if (al_division.equals("클럽게임") || al_division == "클럽게임") {
@@ -113,7 +114,7 @@ public class MemberService {
 				map2.put("al_msg", "[" + param.get("c_nm") + "-게임] 게임이 등록되었습니다.");
 				map2.put("al_receive", list.get(i));
 				alarmInsert(map2);
-				param1.clear();
+				/*param1.clear();
 				param1.add("sendtype", "push");
 				param1.add("appcode", "techni_mglb");
 				param1.add("notitype", "noti");
@@ -127,13 +128,13 @@ public class MemberService {
 
 				} else {
 					mc.token(param1);
-				}
+				}*/
 
 			}
 		} else if (al_division.equals("채팅")) {
 
 		} else if (al_division.equals("가입대기")) {
-			map2.put("al_msg", "[" + param.get("c_nm") + "-가입신청] 새로운 가입신청이 있습니다.");
+			map2.put("al_msg", "[" + ucService.club_nm(c_idx) + "-가입신청] 새로운 가입신청이 있습니다.");
 			map2.put("al_receive", param.get("u_id").toString());
 			alarmInsert(map2);
 
@@ -144,13 +145,13 @@ public class MemberService {
 			param1.add("oscode", "a");
 			param1.add("token", map2.get("u_push"));
 			param1.add("title", "민턴in");
-			param1.add("desc", "[" + param.get("c_nm") + "-가입신청] 새로운 가입신청이 있습니다.");
+			param1.add("desc", "[" + ucService.club_nm(c_idx) + "-가입신청] 새로운 가입신청이 있습니다.");
 			param1.add("dataval",
 					"http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx=" + map2.get("al_idx"));
 			mc.token(param1);
 
 		} else if (al_division.equals("가입승인")) {
-			map2.put("al_msg", "[" + param.get("c_nm") + "-가입승인] 클럽에 가입승인 되었습니다.");
+			map2.put("al_msg", "[" + ucService.club_nm(c_idx) + "-가입승인] 클럽에 가입승인 되었습니다.");
 			map2.put("al_receive", param.get("u_id").toString());
 			alarmInsert(map2);
 
@@ -165,7 +166,7 @@ public class MemberService {
 			param1.add("dataval","http://mgl.techni.co.kr:8081/Member/PushController.techni?al_idx=" + map2.get("al_idx"));
 			mc.token(param1);
 
-			List<MemberVO> list = pushList(c_idx);
+			/*List<MemberVO> list = pushList(c_idx);
 
 			for (MemberVO bvo : list) {
 				if (!bvo.getM_id().equals(mvo.getM_id())||!bvo.getM_id().equals(param.get("u_id").toString())) {
@@ -185,7 +186,7 @@ public class MemberService {
 					System.out.println(map2.get("al_idx"));
 					mc.token(param1);
 				}
-			}
+			}*/
 		}
 
 	}

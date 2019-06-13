@@ -19,10 +19,15 @@
 		<result column="MGL_CONTEST_POINTS" property="ct_points"/>
 		<result column="MGL_CONTEST_ATTACH" property="ct_attach"/>
 		<result column="MGL_CONTEST_INQUIRY" property="ct_inquiry"/>
+		<result column="MGL_CONTEST_OR_IMG" property="ct_or_img"/>
+		<result column="MGL_CONTEST_st_IMG" property="ct_st_img"/>
 		<result column="MGL_CONTEST_COURT" property="ct_court"/>
 		<result column="MGL_CONTEST_LOCATION" property="ct_location"/>
 		<result column="MGL_CONTEST_MATCH_YN" property="ct_match_yn"/>
 		<result column="MGL_CONTEST_YN" property="ct_yn"/>
+		<result column="MGL_CONTEST_APPEAL" property="ct_appeal"/>
+		<result column="MGL_CONTEST_ACCOUNT" property="ct_account"/>
+		<result column="MGL_CONTEST_ENTRY_FEE" property="ct_entry_fee"/>
 		<result column="MGL_CT_TYPE_IDX" property="ct_k_idx"/>
 		<result column="MGL_CT_TYPE_NM" property="ct_k_nm"/>
 		<result column="MGL_CT_TYPE_KIND" property="ct_k_kind"/>
@@ -41,6 +46,49 @@
 		<result column="MGL_CT_GROUP_IDX" property="ct_g_idx"/>
 		<result column="MGL_CT_USER_A" property="ct_t_user_a"/>
 		<result column="MGL_CT_USER_B" property="ct_t_user_b"/>
+		<result column="MGL_CONTEST_HIT" property="ct_hit"/>
+		<result column="MGL_CT_GROUP_NUM" property="ct_g_num"/>
+		<result column="MGL_CT_GROUP_COUNT" property="ct_g_count"/>
+		<result column="MGL_CT_GIDX" property="ct_gidx"/>
+		<result column="MGL_CT_GIDX_GB" property="ct_gidx_gb"/>
+		<result column="MGL_CT_DATE" property="ct_date"/>
+		<result column="MGL_CT_AGE" property="ct_age"/>
+		<result column="MGL_CT_UEFFORT" property="ct_ueffort"/>
+		<result column="MGL_CT_TOTAL" property="ct_total"/>
+		<result column="MGL_CT_CNT_GAP" property="ct_cnt"/>
+		<result column="MGL_CT_WIN" property="win"/>
+		<result column="MGL_CT_GPTN" property="gptn"/>
+		<result column="MGL_CT_VPTN" property="vptn"/>
+		<result column="MGL_CT_PPTN" property="pptn"/>
+		<result column="MGL_CT_APTN" property="aptn"/>
+		<result column="MGL_CT_END" property="ct_end"/>
+		<result column="MGL_CT_W_DAT" property="ct_w_dat"/>
+		<result column="MGL_CT_STATUS" property="ct_status"/>
+		<result column="MGL_CT_ORDER" property="ct_order"/>
+		<result column="MGL_CT_AT_ID1" property="ct_at_id1"/>
+		<result column="MGL_CT_AT_NM1" property="a1_nm"/>
+		<result column="MGL_CT_AT_AGE1" property="a1_age"/>
+		<result column="MGL_CT_AT_GD1" property="a1_gd"/>
+		<result column="MGL_CT_AT_ID2" property="ct_at_id2"/>
+		<result column="MGL_CT_AT_NM2" property="a2_nm"/>
+		<result column="MGL_CT_AT_AGE2" property="a2_age"/>
+		<result column="MGL_CT_AT_GD2" property="a2_gd"/>
+		<result column="MGL_CT_BT_ID1" property="ct_bt_id1"/>
+		<result column="MGL_CT_BT_NM1" property="b1_nm"/>
+		<result column="MGL_CT_BT_AGE1" property="b1_age"/>
+		<result column="MGL_CT_BT_GD1" property="b1_gd"/>
+		<result column="MGL_CT_BT_ID2" property="ct_bt_id2"/>
+		<result column="MGL_CT_BT_NM2" property="b2_nm"/>
+		<result column="MGL_CT_BT_AGE2" property="b2_age"/>
+		<result column="MGL_CT_BT_GD2" property="b2_gd"/>
+		<result column="MGL_CT_COURT" property="ct_court"/>
+		<result column="MGL_CT_NUM" property="ct_num"/>
+		<result column="MGL_CT_A_TEAM_NM" property="team_a_nm"/>
+		<result column="MGL_CT_B_TEAM_NM" property="team_b_nm"/>
+		<result column="MGL_CT_A_TEAM_IDX" property="team_a_idx"/>
+		<result column="MGL_CT_B_TEAM_IDX" property="team_b_idx"/>
+		<result column="MGL_CT_A_TEAM_SCORE" property="team_a_score"/>
+		<result column="MGL_CT_B_TEAM_SCORE" property="team_b_score"/>
 	</resultMap>
 	
 	<insert id="contestInsert">
@@ -54,6 +102,7 @@
 			#{ct_end},
 			#{ct_startline},
 			#{ct_deadline},
+			#{ct_appeal},
 			#{ct_point},
 			#{ct_time},
 			#{ct_homepage},
@@ -64,16 +113,25 @@
 			#{ct_sponsor},
 			#{ct_points},
 			#{ct_attach},
+			#{ct_or_img},
+			#{ct_st_img},
 			#{ct_inquiry},
 			#{ct_court},
 			#{ct_location},
 			"N",
 			"N",
-			"Y"
+			"N",
+			#{ct_host_user},
+			#{ct_account},
+			#{ct_entry_fee},
+			0
 		)
 	</insert>
 	<update id="ct_seq">
 		update mgl_seq set mgl_contest_seq = mgl_contest_seq+1
+	</update>
+	<update id="ct_hit">
+		update mgl_contest set mgl_contest_hit = mgl_contest_hit+1 where mgl_contest_idx = #{ct_idx}
 	</update>
 	<update id="ct_user_seq">
 		update mgl_contest.${ct_idx}_seq set MGL_CT_USER_SEQ = MGL_CT_USER_SEQ+1
@@ -102,6 +160,12 @@
 	<select id="createSeqTable" parameterType="map">
 		${sql}
 	</select>
+	<select id="createViewTable" parameterType="map">
+		${sql}
+	</select>
+	<select id="createStaffTable" parameterType="map">
+		${sql}
+	</select>
 	<insert id="insertSeq">
 		INSERT INTO mgl_contest.${ct_idx}_seq VALUES(1,1)
 	</insert>
@@ -124,18 +188,38 @@
 		FROM mgl_contest.mgl_contest
 		WHERE MGL_CONTEST_IDX = #{ct_idx}
 	</select>
-
+	<!-- view 테이블 셀렉트 -->
+	<select id="viewSelect" resultMap="ContestVOMap">
+		SELECT *
+		FROM ${ct_idx}_view
+		WHERE not MGL_CT_GIDX LIKE "%blank%"
+		AND ${type} = #{value}
+		ORDER BY MGL_CT_W_DAT
+	</select>
+	<!-- 종목이름 리스트 -->
+	<select id="selectCtKindName" resultMap="ContestVOMap">
+		SELECT 
+			MGL_CT_TYPE_NM
+		FROM 
+			mgl_contest.${ct_idx}_kind
+	</select>
 	<select id="selectCtIngList" resultMap="ContestVOMap">
 		SELECT *
 		FROM mgl_contest.mgl_contest
+		<![CDATA[
 		WHERE MGL_CONTEST_MATCH_YN = 'Y'
+		AND MGL_CONTEST_END > NOW()
+		]]>
 		ORDER BY MGL_CONTEST_START
 	</select>
 	
 	<select id="selectCtPreList" resultMap="ContestVOMap">
 		SELECT *
 		FROM mgl_contest.mgl_contest
+		<![CDATA[
 		WHERE MGL_CONTEST_MATCH_YN = 'N'
+		AND MGL_CONTEST_END > NOW()
+		]]>
 		ORDER BY MGL_CONTEST_START
 	</select>
 	
@@ -147,7 +231,101 @@
 		]]>
 		ORDER BY MGL_CONTEST_START
 	</select>
+	<!-- 출전선수 보기 (종목리스트)  -->
+	<select id="selectCtKindList" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CT_TYPE_IDX, A.MGL_CT_TYPE_NM, group_count,MGL_CT_GROUP_IDX
+		FROM 
+			mgl_contest.${ct_idx}_kind A
+		LEFT JOIN
+			(
+				SELECT 
+					count(*) AS GROUP_COUNT, MGL_CT_TYPE_IDX,MGL_CT_GROUP_IDX
+				FROM 
+					mgl_contest.${ct_idx}_team
+	 			group by 
+	 				MGL_CT_TYPE_IDX
+			) B
+		ON 
+			A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX
+		ORDER BY MGL_CT_TYPE_NUM
+	</select>
+	<!-- 출전선수 보기 (종목리스트2)  -->
+	<select id="selectCtKindList2" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CT_TYPE_IDX, A.MGL_CT_CLUB_NM, B.MGL_CT_USER_NM AS ct_u_nm1, B.MGL_CT_USER_GD AS ct_u_gd1, C.MGL_CT_USER_NM AS ct_u_nm2, C.MGL_CT_USER_GD AS ct_u_gd2
+		FROM
+			(
+				SELECT 
+					MGL_CT_TYPE_IDX, MGL_CT_TEAM_IDX, MGL_CT_USER_A, MGL_CT_USER_B, MGL_CT_CLUB_NM
+				FROM 
+					mgl_contest.${ct_idx}_team
+				WHERE 
+					MGL_CT_IDX = #{ct_idx}
+			) A
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user B
+		ON 
+			A.MGL_CT_USER_A = B.MGL_CT_USER_ID
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user C
+		ON 
+			A.MGL_CT_USER_B = C.MGL_CT_USER_ID
+		WHERE 
+			B.MGL_CT_IDX = #{ct_idx}
+		AND 
+			C.MGL_CT_IDX = #{ct_idx}
+		GROUP BY 
+			MGL_CT_TEAM_IDX
+	</select>
 	
+	<!-- 출전선수 보기 (클럽리스트)  -->
+	<select id="selectCtClubList" resultMap="ContestVOMap">
+		SELECT 
+			count(*) AS group_count, MGL_CT_CLUB_NM
+		FROM 
+			mgl_contest.${ct_idx}_user
+		where 
+			MGL_CT_IDX = #{ct_idx}
+		group by 
+			MGL_CT_CLUB_NM
+		ORDER BY
+			group_count desc
+	</select>
+	<!-- 출전선수 보기 (클럽리스트2)  -->
+	<select id="selectCtClubList2" resultMap="ContestVOMap">
+		SELECT 
+			AA.MGL_CT_USER_A, AA.MGL_CT_USER_B,	AB.MGL_CT_USER_NM AS ct_u_nm1, AB.MGL_CT_USER_GD AS ct_u_gd1, AC.MGL_CT_USER_NM AS ct_u_nm2, AC.MGL_CT_USER_GD AS ct_u_gd2, MGL_CT_TYPE_NM, AA.MGL_CT_CLUB_NM
+		FROM
+			(
+				SELECT 
+					A.MGL_CT_USER_A,A.MGL_CT_USER_B,B.MGL_CT_TYPE_NM,A.MGL_CT_CLUB_NM
+				FROM 
+					mgl_contest.${ct_idx}_team A 
+				LEFT JOIN 
+					mgl_contest.${ct_idx}_kind B 
+				ON 
+					A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX
+				WHERE 
+					A.MGL_CT_IDX = #{ct_idx}
+				AND 
+					B.MGL_CT_IDX = #{ct_idx}
+			) AA
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user AB
+		ON 
+			AA.MGL_CT_USER_A = AB.MGL_CT_USER_ID
+		LEFT JOIN 
+			mgl_contest.${ct_idx}_user AC
+		ON 
+			AA.MGL_CT_USER_B = AC.MGL_CT_USER_ID
+		WHERE 
+			AB.MGL_CT_IDX = #{ct_idx}
+		AND 
+			AC.MGL_CT_IDX = #{ct_idx}
+		AND
+			AB.MGL_CT_CLUB_NM = AC.MGL_CT_CLUB_NM
+	</select>
 	<select id="selectCtTypeIdx" resultMap="ContestVOMap">
 		SELECT MGL_CT_TYPE_IDX
 		FROM mgl_contest.${ct_idx}_kind 
@@ -198,16 +376,992 @@
 			#{ct_g_idx},
 			#{ct_club_nm},
 			#{ct_t_user_a},
-			#{ct_t_user_b}
+			#{ct_t_user_b},
+			"N"
 		)
 	</insert>
 	
-	<!-- 해당 이름으로된 참가자가 있는지 호가인 -->
+	<!-- 해당 이름으로된 참가자가 있는지 확인 -->
 	<select id="countSameName" resultType="int">
-		select count(*) from ${ct_idx}_user where MGL_CT_USER_NM = #{ct_u_nm}
+		select count(*) from ${ct_idx}_user where MGL_CT_USER_NM = #{ct_u_nm} <!-- AND MGL_CT_TYPE_IDX = #{ct_k_idx} -->
 	</select>
 	<!-- 광고중인 대회 리스트 -->
 	<select id="contestAdList" resultMap="ContestVOMap">
 		SELECT * FROM MGL_CONTEST WHERE MGL_CONTEST_AD_YN = "Y"
 	</select>	
+	<!-- 출전팀, 출전클럽수 가져오기 -->
+	<select id="selectCtTeamCount" resultMap="ContestVOMap">
+		SELECT 
+			COUNT(MGL_CT_CLUB_NM) AS team_count, COUNT(DISTINCT MGL_CT_CLUB_NM) AS club_count
+		FROM 
+			mgl_contest.${ct_idx}_team
+	</select>
+	
+	<!-- 각 종목리스트에 몇팀이 참가했는지 카운트(입금확인된 팀들만) -->
+	<select id="feeTeamList" resultMap="ContestVOMap">
+		SELECT COUNT(*) as ct_k_count,A.MGL_CT_IDX,A.MGL_CT_TYPE_IDX FROM ${ct_idx}_team A LEFT JOIN ${ct_idx}_KIND B ON A.MGL_CT_tYPE_IDX = B.MGL_CT_TYPE_IDX where MGL_CT_FEE_YN = 'Y'
+		GROUP BY MGL_CT_TYPE_IDX ORDER BY MGL_CT_tYPE_NUM
+	</select>
+	<!-- 대회에 참여한 모든 클럽명들을 리스트로 뽑는다 -->
+	<select id="feeClubList" resultMap="ContestVOMap">
+		SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_team WHERE MGL_CT_FEE_YN ="Y" GROUP BY MGL_CT_CLUB_NM
+	</select>
+	<!--팀리스트 클럽별로 번갈아가며 출력  -->
+	<select id="feeClubTeamList" resultMap="ContestVOMap">
+		select * from 
+				( select *, @rn := if(@mgl_ct_club_nm = `mgl_ct_club_nm`,@rn +1,if(@mgl_ct_club_nm := `mgl_ct_club_nm`,1,1)) as rn
+					from (SELECT A.*,B.MGL_CT_TYPE_NUM FROM ${ct_idx}_team A LEFT JOIN ${ct_idx}_kind B ON A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX) a
+					cross join (select @rn := 0 , @mgl_ct_club_nm :='')as var
+					<!-- where mgl_ct_type_idx =#{ct_k_idx} -->
+					order by mgl_ct_type_num ,`mgl_ct_club_nm`)t
+					order by mgl_ct_type_num, rn,CASE `mgl_ct_club_nm`
+					<foreach collection="list" item="item" separator="" index="index">
+						when #{item} then (#{index})
+					</foreach>
+					end
+	</select>
+	<!-- 팀테이블에 그룹인덱스 업데이트 -->
+	<update id="teamGroupUpdate" >
+		<foreach collection="list" item="item" separator=";">
+			UPDATE ${ct_idx}_TEAM SET MGL_CT_GROUP_IDX = #{item.ct_g_idx} WHERE MGL_CT_TEAM_IDX = #{item.ct_team_idx}
+		</foreach>
+	</update>
+	<!-- 그룹테이블 인서트 -->
+	<insert id="groupInsert">
+		INSERT INTO
+			${ct_idx}_GROUP values
+			<foreach collection="list" item="item" separator=",">
+				(
+				#{item.ct_g_idx},
+				#{ct_idx},
+				#{item.ct_k_idx},
+				#{item.ct_g_no},
+				#{item.ct_g_count}
+				)
+			</foreach>
+	</insert>
+		<!-- 그룹인덱스와 그룹 카운트를 구하는 SQL문 -->
+	<select id="groupIdx" resultMap="ContestVOMap">
+		SELECT 
+			MGL_CT_GROUP_IDX,MGL_CT_GROUP_COUNT,A.MGL_CT_TYPE_IDX 
+		FROM 
+			${ct_idx}_GROUP A LEFT JOIN
+			${ct_idx}_KIND B
+		ON 
+			A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX		
+	</select>
+	<!-- 그룹인덱스를 조건으로 선수를 가져온다 -->
+	<select id="groupAll" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			${ct_idx}_TEAM 
+		WHERE 
+			MGL_CT_GROUP_IDX = #{ct_g_idx}
+	</select>
+	<!-- 종목인덱스를 조건으로 선수를 가져온다 -->
+	<select id="typeAll" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			${ct_idx}_TEAM 
+		WHERE 
+			MGL_CT_TYPE_IDX = #{ct_k_idx}
+	</select>
+	<!-- 대진표 생성됨을 알리는 업데이트 -->
+	<update id="matchListYN">
+		update mgl_CONTEST set mgl_CONTEST_MATCH_YN = "Y" WHERE MGL_CONTEST_IDX = #{ct_idx}
+	</update>
+	
+	<!-- 매치 테이블 인서트(대진표) -->
+	<insert id="gameInsert">
+		Insert into
+			${ct_idx}_WAIT VALUES
+			<foreach collection="list" item="item" separator=",">
+			(
+			#{item.ct_gidx},
+			#{ct_idx},
+			#{item.ct_w_date},
+			#{ct_status},
+			#{item.ct_order},
+			#{item.ct_no},
+			#{item.ct_u_court},
+			#{item.team_a_user_a},
+			#{item.team_a_user_b},
+			#{item.team_b_user_a},
+			#{item.team_b_user_b},
+			#{item.team_a_idx},
+			#{item.team_b_idx}
+			)
+			</foreach>
+	</insert>
+	
+	<!-- 매치 테이블 인서트(대진표) -->
+	<insert id="viewInsert">
+		Insert into
+			${ct_idx}_view VALUES
+			<foreach collection="list" item="item" separator=",">
+			(
+			#{item.ct_gidx},
+			#{ct_idx},
+			#{item.ct_w_date},
+			#{ct_status},
+			#{item.ct_order},
+			#{item.ct_no},
+			#{item.ct_u_court},
+			(SELECT MGL_CT_TYPE_NM FROM ${ct_idx}_kind WHERE MGL_CT_TYPE_IDX = substr(#{item.ct_gidx},1,13)),
+			#{item.team_a_user_a},
+			(SELECT MGL_CT_USER_NM FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_a}),
+			(SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4) FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_a}),
+			(SELECT MGL_CT_USER_GD FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_a}),
+			#{item.team_a_user_b},
+			(SELECT MGL_CT_USER_NM FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_b}),
+			(SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4) FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_b}),
+			(SELECT MGL_CT_USER_GD FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_a_user_b}),
+			#{item.team_b_user_a},
+			(SELECT MGL_CT_USER_NM FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_a}),
+			(SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4) FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_a}),
+			(SELECT MGL_CT_USER_GD FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_a}),
+			#{item.team_b_user_b},
+			(SELECT MGL_CT_USER_NM FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_b}),
+			(SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4) FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_b}),
+			(SELECT MGL_CT_USER_GD FROM ${ct_idx}_user WHERE MGL_CT_USER_ID = #{item.team_b_user_b}),
+			#{item.team_a_idx},
+			(SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_team WHERE MGL_CT_TEAM_IDX = #{item.team_a_idx}),
+			NULL,
+			#{item.team_b_idx},
+			(SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_team WHERE MGL_CT_TEAM_IDX = #{item.team_b_idx}),
+			NULL
+			)
+			</foreach>
+	</insert>
+	
+	<!-- 엔드 매치 인서트 -->
+	<insert id="endGameInsert">
+		Insert into
+			${ct_idx}_Match_END VALUES
+			<foreach collection="list" item="item" separator=",">
+			(
+			#{item.ct_e_gidx},
+			#{item.ct_gidx},
+			#{ct_idx},
+			#{item.c_nm},
+			#{item.ct_t_idx},
+			#{item.ct_g_idx},
+			#{item.ct_team_idx},
+			#{item.u_id},
+			NULL,
+			(
+				SELECT 
+					MGL_CT_USER_GD 
+				FROM 
+					${ct_idx}_USER 
+				WHERE 
+					MGL_CT_USER_ID = #{item.u_id}
+			),
+			(
+				SELECT 
+					left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1
+				FROM 
+					${ct_idx}_USER 
+				WHERE 
+					MGL_CT_USER_ID = #{item.u_id}
+			),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL
+			)
+			</foreach>
+	</insert>
+	<!-- 내 대진표 -->
+	<select id="myMatchList" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CONTEST_NM,B.* 
+		FROM
+			(
+				SELECT 
+					MGL_CONTEST_NM,MGL_CONTEST_IDX 
+				FROM 
+					MGL_CONTEST WHERE MGL_CONTEST_IDX = #{ct_idx}		
+			) A
+		RIGHT JOIN
+		(
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					${ct_idx}_WAIT A
+				JOIN 
+					( 
+						select 
+							mgl_CT_type_idx as f_idx,mgl_CT_type_idx,mgl_CT_type_nm 
+						from 
+							${ct_idx}_KIND
+					) F 
+				ON 
+					substr(a.mgl_CT_gidx,1,13) = f.f_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_ct_CLUB_NM as team_a_nm,MGL_CT_TEAM_IDX as team_a_idx 
+						FROM 
+							${ct_idx}_TEAM q
+					) B 
+				ON 
+					A.MGL_CT_A_TEAM_IDX = B.team_a_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_ct_CLUB_NM as team_b_nm,MGL_CT_TEAM_IDX as team_b_idx 
+						FROM 
+							${ct_idx}_TEAM q 
+					) C 
+				ON 
+					A.MGL_CT_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_a_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) Z
+				ON 
+					A.MGL_CT_GIDX = Z.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_A_TEAM_IDX = Z.MGL_CT_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_b_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) S
+				ON 
+					A.MGL_CT_GIDX = S.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_B_TEAM_IDX = S.MGL_CT_TEAM_IDX
+				WHERE 
+					MGL_CT_AT_ID1 = #{u_id}
+				OR 
+					MGL_CT_AT_ID2 = #{u_id} 
+				OR 
+					MGL_CT_BT_ID1 = #{u_id}
+				OR 
+					MGL_CT_BT_ID2 = #{u_id}
+				GROUP BY 
+					A.MGL_CT_GIDX 
+			) JA
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID as a1,MGL_CT_USER_NM as a1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a1_age,MGL_CT_USER_GD as a1_gd 
+					FROM 
+						${ct_idx}_USER
+				) JB
+			ON 
+				JA.MGL_CT_AT_ID1 = JB.a1
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID as a2,MGL_CT_USER_NM as a2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a2_age,MGL_CT_USER_GD as a2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JC
+			ON 
+				JA.MGL_CT_AT_ID2 = JC.a2
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID as b1,MGL_CT_USER_NM as b1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b1_age,MGL_CT_USER_GD as b1_gd 
+					FROM 
+						${ct_idx}_USER
+				) JD
+			ON 
+				JA.MGL_CT_BT_ID1 = JD.b1
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID as b2,MGL_CT_USER_NM as b2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b2_age,MGL_CT_USER_GD as b2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JE
+			ON 
+				JA.MGL_CT_BT_ID2 = JE.b2
+			GROUP BY 
+				MGL_CT_GIDX
+			ORDER BY 
+				MGL_CT_W_DAT
+		) B
+		ON 
+			A.MGL_CONTEST_IDX = B.MGL_CT_IDX
+	</select>
+	<!-- 시간별로 대진표 -->
+	<select id="timeMatchList" resultMap="ContestVOMap">
+		SELECT 
+			MGL_CONTEST_NM,MGL_CT_W_DAT FROM ${ct_idx}_WAIT A
+		LEFT JOIN 
+			MGL_CONTEST B
+		ON 
+			A.MGL_CT_IDX = B.MGL_CONTEST_IDX
+		GROUP BY 
+			MGL_CT_W_DAT
+		ORDER BY 
+			MGL_CT_W_DAT
+	</select>
+	<!-- 코트별로 대진표 -->
+	<select id="courtMatchList" resultMap="ContestVOMap">
+		SELECT 
+			A.MGL_CT_COURT,MGL_CONTEST_NM 
+		FROM 
+			${ct_idx}_WAIT A
+		LEFT 
+			JOIN MGL_CONTEST B
+		ON 
+			A.MGL_CT_IDX = B.MGL_CONTEST_IDX
+		GROUP BY 
+			MGL_CT_COURT
+		ORDER BY 
+			MGL_CT_COURT
+	</select>
+	<select id="matchList" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM
+			(
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					${ct_idx}_WAIT A
+				JOIN 
+					( 
+						select 
+							mgl_CT_type_idx as f_idx,mgl_CT_type_idx,mgl_CT_type_nm 
+						from 
+							${ct_idx}_kind 
+					) F 
+				ON 
+					substr(a.mgl_CT_gidx,1,13) = f.f_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_ct_CLUB_NM as team_a_nm,MGL_CT_TEAM_IDX as team_a_idx 
+						FROM 
+							${ct_idx}_TEAM q 
+					) B 
+				ON 
+					A.MGL_CT_A_TEAM_IDX = B.team_a_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_ct_CLUB_NM as team_b_nm,MGL_CT_TEAM_IDX as team_b_idx 
+						FROM 
+							${ct_idx}_TEAM q 
+					) C 
+				ON 
+					A.MGL_CT_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_a_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) Z
+				ON 
+					A.MGL_CT_GIDX = Z.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_A_TEAM_IDX = Z.MGL_CT_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_b_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) S
+				ON 
+					A.MGL_CT_GIDX = S.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_B_TEAM_IDX = S.MGL_CT_TEAM_IDX
+				GROUP BY 
+					A.MGL_CT_GIDX 
+			) JA
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a1_age,MGL_CT_USER_GD as a1_gd 
+					FROM ${ct_idx}_USER
+				) JB
+			ON 
+				JA.MGL_CT_AT_ID1 = JB.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a2_age,MGL_CT_USER_GD as a2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JC
+			ON 
+				JA.MGL_CT_AT_ID2 = JC.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b1_age,MGL_CT_USER_GD as b1_gd 
+					FROM 
+						${ct_idx}_USER
+				) JD
+			ON 
+				JA.MGL_CT_BT_ID1 = JD.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b2_age,MGL_CT_USER_GD as b2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JE
+			ON 
+				JA.MGL_CT_BT_ID2 = JE.MGL_CT_USER_ID
+			GROUP BY 
+				MGL_CT_GIDX
+			ORDER BY 
+				MGL_CT_W_DAT,MGL_CT_NUM
+	</select>
+	
+	<select id="typeMatchList" resultMap="ContestVOMap">
+		SELECT 
+			MGL_CT_NM,MGL_CT_TYPE_NM,type_count,MGL_CT_GIDX
+		FROM 
+			${ct_idx}_WAIT a 
+		left join 
+			${ct_idx}_KIND b
+		ON 
+			substr(a.MGL_CT_gidx,1,13) = b.MGL_CT_type_idx 
+		left join 
+			(
+				select 
+					count(*) as type_count,MGL_CT_type_idx 
+				from 
+					${ct_idx}_team
+				group by 
+					${ct_idx}_type_idx
+			) c
+		on 
+			b.MGL_CT_type_idx = c.MGL_CT_Type_idx
+		left join 
+			MGL_CONTEST d
+		on 
+			a.MGL_CT_IDX=d.MGL_CONTEST_idx
+		GROUP BY 
+			MGL_CT_TYPE_NM
+		ORDER BY 
+			MGL_CT_TYPE_NM
+	</select>
+	<!-- 종목 대진표 디테일 -->
+	<select id="typeMatchDetail" resultMap="ContestVOMap">
+		select 
+			* 
+		from
+			(
+				SELECT 
+					A.*,B.*,D.*,E.*,Z.team_a_score,s.team_b_score
+				FROM 
+					(
+						SELECT 
+							* 
+						FROM ${ct_idx}_WAIT
+					) A
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_CLUB_NM as team_a_nm,MGL_CT_TEAM_IDX as a_idx 
+						FROM 
+							${ct_idx}_TEAM T 
+					) B
+				ON 
+					A.MGL_CT_A_TEAM_IDX = B.a_idx
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_CLUB_NM as team_b_nm,MGL_CT_TEAM_IDX as b_idx 
+						FROM 
+							${ct_idx}_TEAM T 
+					) D
+				ON 
+					A.MGL_CT_B_TEAM_IDX = D.b_idx
+				LEFT JOIN 
+					(
+						SELECT 
+							COUNT(*) AS group_count,MGL_CT_IDX as e_idx 
+						FROM 
+							${ct_idx}_GROUP 
+						WHERE 
+							SUBSTR(MGL_CT_GROUP_IDX,1,13) = SUBSTR(#{ct_g_idx},1,13)
+					) E
+				ON 
+					A.MGL_CT_IDX = E.e_idx
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_a_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_END
+					) Z
+				ON 
+					A.MGL_CT_GIDX = Z.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_A_TEAM_IDX = Z.MGL_CT_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_b_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) S
+				ON 
+					A.MGL_CT_GIDX = S.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_B_TEAM_IDX = S.MGL_CT_TEAM_IDX
+				WHERE 
+					A.MGL_CT_GIDX like CONCAT('%',#{ct_g_idx},'%')
+				GROUP BY 
+					A.MGL_CT_GIDX
+			) ja
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a1_age,MGL_CT_USER_GD as a1_gd 
+					FROM 
+						${ct_idx}_USER
+				) JB
+			ON 
+				JA.MGL_CT_AT_ID1 = JB.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a2_age,MGL_CT_USER_GD as a2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JC
+			ON 
+				JA.MGL_CT_AT_ID2 = JC.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b1_age,MGL_CT_USER_GD as b1_gd 
+					FROM 
+						${ct_idx}_USER
+				) JD
+			ON 
+				JA.MGL_CT_BT_ID1 = JD.MGL_CT_USER_ID
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b2_age,MGL_CT_USER_GD as b2_gd 
+					FROM 
+						${ct_idx}_USER
+				) JE
+			ON 
+				JA.MGL_CT_BT_ID2 = JE.MGL_CT_USER_ID
+			group by 
+				MGL_CT_gidx
+			order by 
+				MGL_CT_gidx
+	</select>
+	
+	<!-- 종목 디테일에 일정리스트 -->
+	<select id="typeDetailList" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			( 
+				SELECT 
+					A.*,B.*,F.*,C.*,Z.team_a_score,s.team_b_score 
+				FROM 
+					${ct_idx}_WAIT A
+				JOIN 
+					( 
+						select 
+							MGL_CT_type_idx as f_idx,MGL_CT_type_idx,MGL_CT_type_nm 
+						from 
+							${ct_idx}_KIND 
+					) F 
+				ON 
+					substr(a.MGL_CT_gidx,1,13) = f.f_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_CT_CLUB_NM as team_a_nm,MGL_CT_TEAM_IDX as team_a_idx 
+						FROM 
+							${ct_idx}_TEAM q 
+					) B 
+				ON 
+					A.MGL_CT_A_TEAM_IDX = B.team_a_idx 
+				JOIN 
+					( 
+						SELECT 
+							MGL_CT_CLUB_NM as team_b_nm,MGL_CT_TEAM_IDX as team_b_idx 
+						FROM 
+							${ct_idx}_TEAM q 
+					) C 
+				ON 
+					A.MGL_CT_B_TEAM_IDX = C.team_b_idx 
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_a_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) Z
+				ON 
+					A.MGL_CT_GIDX = Z.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_A_TEAM_IDX = Z.MGL_CT_TEAM_IDX
+				LEFT JOIN 
+					(
+						SELECT 
+							MGL_CT_TOTAL as team_b_score,MGL_CT_TEAM_IDX,MGL_CT_GIDX 
+						FROM 
+							${ct_idx}_MATCH_END
+					) S
+				ON 
+					A.MGL_CT_GIDX = S.MGL_CT_GIDX
+				AND 
+					A.MGL_CT_B_TEAM_IDX = S.MGL_CT_TEAM_IDX
+				GROUP BY 
+					A.MGL_CT_GIDX 
+			) JA 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CT_USER_ID,MGL_CT_USER_NM as a1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a1_age,MGL_CT_USER_GD as a1_gd 
+						FROM 
+							${ct_idx}_USER 
+					) JB 
+				ON 
+					JA.MGL_CT_AT_ID1 = JB.MGL_CT_USER_ID 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CT_USER_ID,MGL_CT_USER_NM as a2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as a2_age,MGL_CT_USER_GD as a2_gd 
+						FROM 
+							${ct_idx}_USER 
+					) JC 
+				ON 
+					JA.MGL_CT_AT_ID2 = JC.MGL_CT_USER_ID 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CT_USER_ID,MGL_CT_USER_NM as b1_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b1_age,MGL_CT_USER_GD as b1_gd 
+						FROM 
+							${ct_idx}_USER 
+					) JD 
+				ON 
+					JA.MGL_CT_BT_ID1 = JD.MGL_CT_USER_ID 
+				LEFT JOIN 
+					( 
+						SELECT 
+							MGL_CT_USER_ID,MGL_CT_USER_NM as b2_id,left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 as b2_age,MGL_CT_USER_GD as b2_gd 
+						FROM 
+							${ct_idx}_USER 
+					) JE 
+				ON 
+					JA.MGL_CT_BT_ID2 = JE.MGL_CT_USER_ID
+				WHERE 
+					MGL_CT_gidx LIKE CONCAT('%',#{ct_g_idx},'%')
+				GROUP BY 
+					MGL_CT_GIDX 
+				ORDER BY 
+					MGL_CT_W_DAT , MGL_CT_GIDX
+	</select>
+	<!-- 대진표 디테일 랭킹 -->
+	<select id="typeDetailRank" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM
+		(
+			SELECT 
+				MGL_CT_CLUB_NM,MGL_CT_TEAM_IDX,MGL_CT_USER_A,MGL_CT_USER_B 
+			FROM 
+				${ct_idx}_TEAM 
+			WHERE 
+				MGL_CT_GROUP_IDX =#{ct_g_idx}
+		) JA
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_TEAM_IDX,SUM(MGL_CT_TOTAL)as total_sum,SUM(MGL_CT_CNT_GAP)as gap_sum,COUNT(CASE WHEN MGL_CT_WIN = "승" THEN 1 END) as win_count,COUNT(CASE WHEN MGL_CT_WIN = "패" THEN 1 END)as lose_count 
+					FROM 
+						${ct_idx}_MATCH_END 
+					WHERE 
+						MGL_CT_GROUP_IDX = #{ct_g_idx}
+					GROUP BY 
+						MGL_CT_TEAM_IDX
+				)JB
+			ON 
+				JA.MGL_CT_TEAM_IDX = JB.MGL_CT_TEAM_IDX
+			LEFT JOIN 	
+				( 
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a1_id 
+					FROM 
+						${ct_idx}_USER
+				) JC 
+			ON 
+				JA.MGL_CT_USER_A = JC.MGL_CT_USER_ID
+			LEFT JOIN 
+				( 
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b1_id 
+					FROM 
+						${ct_idx}_USER 
+				) JD
+			ON 
+				JA.MGL_CT_USER_B = JD.MGL_CT_USER_ID
+			group by 
+				ja.mgl_CT_Team_idx
+			ORDER BY 
+				WIN_COUNT DESC ,TOTAL_SUM DESC
+	</select>
+	
+	<!-- 코트리스트  OR 시간리스트 -->
+	<select id="courtOrTimeList" resultMap="ContestVOMap">
+		SELECT ${kind} FROM ${ct_idx}_WAIT  GROUP BY  ${kind} ORDER BY  ${kind}
+	</select>	
+	<!-- 대회 상태 리스트 -->
+	<select id="statusList" resultMap="ContestVOMap">
+		SELECT MGL_CT_W_DAT,MGL_CT_STATUS,MGL_CT_COURT FROM ${ct_idx}_WAIT WHERE NOT MGL_CT_GIDX LIKE'%blank%' ORDER BY MGL_CT_W_DAT,MGL_CT_COURT
+	</select>
+	<!-- 종료게임과 모든게임 카운트  -->
+	<select id="gameCount" resultMap="ContestVOMap">
+		SELECT COUNT(CASE WHEN MGL_CT_STATUS="종료" THEN 1 END) as end_count,COUNT(*) as game_count FROM ${ct_idx}_WAIT WHERE not MGL_CT_GIDX LIKE "%blank%"
+	</select>
+	<!-- 종목 디테일에서 순위 -->
+	<select id="detailRank" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM
+		(
+			SELECT 
+				MGL_CT_CLUB_NM,MGL_CT_TEAM_IDX,MGL_CT_USER_A,MGL_CT_USER_B 
+			FROM 
+				${ct_idx}_TEAM 
+			WHERE 
+				MGL_CT_GROUP_IDX = #{ct_g_idx}
+		) JA
+			LEFT JOIN
+				(
+					SELECT 
+						MGL_CT_TEAM_IDX,SUM(MGL_CT_TOTAL)as total_sum,SUM(MGL_CT_CNT_GAP)as gap_sum,COUNT(CASE WHEN MGL_CT_WIN = "승" THEN 1 END) as win_count,COUNT(CASE WHEN MGL_CT_WIN = "패" THEN 1 END)as lose_count 
+					FROM 
+						${ct_idx}_MATCH_END 
+					WHERE 
+						MGL_CT_GROUP_IDX = #{ct_g_idx}
+					GROUP BY 
+						MGL_CT_TEAM_IDX
+				)JB
+			ON 
+				JA.MGL_CT_TEAM_IDX = JB.MGL_CT_TEAM_IDX
+			LEFT JOIN 	
+				( 
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as a1_id 
+					FROM 
+						${ct_idx}_USER
+				) JC 
+			ON 
+				JA.MGL_CT_USER_A = JC.MGL_CT_USER_ID
+			LEFT JOIN 
+				( 
+					SELECT 
+						MGL_CT_USER_ID,MGL_CT_USER_NM as b1_id 
+					FROM 
+						${ct_idx}_USER
+				) JD
+			ON 
+				JA.MGL_CT_USER_B = JD.MGL_CT_USER_ID
+			group by 
+				ja.mgl_CT_Team_idx
+			ORDER BY 
+				WIN_COUNT DESC ,TOTAL_SUM DESC
+	</select>
+	<!-- 종목 디테일화면에서 일정 -->
+	<select id="detailCalendar" resultMap="ContestVOMap">
+		SELECT *
+		FROM ${ct_idx}_view
+		WHERE not MGL_CT_GIDX LIKE "%blank%"
+		AND substr(MGL_CT_GIDX,1,${i}) = #{ct_g_idx2}
+		ORDER BY MGL_CT_W_DAT
+	</select>
+	<!-- 그룹리스트 -->
+	<select id="groupList" resultMap="ContestVOMap">
+		SELECT MGL_CT_GROUP_IDX,MGL_CT_TYPE_IDX FROM ${ct_idx}_GROUP WHERE MGL_CT_TYPE_IDX = #{ct_k_idx}
+		order by 
+			CASE WHEN MGL_CT_GROUP_IDX LIKE '%win%' THEN MGL_CT_gROUP_IDX END ASC,
+			CASE WHEN NOT MGL_CT_GROUP_IDX LIKE '%win%' THEN cast(substr(mgl_ct_Group_idx,15) as unsigned) END ASC
+	</select>
+	<!-- 해당 코트에서 진행되는 경기(뷰테이블) -->
+	<select id="courtMatchList2" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_VIEW WHERE MGL_CT_COURT = #{ct_court} AND NOT MGL_CT_GIDX LIKE '%blank%' AND MGL_CT_STATUS != "종료" ORDER BY MGL_CT_W_DAT
+	</select>
+	<!-- 본선경기 적용을위한 셀렉트문 -->
+	<select id="getCount" resultMap="ContestVOMap">
+select * from
+(
+SELECT MAX(SUBSTR(MGL_CT_GIDX,18,1)) AS game_count,MGL_CT_GIDX,MGL_CT_GROUP_COUNT FROM ${ct_idx}_WAIT a left join (SELECT MGL_CT_GROUP_COUNT,MGL_CT_GROUP_IDX FROM ${ct_idx}_GROUP) B ON SUBSTR(A.MGL_CT_GIDX,1,18) = B.MGL_CT_GROUP_IDX  WHERE MGL_CT_GIDX LIKE '%win%'  group by SUBSTR(MGL_CT_GIDX,1,13)
+)ja
+left join
+(
+SELECT COUNT(*) as ct_k_count,A.MGL_CT_TYPE_IDX FROM ${ct_idx}_team A LEFT JOIN ${ct_idx}_KIND B ON A.MGL_CT_tYPE_IDX = B.MGL_CT_TYPE_IDX where MGL_CT_FEE_YN = 'Y'
+		GROUP BY MGL_CT_TYPE_IDX ORDER BY MGL_CT_tYPE_NUM
+)jb
+on SUBSTR(MGL_CT_GIDX,1,13) = mgl_ct_type_idx
+		
+	</select>
+	<!-- 랜덤으로 그룹리스트 출력 -->
+	<select id="randomGroupList" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_GROUP WHERE MGL_CT_TYPE_IDX = #{ct_k_idx} AND NOT MGL_CT_GROUP_IDX LIKE '%win%' ORDER BY MGL_CT_GROUP_COUNT ,rand() ;
+	</select>
+	<!-- 해당 종목에 2차 본선경기 -->
+	<select id="winGame" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_WAIT WHERE MGL_CT_GIDX LIKE '%win%'  AND SUBSTR(MGL_CT_GIDX,1,13) = #{ct_k_idx}
+	</select>
+	
+	<update id="matchEndUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				${ct_idx}_MATCH_END
+			SET
+				MGL_CT_TEAM_IDX = #{list.ct_t_idx}
+			WHERE 
+				MGL_CT_GIDX_GB = #{list.ct_gidx_gb}
+		</foreach>
+	</update>
+	<update id="waitUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				${ct_idx}_wait
+			SET
+				MGL_CT_A_TEAM_IDX = #{list.team_a_idx},
+				MGL_CT_B_TEAM_IDX = #{list.team_b_idx}
+			WHERE 
+				MGL_CT_GIDX = #{list.ct_gidx}
+		</foreach>
+	</update>
+	<update id="viewUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				${ct_idx}_view
+			SET
+				MGL_CT_A_TEAM_IDX = #{list.team_a_idx},
+				MGL_CT_B_TEAM_IDX = #{list.team_b_idx}
+			WHERE 
+				MGL_CT_GIDX = #{list.ct_gidx}
+		</foreach>
+	</update>
+	
+	
+	<update id="pointUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				${ct_idx}_MATCH_END
+			SET
+				MGL_CT_UEFFORT = 1.0,
+				MGL_CT_TOTAL = #{list.total},
+				MGL_CT_CNT_GAP = #{list.cnt_gap},
+				MGL_CT_WIN = #{list.win},
+				MGL_CT_GPTN = 0.25,
+				MGL_CT_VPTN = #{list.vptn},
+				MGL_CT_PPTN = #{list.pptn},
+				MGL_CT_APTN = #{list.aptn},
+				MGL_CT_END = sysdate()
+			WHERE 
+				MGL_CT_GIDX = #{ct_gidx}
+			AND
+				MGL_CT_USER_ID = #{list.ct_u_id}
+		</foreach>
+	</update>
+	<update id="statusUpdate">
+		UPDATE 
+			${ct_idx}_WAIT
+		SET
+			MGL_CT_STATUS = "종료"
+		WHERE 
+			MGL_CT_GIDX = #{ct_gidx}
+	</update>
+	<update id="viewScoreUpdate">
+		UPDATE 
+			${ct_idx}_VIEW
+		SET
+			MGL_CT_A_TEAM_SCORE = #{a_score},
+			MGL_CT_B_TEAM_SCORE = #{b_score},
+			MGL_CT_STATUS = "종료"
+		WHERE 
+			MGL_CT_GIDX = #{ct_gidx}
+	</update>
+	<update id="tournamentWaitUpdate">
+		UPDATE 
+			${ct_idx}_WAIT
+		SET
+			${ab_team} = #{ct_t_idx},
+			${ab_id1} = (SELECT MGL_CT_USER_A FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+			${ab_id2} = (SELECT MGL_CT_USER_B FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})
+		WHERE 
+			MGL_CT_GIDX = #{ct_gidx}
+	</update>
+	<update id="tournamentViewUpdate">
+		UPDATE 
+			${ct_idx}_View
+		SET
+			${ab_team} = #{ct_t_idx},
+			${ab_team_nm} = (SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+			${ab_id1} = (SELECT MGL_CT_USER_A FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+			${ab_nm1} = (SELECT MGL_CT_USER_NM FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_A FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})),
+			${ab_age1} = (SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_A FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})),
+			${ab_gd1} = (SELECT MGL_CT_USER_GD FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_A FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})),
+			${ab_id2} = (SELECT MGL_CT_USER_B FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+			${ab_nm2} = (SELECT MGL_CT_USER_NM FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_B FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})),
+			${ab_age2} = (SELECT left(now(),4)-left(MGL_CT_USER_BIRTH,4)+1 FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_B FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx})),
+			${ab_gd2} = (SELECT MGL_CT_USER_GD FROM ${ct_idx}_USER WHERE MGL_CT_USER_ID = ( SELECT MGL_CT_USER_B FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}))
+		WHERE 
+			MGL_CT_GIDX = #{ct_gidx}
+	</update>
+	<update id="tournamentMatchEndUpdate">
+		<foreach collection="list" item="list" separator=";">
+			UPDATE 
+				${ct_idx}_MATCH_END
+			SET
+				MGL_CT_CLUB_NM = (SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+				MGL_CT_USER_ID = (SELECT ${list.ab_user} FROM ${ct_idx}_TEAM WHERE MGL_CT_TEAM_IDX = #{ct_t_idx}),
+				MGL_CT_TEAM_IDX = #{ct_t_idx}
+			WHERE 
+				MGL_CT_GIDX_GB = #{list.ct_gidx_gb}
+		</foreach>
+	</update>
+	
+	<select id="endYN" resultType="int">
+		SELECT COUNT(CASE WHEN MGL_CT_STATUS != "종료" THEN 1 END) as count FROM ${ct_idx}_WAIT WHERE SUBSTR(MGL_CT_GIDX,1,${i}) = #{ct_g_idx}
+	</select>
+	
+	<select id="selectAteam" resultMap="ContestVOMap">
+		SELECT *,COUNT(*) as count FROM ${ct_idx}_WAIT WHERE MGL_CT_A_TEAM_IDX = #{ct_g_idx}
+	</select>
+	<select id="selectBteam" resultMap="ContestVOMap">
+		SELECT *,COUNT(*) as count FROM ${ct_idx}_WAIT WHERE MGL_CT_B_TEAM_IDX = #{ct_g_idx}
+	</select>
+	<select id="selectGroup_1st" resultMap="ContestVOMap">
+		SELECT *,SUM(MGL_CT_APTN) as sum_aptn FROM ${ct_idx}_MATCH_END WHERE SUBSTR(MGL_CT_GIDX,1,${i})= #{ct_g_idx} GROUP BY MGL_CT_TEAM_IDX ORDER BY sum_aptn desc  limit 1;
+	</select>
+	
+	<!-- 본선 디테일 -->
+	<select id="tournamentSelect" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_view WHERE MGL_CT_GIDX LIKE #{win} AND SUBSTR(MGL_CT_GIDX,1,13) = #{ct_k_idx}
+	</select>
 </mapper>

@@ -151,21 +151,22 @@ $(document).ready(function(){
 			$("#sub_title_2").removeAttr("class");
 			$("#sub_title_3").removeAttr("class");
 			$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick='history.back();'></div>");
-			if("${res eq 0}" == "true"){
+			/* if("${res eq 0}" == "true"){
 				$("#bt_top").append("<span onclick=\"ynChk('Y')\"class='icon-approval icon-f btn_i i-text'>참석</span>")
 			}else{
 				$("#bt_top").append("<span onclick=\"ynChk('N')\"class='icon-approval icon-f btn_i i-text'>불참</span>")
-			}
+			} */
 			if( mng == '매니저'){
-				$("#bt_top").append("<span class='icon-group-set icon-f btn_i i-text' onclick='matchSetting()'>대회설정</span>");
+				$("#bt_top").append("<span class='btn_st' onclick=\"location.href='/Game/selfMatchRegister.techni'\">대회설정</span>");
 			}
 		}
 	}else if(lo.includes("/Game/selfMatchTypeInsertForm.techni")){
+		$("#sub_title").text("종목 설정");
 		$("#sub_title_2").text("");
 		$("#sub_title_2").removeAttr("class");
 		$("#sub_title_3").removeAttr("class");
-		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='history.back()'\"></div>");
-		$("#bt_top").append("<span class='icon-save icon-f btn_i i-text' onclick='formSubmit()'>저장</span>");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='/Game/selfMatchRegister.techni'\"></div>");
+		$("#bt_top").append("<span class='btn_st' onclick='formSubmit()'>팀 출전신청</span>");
 	}else if(lo.includes("/Cfight/CfightGroup.techni")){
 		$("#sub_title").text(cf_nm+" 그룹설정");
 		$("#sub_title_2").text("");
@@ -197,7 +198,7 @@ $(document).ready(function(){
 		$("#sub_title_2").removeAttr("class");
 		$("#sub_title_3").removeAttr("class");
 		$("#bt_top").append("<span class='icon-score icon-f btn_i i-text' onclick=\"location.href='/Game/selfMatchReferee.techni'\">심판</span>");
-	}else if(lo.includes("/Game/selfMatchEntryType.techni")||lo.includes("/Game/selfMatchMyRank.techni")||lo.includes("/Game/selfMatchMyRank.techni")){
+	}else if(lo.includes("/Game/selfMatchEntryType.techni")||lo.includes("/Game/selfMatchMyRank.techni")||lo.includes("/Game/selfMatchMyRank.techni")||lo.includes("/Game/selfMatchTypeRank.techni")){
 		$("#sub_title").text(cs_nm);
 		$("#sub_title_2").text("");
 		$("#sub_title_2").removeAttr("class");
@@ -260,6 +261,38 @@ $(document).ready(function(){
 		$("#sub_title_2").removeAttr("class");
 		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"history.back()\"></div>");
 		$("#bt_top").append("<span class='icon-save icon-f btn_i i-text' onclick=\"alarmDel('all')\">전체삭제</span>");
+	}else if(lo.includes("/Game/selfMatchMatchDetail.techni")){
+		$("#sub_title").text(cs_nm);
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='/Game/selfMatchTypeList.techni'\"></div>");
+	}else if(lo.includes("/Game/selfMatchReferee.techni")){
+		$("#sub_title").text(cs_nm);
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"history.back()\"></div>");
+	}else if(lo.includes("/Game/selfMatchRegister.techni")){
+		$("#sub_title").text("선수 등록");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='/Game/selfMatchDetail.techni'\"></div>");
+		$("#bt_top").append("<span class='btn_st' onclick='matchSetting()'>종목설정</span>");
+	}else if(lo.includes("/Game/selfMatchTeamInsertForm.techni")){
+		$("#sub_title").text("팀 등록");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='/Game/selfMatchTypeInsertForm.techni'\"></div>");
+		$("#bt_top").append("<span class='btn_st' onclick=\"location.href='/Game/selfMatchGameInsert.techni'\">대진표 생성</span>");
+	}else if(lo.includes("/Game/selfMatchTeamList.techni")){
+		$("#sub_title").text("등록 팀 확인");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top").prepend("<div id='btn_back' class='btn_back' onclick=\"location.href='/Game/selfMatchTeamInsertForm.techni'\"></div>");
 	}
 	
 	

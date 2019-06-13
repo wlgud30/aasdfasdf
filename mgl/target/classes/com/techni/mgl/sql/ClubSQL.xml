@@ -122,4 +122,10 @@
 			MGL_CLUB_IDX = #{c_idx}
 	</update>
 	
+	<!-- 클럽 이름 중복체크 -->
+	<select id="clubCheck" resultType="int">
+		SELECT COUNT(*) FROM MGL_CLUB WHERE MGL_CLUB_NM = #{c_nm}
+	</select>
+	
+	
 </mapper>

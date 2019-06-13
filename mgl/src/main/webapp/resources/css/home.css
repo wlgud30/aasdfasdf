@@ -10,14 +10,15 @@ a {text-decoration: none; color: inherit;} *:focus {outline: none;} a img{border
 background-image: url(../img/home_bg.png),url(../img/home_bg_b.png);background-repeat: no-repeat, repeat-y;background-position: center top, center bottom;width: 100%;background-size:cover} 
 .home_visual{position:relative;max-height: 273px;max-width:330px;margin:0 auto;top:32%;}
 .main_btn{color:#fff;font-weight:600;position:absolute;font-size: 16px;width:80px;text-align:center;} 
-.club_btn{left: 25%;top: -8px;} .contest_btn{right: 7%;bottom: 35px;} .non_mb_btn{left: 2%;bottom: 63px;} 
-.btn_icon{width:59px;height:59px;background:rgba(255, 255, 255, 0.85) url(../img/club_icon.svg) no-repeat center;border-radius: 50%;background-size: 47%;background-position: center 27%;}
+.club_btn{left:6%;top:5px;} .contest_btn{right:5%;top:45%;} .non_mb_btn{left: 2%;bottom: 63px;} 
+.btn_icon{width:62px;height:62px;background:rgba(255, 255, 255, 0.85) url(../img/club_icon.svg) no-repeat center;border-radius: 50%;background-size: 47%;background-position: center 27%;}
 .contest_icon{background-image:url(../img/contest_icon.svg)} .non_mb_icon{background-image:url(../img/nonmember.svg)}
-.line_ain{width:68px; height:68px;border:3px solid;opacity:0.8; border-radius:50%; display:inline-block}
+.line_ain{width:72px; height:72px;border:3px solid;opacity:0.8; border-radius:50%; display:inline-block}
 .btn_area{height:80px;display: flex;justify-content: center;align-items: center; position:relative}
 .line_ain_area{position:absolute;height:80px; left:0; top:0;display:flex;justify-content: center;align-items: center; width:100%}
 .main_btn p{margin-top: -36px;color: #333;z-index: 100;position: relative;}
-.head_tit{color:#fff; font-size:24px;position: fixed;top:14%;width: 100%;max-width: 480px} .logo_bt{color:#fff; font-size:11.5px; position:fixed; bottom:10%; max-width:480px; width:100%} 
+.head_tit{color:#fff; font-size:24px;position: fixed;top:14%;width: 100%;max-width: 480px;line-height: 1.6} .logo_bt{color:#fff; font-size:11.5px; position:fixed; bottom:10%; max-width:480px; width:100%} 
 .head_tit p{font-size:0.7em}
-.tiny_text{font-size: 0.83em !important;letter-spacing:-0.4px;display:block;white-space: nowrap;color: #fff;margin-top: 6px;text-shadow: 1px 1px 0px rgba(172, 104, 204, 0.9);}
+.tiny_text{font-size: 0.83em !important;letter-spacing:-0.4px;display:block;white-space: nowrap;color: #fff;margin-top:7px;text-shadow: 1px 1px 0px rgba(172, 104, 204, 0.9)}
+.logo_bt p ~ p{margin-top:12px} .logo_bt p:nth-of-type(1){font-weight:100}
 @media only screen and (max-width:680px),(max-device-width :768px) and (orientation : landscape){#intro_area{ max-height:100%}}

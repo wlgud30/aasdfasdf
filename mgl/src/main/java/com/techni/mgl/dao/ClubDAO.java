@@ -45,5 +45,9 @@ public class ClubDAO {
 		return sqlSession.update(nameSpace+"clubDel",c_idx);
 	}
 	
+	public int clubCheck(String c_nm) {
+		return sqlSession.selectOne(nameSpace+"clubCheck", c_nm);
+	}
+	
 
 }

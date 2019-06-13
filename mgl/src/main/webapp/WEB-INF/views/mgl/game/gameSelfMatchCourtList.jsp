@@ -33,7 +33,6 @@
 											<li>${fn:substring(list2.cs_w_date,0,5)}</li>
 											<li>${list2.cs_no}경기</li>
 											<li>${list2.cs_k_nm }</li>
-											<li>토너먼트</li>
 										</ul>
 									</div>
 									<div>
@@ -50,7 +49,7 @@
 						<!-- head-data end-->
 									<table class="line_no td-pt">
 										<tr>
-											<td class="club_td"><span class="club_name"></span></td>
+											<td class="club_td"><span class="club_name">${c_nm }</span></td>
 											<td class="name3-2_td"><ul class="name_row">
 													<li><span class="name3 name_max">${list2.a1_id }</span> <span
 														class="age_rank side_right">(${list2.a1_age }-${list2.a1_gd })</span></li>
@@ -65,7 +64,7 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="club_td"><span class="club_name"></span></td>
+											<td class="club_td"><span class="club_name">${c_nm }</span></td>
 											<td class="name3-2_td"><ul class="name_row">
 													<li><span class="name3 name_max">${list2.b1_id }</span> <span
 														class="age_rank side_right">(${list2.b1_age }-${list2.b1_gd })</span></li>
@@ -100,7 +99,7 @@
 				});
 			</script>
 			<ul id="ft_nv2" class="ft_menu">
-				<li onClick="location.href='/Cfight/CfightSummary.techni'"><span>개요</span></li>
+				<li onClick="location.href='/Game/selfMatchSummary.techni'"><span>개요</span></li>
 				<li onClick="location.href='/Game/selfMatchEntryType.techni'"><span>선수</span></li>
 				<li onClick="location.href='/Game/selfMatchDetail.techni'" class="active_tab"><span>대진표</span></li>
 				<li onClick="location.href='/Game/selfMatchMyRank.techni'"><span>순위</span></li>

@@ -75,8 +75,8 @@ var ct_nm = "<% out.print(ct_nm); %>";
 		$("#sub_title_2").text("");
 		$("#sub_title_2").removeAttr("class");
 		$("#sub_title_3").removeAttr("class");
-		$(".tit_top:eq(0)").after("<div class='w10'><div class='search_line fl_r'><input type='text' placeholder='대회명, 지역, 체육관'><i class='icon-search icon-f' onclick=\"location.href='10_contest-search-result.html'\"></i></div></div>")
-		$("#bt_top").append("<span class='btn_st'>선수검색</span>");
+		/* $(".tit_top:eq(0)").after("<div class='w10'><div class='search_line fl_r'><input type='text' placeholder='대회명, 지역, 체육관'><i class='icon-search icon-f' onclick=\"location.href='10_contest-search-result.html'\"></i></div></div>")
+		$("#bt_top").append("<span class='btn_st'>선수검색</span>"); */
 		$("#head_top")
 				.prepend(
 						"<div id='btn_back' class='btn_back' onclick='history.back();'></div>");
@@ -96,6 +96,7 @@ var ct_nm = "<% out.print(ct_nm); %>";
 		$("#head_top")
 				.prepend(
 						"<div id='btn_back' class='btn_back' onclick='history.back();'></div>");
+		$("#bt_top").append("<span class='btn_st' onclick=\"ctForm();\">신청</span>");
 	} else if (lo.includes("/Contest/ContestDetail.techni")) {
 		$("#sub_title").text(ct_nm);
 		$("#sub_title_2").text("");
@@ -104,7 +105,57 @@ var ct_nm = "<% out.print(ct_nm); %>";
 		$("#head_top")
 				.prepend(
 						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestMain.techni'\"></div>");
+	}else if(lo.includes("/Contest/ContestStep.techni")){
+		$("#sub_title").text("스텝 ("+ct_nm+" )");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick='history.back();'></div>");
+	}else if(lo.includes("/Contest/ContestMyGame.techni")||lo.includes("/Contest/ContestMyGameEvent.techni")||lo.includes("/Contest/ContestMyGameTime.techni")||lo.includes("/Contest/ContestMyGameCoat.techni")){
+		$("#sub_title").text("대진표 ("+ct_nm+" )");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestDetail.techni'\"></div>");
+	}else if(lo.includes("/Contest/ContestMyGameEventDetail.techni")||lo.includes("/Contest/ContestTournament.techni")){
+		
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestMyGameEvent.techni'\"></div>");
+	}else if(lo.includes("/Contest/ContestMyRanking.techni")||lo.includes("/Contest/ContestEventRanking.techni")||lo.includes("/Contest/ContestClubRanking.techni")){
+		$("#sub_title").text("순위 ("+ct_nm+" )");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestDetail.techni'\"></div>");
+	}else if(lo.includes("Contest/ContestEventPlayer.techni")||lo.includes("/Contest/ContestGroupPlayer.techni")){
+		$("#sub_title").text("선수 ("+ct_nm+" )");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestDetail.techni'\"></div>");
+	}else if(lo.includes("Contest/ContestReferee.techni")){
+		$("#sub_title").text("심판 ("+ct_nm+" )");
+		$("#sub_title_2").text("");
+		$("#sub_title_2").removeAttr("class");
+		$("#sub_title_3").removeAttr("class");
+		$("#head_top")
+				.prepend(
+						"<div id='btn_back' class='btn_back' onclick=\"location.href='/Contest/ContestDetail.techni'\"></div>");
 	}
+	
+	
 </script>
 <%
 	if (session.getAttribute("login") == null) {
@@ -117,9 +168,6 @@ var ct_nm = "<% out.print(ct_nm); %>";
 	var d = navigator.userAgent.indexOf("TOKEN:")
 	var au = "${au}";
 	if (ua.substr(a + 3, 1) == "1" && au != "1") {
-		location.href = '/Member/LoginContest.techni?m_id='
-				+ ua.substr(b + 3, c - b - 3) + '&m_pw=' + ua.substr(c + 3)
-				+ "&m_push=" + ua.substr(d + 6, a - d - 6)
 	}
 </script>
 <%

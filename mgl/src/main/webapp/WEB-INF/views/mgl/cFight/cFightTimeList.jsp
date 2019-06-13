@@ -19,7 +19,7 @@
 						<li>${fn:substring(list.cf_w_date,0,5)}</li>
 					</ul>
 					<div class="accd_a">
-					<%-- <c:forEach items="${list2}" var="list2">
+					<c:forEach items="${list2}" var="list2">
 					<c:if test="${list.cf_w_date eq list2.cf_w_date }">
 						<div class="head-data">
 							<div>
@@ -90,7 +90,7 @@
 							</tr>
 						</table>
 						</c:if>
-						</c:forEach> --%>
+						</c:forEach>
 					</div>
 					<!-- accd_a end-->
 				</li>
