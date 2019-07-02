@@ -1,5 +1,6 @@
 package com.techni.mgl.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -884,4 +885,234 @@ public class ContestService {
 		return ctDAO.tournamentSelect(map);
 	}
 	
+	@Transactional
+	public List<ContestVO> courtView(Map<String,String> map){
+		return ctDAO.courtView(map);
+	}
+	
+	@Transactional
+	public List<ContestVO> rankKindList(Map<String,String> map){
+		return ctDAO.rankKindList(map);
+	}
+	
+	@Transactional
+	public int leagueEndYN (Map<String,String> map) {
+		return ctDAO.leagueEndYN(map);
+	}
+	
+	
+	@Transactional
+	public List<Object> leagueRank(Map<String,String> map){
+		List<Object> List = new ArrayList<Object>();
+		int count = ctDAO.leagueRank3st2(map);
+		if(count>5&&count<9) {
+			ContestVO cvo = ctDAO.leagueRank(map);
+			Map<String,String> mapa = new HashMap<String,String>();
+			Map<String,String> mapb = new HashMap<String,String>();
+			Map<String,String> mapc = new HashMap<String,String>();
+			if(Integer.parseInt(cvo.getTeam_a_score())>Integer.parseInt(cvo.getTeam_b_score())) {
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				map.put("ct_t_idx", cvo.getTeam_a_idx());
+				map.put("ct_g_idx", ctDAO.winGroup(map).getCt_g_idx());
+				
+				List<ContestVO> cvo3 = ctDAO.fullRank(map);
+				mapc.put("ct_t_nm", cvo3.get(1).getCt_t_nm());
+				mapc.put("a1_nm", cvo3.get(1).getA1_nm());
+				mapc.put("b1_nm", cvo3.get(1).getB1_nm());
+				List.add(mapc);
+			}else if(Integer.parseInt(cvo.getTeam_a_score())<Integer.parseInt(cvo.getTeam_b_score())) {
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				map.put("ct_t_idx", cvo.getTeam_b_idx());
+				map.put("ct_g_idx", ctDAO.winGroup(map).getCt_g_idx());
+				
+				List<ContestVO> cvo3 = ctDAO.fullRank(map);
+				mapc.put("ct_t_nm", cvo3.get(1).getCt_t_nm());
+				mapc.put("a1_nm", cvo3.get(1).getA1_nm());
+				mapc.put("b1_nm", cvo3.get(1).getB1_nm());
+				List.add(mapc);
+			}
+			System.out.println("그룹2개");
+		}else if(count>8&&count<12) {
+			System.out.println("뽑기전");
+			ContestVO cvo = ctDAO.leagueRank(map);
+			System.out.println("뽑은후");
+			Map<String,String> mapa = new HashMap<String,String>();
+			Map<String,String> mapb = new HashMap<String,String>();
+			Map<String,String> mapc = new HashMap<String,String>();
+			if(Integer.parseInt(cvo.getTeam_a_score())>Integer.parseInt(cvo.getTeam_b_score())) {
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				map.put("ct_t_idx", cvo.getTeam_a_idx());
+				map.put("ct_t_idx2", cvo.getTeam_b_idx());
+				ContestVO cvo3st = ctDAO.leagueRank3st3(map);
+				if(cvo.getTeam_a_idx().equals(cvo3st.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+				}else if(cvo.getTeam_a_idx().equals(cvo3st.getTeam_b_idx())){
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+				}else if(cvo.getTeam_b_idx().equals(cvo3st.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+				}else if(cvo.getTeam_b_idx().equals(cvo3st.getTeam_b_idx())){
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+				}
+				
+				List.add(mapc);
+				
+			}else if(Integer.parseInt(cvo.getTeam_a_score())<Integer.parseInt(cvo.getTeam_b_score())) {
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				map.put("ct_t_idx", cvo.getTeam_a_idx());
+				map.put("ct_t_idx2", cvo.getTeam_b_idx());
+				ContestVO cvo3st = ctDAO.leagueRank3st3(map);
+				if(cvo.getTeam_b_idx().equals(cvo3st.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+				}else if(cvo.getTeam_b_idx().equals(cvo3st.getTeam_b_idx())){
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+				}else if(cvo.getTeam_a_idx().equals(cvo3st.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+				}else if(cvo.getTeam_a_idx().equals(cvo3st.getTeam_b_idx())){
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+				}
+				List.add(mapc);
+			}
+			System.out.println("그룹3개");
+		}else if(map.get("kind").equals("풀리그")) {
+			List<ContestVO> list2 = ctDAO.fullRank(map);
+			Map<String,String> mapa = new HashMap<String,String>();
+			Map<String,String> mapb = new HashMap<String,String>();
+			Map<String,String> mapc = new HashMap<String,String>();
+			mapa.put("ct_t_nm", list2.get(0).getCt_t_nm());
+			mapa.put("a1_nm", list2.get(0).getA1_nm());
+			mapa.put("b1_nm", list2.get(0).getB1_nm());
+			List.add(mapa);
+			mapb.put("ct_t_nm", list2.get(1).getCt_t_nm());
+			mapb.put("a1_nm", list2.get(1).getA1_nm());
+			mapb.put("b1_nm", list2.get(1).getB1_nm());
+			List.add(mapb);
+			mapc.put("ct_t_nm", list2.get(2).getCt_t_nm());
+			mapc.put("a1_nm", list2.get(2).getA1_nm());
+			mapc.put("b1_nm", list2.get(2).getB1_nm());
+			List.add(mapc);
+		}else if(map.get("kind").equals("결승")) {
+			System.out.println("뽑기전");
+			ContestVO cvo = ctDAO.leagueRank(map);
+			System.out.println("뽑은후");
+			Map<String,String> mapa = new HashMap<String,String>();
+			Map<String,String> mapb = new HashMap<String,String>();
+			Map<String,String> mapc = new HashMap<String,String>();
+			if(Integer.parseInt(cvo.getTeam_a_score())>Integer.parseInt(cvo.getTeam_b_score())) {
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				map.put("ct_t_idx", cvo.getTeam_a_idx());
+				ContestVO cvo3st = ctDAO.leagueRank3st(map);
+				if(cvo3st.getTeam_a_idx().equals(cvo.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+					List.add(mapc);
+				}else if(cvo3st.getTeam_b_idx().equals(cvo.getTeam_a_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+					List.add(mapc);
+				}
+			}else if(Integer.parseInt(cvo.getTeam_a_score())<Integer.parseInt(cvo.getTeam_b_score())) {
+				mapb.put("ct_t_nm", cvo.getTeam_b_nm());
+				mapb.put("a1_nm", cvo.getB1_nm());
+				mapb.put("b1_nm", cvo.getB2_nm());
+				List.add(mapb);
+				mapa.put("ct_t_nm", cvo.getTeam_a_nm());
+				mapa.put("a1_nm", cvo.getA1_nm());
+				mapa.put("b1_nm", cvo.getA2_nm());
+				List.add(mapa);
+				map.put("ct_t_idx", cvo.getTeam_b_idx());
+				ContestVO cvo3st = ctDAO.leagueRank3st(map);
+				if(cvo3st.getTeam_a_idx().equals(cvo.getTeam_b_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_b_nm());
+					mapc.put("a1_nm", cvo3st.getB1_nm());
+					mapc.put("b1_nm", cvo3st.getB2_nm());
+					List.add(mapc);
+				}else if(cvo3st.getTeam_b_idx().equals(cvo.getTeam_b_idx())) {
+					mapc.put("ct_t_nm", cvo3st.getTeam_a_nm());
+					mapc.put("a1_nm", cvo3st.getA1_nm());
+					mapc.put("b1_nm", cvo3st.getA2_nm());
+					List.add(mapc);
+				}
+			}
+		}
+		
+		//필요한것 c_idx , 그룹인덱스(풀리그),그룹인덱스(본선리그),승리팀인덱스,종목이름
+		
+		
+		return List;
+	}
+	//웹 확정 대진표
+	@Transactional
+	public List<ContestVO> selectDesideMatchList(Map<String, String> map) {
+		
+		return ctDAO.selectDesideMatchList(map);
+	}
+	
+	//대회 상태별 대진표(대기 or 종료)
+	@Transactional
+	public List<ContestVO> selectStatusMatchList(Map<String, String> map) {
+		
+		return ctDAO.selectStatusMatchList(map);
+	}
+
+	public ContestVO selectGameInfo(Map<String, String> map) {
+		
+		return ctDAO.selectGameInfo(map);
+	}	
+	@Transactional
+	public int leagueEndYN2 (Map<String,String> map) {
+		return ctDAO.leagueEndYN2(map);
+	}
 }

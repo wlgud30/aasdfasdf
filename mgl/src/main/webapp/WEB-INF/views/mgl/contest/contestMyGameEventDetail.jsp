@@ -67,7 +67,7 @@
 						<c:set var="i" value="${i+1}" />
 						<tr>
 							<td class="no_td"><c:choose>
-								<c:when test="${list.total_sum eq null }">-</c:when>
+								<c:when test="${list.total_sum eq null || list.total_sum eq ''}">-</c:when>
 								<c:otherwise>${i}</c:otherwise>
 							</c:choose></td>
 							<td class="club_td"><span class="club_name">${list.ct_club_nm }</span></td>
@@ -120,11 +120,11 @@ match-figure end
 							<div>
 								<ul class="li_col-nol impot">
 									<fmt:parseNumber var="pages" integerOnly="true" value="${list2.ct_num/all_court+(1-(list2.ct_num/all_court%1))%1}"/>
-									<li>${pages}경기</li>
-									<li><c:choose><c:when test="${fn:substring(list2.ct_gidx,14,15) eq 'w' }"></c:when><c:otherwise>예선</c:otherwise> </c:choose></li>
-									<li><c:choose><c:when test="${fn:substring(list2.ct_gidx,14,15) eq 'w' }">본선</c:when><c:otherwise> ${fn:substring(list2.ct_gidx,14,15)}그룹</c:otherwise> </c:choose></li>
-									<li>${list2.ct_court }코트</li>
 									<li>${fn:substring(list2.ct_w_dat,0,5) }</li>
+									<li>${list2.ct_court }코트</li>
+									<li>${pages}경기</li>
+									<li><c:choose><c:when test="${fn:substring(list2.ct_gidx,14,15) eq 'w' }"></c:when><c:otherwise> ${fn:substring(list2.ct_gidx,14,15)}그룹</c:otherwise> </c:choose></li>						
+									<li>${list2.ct_kind}</li>
 								</ul>
 							</div>
 							<div>

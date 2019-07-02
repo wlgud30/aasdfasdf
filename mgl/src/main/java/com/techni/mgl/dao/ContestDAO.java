@@ -316,4 +316,62 @@ public class ContestDAO {
 	public List<ContestVO> tournamentSelect(Map<String,String> map) {
 		return sqlSession_ct.selectList(nameSpace+"tournamentSelect", map);
 	}
+	public List<ContestVO> courtView(Map<String,String> map) {
+		return sqlSession_ct.selectList(nameSpace+"courtView", map);
+	}
+	
+	public List<ContestVO> rankKindList(Map<String,String> map){
+		return sqlSession_ct.selectList(nameSpace+"rankKindList", map);
+	}
+
+	public List<ContestVO> fullRank(Map<String,String> map){
+		return sqlSession_ct.selectList(nameSpace+"fullRank", map);
+	}
+	
+	public int leagueEndYN(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueEndYN", map);
+	}
+	
+	public ContestVO leagueRank(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueRank", map);
+	}
+	
+	public ContestVO leagueRank3st(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueRank3st", map);
+	}
+	
+	public int leagueRank3st2(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueRank3st2", map);
+	}
+	
+	public ContestVO winGroup(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"winGroup", map);
+	}
+	
+	public ContestVO leagueRank3st3(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueRank3st3", map);
+	}
+	//웹 확정 대진표
+		public List<ContestVO> selectDesideMatchList(Map<String, String> map) {
+			
+			return sqlSession_ct.selectList(nameSpace+"selectDesideMatchList",map);
+		}
+
+		//대회 상태별 대진표(대기 or 종료)
+		public List<ContestVO> selectStatusMatchList(Map<String, String> map) {		
+			
+			return sqlSession_ct.selectList(nameSpace+"selectStatusMatchList",map);
+		}
+
+		public ContestVO selectGameInfo(Map<String, String> map) {
+			
+			return sqlSession_ct.selectOne(nameSpace+"selectGameInfo",map);
+		}
+	public int leagueEndYN2(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueEndYN2", map);
+	}
+	
+	public ContestVO leagueRank2(Map<String,String> map) {
+		return sqlSession_ct.selectOne(nameSpace+"leagueRank2", map);
+	} 
 }

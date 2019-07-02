@@ -57,6 +57,41 @@
     <definition name="*/*/*.pa" extends="base3">
         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
     </definition>  
+    
+    <definition name="base4" template="/WEB-INF/tiles/templateContestWeb.jsp">
+        <put-attribute name="leftWeb" value="/WEB-INF/tiles/leftContestWeb.jsp" />
+        <put-attribute name="headerWeb" value="/WEB-INF/tiles/headerContestWeb.jsp" />
+    </definition>
+ 
+    <definition name="*.CWeb" extends="base4">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>
+ 
+     <definition name="*/*.CWeb" extends="base4">
+         <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+     </definition>
+    
+    <definition name="*/*/*.CWeb" extends="base4">
+        <put-attribute name="body" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+    </definition>
+    
+     <!-- 대회 클릭 시 네비게이션  -->
+    <definition name="base5" template="/WEB-INF/tiles/templateContestWeb_2.jsp">
+    	<put-attribute name="leftWeb2" value="/WEB-INF/tiles/leftContestWeb_2.jsp"/>
+    	<put-attribute name="headerWeb2" value="/WEB-INF/tiles/headerContestWeb.jsp"/> 
+    </definition> 
+   
+    <definition name="*.CWeb2" extends="base5">
+        <put-attribute name="body2" value="/WEB-INF/views/mgl/{1}.jsp" />
+    </definition>
+ 
+     <definition name="*/*.CWeb2" extends="base5">
+         <put-attribute name="body2" value="/WEB-INF/views/mgl/{1}/{2}.jsp" />
+     </definition>
+    
+    <definition name="*/*/*.CWeb2" extends="base5">
+        <put-attribute name="body2" value="/WEB-INF/views/mgl/{1}/{2}/{3}.jsp" />
+    </definition>
     <!-- 메뉴 미표시 -->
     <definition name="baseEmpty" template="/WEB-INF/tiles/templateEmpty.jsp">
     </definition>

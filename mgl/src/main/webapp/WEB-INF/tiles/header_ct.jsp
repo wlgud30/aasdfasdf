@@ -225,19 +225,16 @@ if(id != "wlgud30" &&id != "jjjj1111" &&id != "admin1234"){
 }
 });
 function testFc(location){
-	if(id != "wlgud30" &&id != "jjjj1111" &&id != "admin1234"){
-		swal("민턴in","서비스 준비중 입니다.");
-	}else{
 		if(location=="step"){
 			window.location.href="/Contest/ContestStep.techni"
 		}else if(location=="rank"){
 			window.location.href='/Contest/ContestMyRanking.techni';
 		}else if(location=="league"){
-			window.location.href='/Contest/ContestMyGame.techni';
+			window.location.href='/Contest/ContestMyGameEvent.techni';
 		}else if(location=="create"){
 			window.location.href='/Contest/ContestMyGame.techni';
 		}
-	}
+	
 }
 function appendForm(path,nm,param){
 	var form = document.createElement("form");

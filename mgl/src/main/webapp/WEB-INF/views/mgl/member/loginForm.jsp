@@ -140,11 +140,11 @@
 			<table class="table_form mb_m">
 				<tr>
 					<td class="td_ti"><strong class="point_text">생년월일</strong></td>
-					<td><input id="u_birth" type="number" placeholder="('-' 제외)"></td>
+					<td><input id="u_birth" type="number" placeholder="('-' 제외 ex)19990101)"></td>
 				</tr>
 				<tr>
 					<td class="td_ti"><strong class="point_text">핸드폰 번호</strong></td>
-					<td><input id="u_tel" type="number" placeholder="('-' 제외)"></td>
+					<td><input id="u_tel" type="number" placeholder="('-' 제외 ex)01012345678)"></td>
 				</tr>
 			</table>
 			<hr class="line_both">

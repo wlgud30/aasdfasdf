@@ -26,7 +26,7 @@
 					<fmt:parseNumber var="pages" integerOnly="true" value="${list2.ct_num/all_court+(1-(list2.ct_num/all_court%1))%1+1}"/>
 					<li>${list.ct_court}코트${pages}경기</li>
 					<li>${list.ct_k_nm}</li>
-					<li>토너먼트</li>
+					<li>${list.ct_kind}</li>
 				</ul>
 				<table class="line_no td-pt score-result3">
 					<tr>
@@ -43,7 +43,7 @@
 							</div></td>
 						<td class="score2_td"><span class="sign-round color3">진행</span>
 						</td>
-						<td class="club_name32"><span class="club_name">${list.team_a_nm }</span>
+						<td class="club_name32"><span class="club_name">${list.team_b_nm }</span>
 							<ul class="name_col">
 								<li><span class="name3">${list.b1_nm }</span> <span
 									class="age_rank">(${list.b1_age }-${list.b1_gd })</span></li>
@@ -75,7 +75,7 @@
 					value="${list.ct_num/all_court+(1-(list.ct_num/all_court%1))%1}" />
 				<li>${list.ct_court}코트${pages}경기</li>
 				<li>${list.ct_k_nm}</li>
-				<li><c:choose><c:when test="${fn:contains(list.ct_gidx,'win') eq 'true'}">본선</c:when><c:otherwise>예선</c:otherwise> </c:choose></li>
+				<li>${list.ct_kind }</li>
 			</ul>
 			<table class="line_no td-pt score-result3">
 				<tr>
@@ -125,8 +125,6 @@ function pSubmit(){
 
 	var aScore = $("#aScore").val();
 	var bScore = $("#bScore").val();
-	alert($("#aTeam").val());
-	alert($("#bTeam").val());
 	if(aScore == ""||bScore ==""||aScore == null||bScore==null){
 		swal({
 			title : "민턴in",

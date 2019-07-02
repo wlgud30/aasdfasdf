@@ -25,14 +25,14 @@ public class ContestVO {
 	public String ct_entry_fee;
 	public String ct_account;
 	public String ct_appeal;
-	
+
 	private String ct_k_idx;
 	private String ct_k_nm;
 	private String ct_k_kind;
 	private int ct_k_num;
 	private String ct_g_split;
 	public int ct_k_count;
-	
+
 	private String ct_u_idx;
 	private String ct_u_id;
 	private String ct_u_nm;
@@ -42,26 +42,26 @@ public class ContestVO {
 	private String ct_u_gd;
 	private String ct_club_nm;
 	private String ct_u_rep_id;
-	
+
 	private String ct_t_idx;
 	private String ct_g_idx;
 	private String ct_t_user_a;
 	private String ct_t_user_b;
-	
-	private String ct_or_img;               
-	private String ct_st_img;             
-	private String ct_u_nm1;              
-	private String ct_u_nm2;           
-	private String ct_u_gd1;           
+	public String ct_t_nm;
+	private String ct_or_img;
+	private String ct_st_img;
+	private String ct_u_nm1;
+	private String ct_u_nm2;
+	private String ct_u_gd1;
 	private String ct_u_gd2;
-	
+
 	private int group_count;
 	private int team_count;
 	private int club_count;
 	public int ct_hit;
 	public int ct_g_num;
 	public int ct_g_count;
-	
+
 	public String ct_t_a_nm;
 	public String ct_t_a_age;
 	public String ct_t_a_gd;
@@ -130,8 +130,23 @@ public class ContestVO {
 	public int ct_total;
 	public int ct_cnt;
 	public String ct_referee;
+	public String ct_kind;
 	
-	
+	public String getCt_t_nm() {
+		return ct_t_nm;
+	}
+
+	public void setCt_t_nm(String ct_t_nm) {
+		this.ct_t_nm = ct_t_nm;
+	}
+
+	public String getCt_kind() {
+		return ct_kind;
+	}
+
+	public void setCt_kind(String ct_kind) {
+		this.ct_kind = ct_kind;
+	}
 
 	public int getCt_ueffort() {
 		return ct_ueffort;
@@ -205,8 +220,9 @@ public class ContestVO {
 		this.ct_hit = ct_hit;
 	}
 
-	public ContestVO() {}
-	
+	public ContestVO() {
+	}
+
 	public ContestVO(String ct_idx, String ct_start, String ct_end, String ct_startline, String ct_deadline,
 			int ct_point, int ct_time, String ct_homepage, String ct_nm, String ct_host, String ct_supervision,
 			String ct_support, String ct_sponsor, String ct_points, String ct_attach, String ct_inquiry, int ct_court,
@@ -265,7 +281,7 @@ public class ContestVO {
 		this.team_count = team_count;
 		this.club_count = club_count;
 	}
-	
+
 	public int getCt_k_count() {
 		return ct_k_count;
 	}
@@ -1177,5 +1193,5 @@ public class ContestVO {
 	public void setGame_count(int game_count) {
 		this.game_count = game_count;
 	}
-	
+
 }

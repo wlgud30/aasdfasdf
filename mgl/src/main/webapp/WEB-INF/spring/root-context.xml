@@ -21,7 +21,7 @@
   		<property name="password" value=""/>
   		<property name="validationQuery" value="select 1"/>
  	</bean>
- 	
+ 	<!-- 118.129.196.68 비번없음 -->
  	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
         <constructor-arg ref="dataSourceSpied" />
     </bean>

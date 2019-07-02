@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate value="${now}" pattern="yyyy-MM-dd HH:mm:ss" var="today" />
 <div class="content white_bg pt_00">
@@ -121,6 +122,12 @@
 				</h4></td>
 		</tr>
 	</table>
+</div>
+<div class="content white_bg">
+    <h4 class="title_m tit_mb">문의처</h4>
+    <ul class="li_line gray-dot-line">
+      <li>${fn:replace(list.ct_inquiry, newLineChar, "<br/>")}</li>
+    </ul>
 </div>
 <!-- content end -->
 <!-- 		<div class="tab_btn_b_area tab_btn_bm">

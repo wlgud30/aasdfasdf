@@ -3,10 +3,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <div class="tab_btn_b_area">
-	<ul class="tab_btn_b">
+	<ul class="tab_btn_b"><!-- 
 		<li onClick="location.href='/Contest/ContestMyGame.techni'">
 			<span>나의 게임</span>
-		</li>
+		</li> -->
 		<li class="active_tab" onClick="location.href='/Contest/ContestMyGameEvent.techni'">
 			<span>종목</span>
 		</li>

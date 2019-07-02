@@ -89,6 +89,7 @@
 		<result column="MGL_CT_B_TEAM_IDX" property="team_b_idx"/>
 		<result column="MGL_CT_A_TEAM_SCORE" property="team_a_score"/>
 		<result column="MGL_CT_B_TEAM_SCORE" property="team_b_score"/>
+		<result column="MGL_CT_KIND" property="ct_kind"/>
 	</resultMap>
 	
 	<insert id="contestInsert">
@@ -248,7 +249,7 @@
 			) B
 		ON 
 			A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX
-		ORDER BY MGL_CT_TYPE_NUM
+		ORDER BY substr(MGL_CT_TYPE_NM,1,2),field (substr(MGL_CT_TYPE_NM,5,2),"혼복","여복","남복"),field (substr(MGL_CT_TYPE_NM,8),"A조","B조","C조","D조","초심조","왕초조")
 	</select>
 	<!-- 출전선수 보기 (종목리스트2)  -->
 	<select id="selectCtKindList2" resultMap="ContestVOMap">
@@ -404,21 +405,37 @@
 	</select>
 	<!-- 대회에 참여한 모든 클럽명들을 리스트로 뽑는다 -->
 	<select id="feeClubList" resultMap="ContestVOMap">
-		SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_team WHERE MGL_CT_FEE_YN ="Y" GROUP BY MGL_CT_CLUB_NM
+		SELECT MGL_CT_CLUB_NM,count(*) as ac FROM ${ct_idx}_team WHERE MGL_CT_FEE_YN ="Y" and MGL_CT_tYPE_IDX = #{ct_k_idx} GROUP BY MGL_CT_CLUB_NM order by ac desc
 	</select>
 	<!--팀리스트 클럽별로 번갈아가며 출력  -->
-	<select id="feeClubTeamList" resultMap="ContestVOMap">
+	<!-- <select id="feeClubTeamList" resultMap="ContestVOMap">
 		select * from 
-				( select *, @rn := if(@mgl_ct_club_nm = `mgl_ct_club_nm`,@rn +1,if(@mgl_ct_club_nm := `mgl_ct_club_nm`,1,1)) as rn
-					from (SELECT A.*,B.MGL_CT_TYPE_NUM FROM ${ct_idx}_team A LEFT JOIN ${ct_idx}_kind B ON A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX) a
+				( select *, @rn := if(@mgl_ct_club_nm = `MGL_CT_CLUB_NM`,@rn +1,if(@mgl_ct_club_nm := `MGL_CT_CLUB_NM`,1,1)) as rn
+					from (SELECT A.*,B.MGL_CT_TYPE_NUM FROM ${ct_idx}_team A LEFT JOIN ${ct_idx}_kind B ON A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX WHERE A.MGL_CT_tYPE_IDX = #{ct_k_idx}) a
 					cross join (select @rn := 0 , @mgl_ct_club_nm :='')as var
-					<!-- where mgl_ct_type_idx =#{ct_k_idx} -->
-					order by mgl_ct_type_num ,`mgl_ct_club_nm`)t
-					order by mgl_ct_type_num, rn,CASE `mgl_ct_club_nm`
+					order by `MGL_CT_CLUB_NM`)t
+					order by rn,CASE `mgl_ct_club_nm`
 					<foreach collection="list" item="item" separator="" index="index">
 						when #{item} then (#{index})
 					</foreach>
 					end
+	</select> -->
+	<select id="feeClubTeamList" resultMap="ContestVOMap">
+		SELECT * FROM(
+			SELECT A.*,B.MGL_CT_TYPE_NUM FROM ${ct_idx}_team A 
+			LEFT JOIN ${ct_idx}_kind B ON A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX WHERE A.MGL_CT_tYPE_IDX 
+			= #{ct_k_idx}
+			) A LEFT JOIN
+			
+			(
+			SELECT COUNT(*) AS count,MGL_CT_CLUB_NM  FROM ${ct_idx}_team A 
+			LEFT JOIN ${ct_idx}_kind B ON A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX WHERE A.MGL_CT_tYPE_IDX 
+			= #{ct_k_idx} GROUP BY MGL_cT_CLUB_NM ORDER BY count DESC
+			) B
+			
+			ON A.MGL_CT_CLUB_NM = B.MGL_CT_CLUB_NM
+			
+			ORDER BY count desc
 	</select>
 	<!-- 팀테이블에 그룹인덱스 업데이트 -->
 	<update id="teamGroupUpdate" >
@@ -436,37 +453,54 @@
 				#{ct_idx},
 				#{item.ct_k_idx},
 				#{item.ct_g_no},
-				#{item.ct_g_count}
+				#{item.ct_g_count},
+				#{item.kind}
 				)
 			</foreach>
 	</insert>
 		<!-- 그룹인덱스와 그룹 카운트를 구하는 SQL문 -->
 	<select id="groupIdx" resultMap="ContestVOMap">
 		SELECT 
-			MGL_CT_GROUP_IDX,MGL_CT_GROUP_COUNT,A.MGL_CT_TYPE_IDX 
+			MGL_CT_GROUP_IDX,MGL_CT_GROUP_COUNT,A.MGL_CT_TYPE_IDX,MGL_CT_KIND
 		FROM 
 			${ct_idx}_GROUP A LEFT JOIN
 			${ct_idx}_KIND B
 		ON 
 			A.MGL_CT_TYPE_IDX = B.MGL_CT_TYPE_IDX		
+		 ORDER BY MGL_CT_tYPE_NUM,CASE WHEN MGL_CT_GROUP_IDX LIKE '%win%' THEN MGL_CT_gROUP_IDX END ASC,
+			CASE WHEN NOT MGL_CT_GROUP_IDX LIKE '%win%' THEN cast(substr(mgl_ct_Group_idx,15) as unsigned) END ASC
+		 
 	</select>
 	<!-- 그룹인덱스를 조건으로 선수를 가져온다 -->
 	<select id="groupAll" resultMap="ContestVOMap">
-		SELECT 
-			* 
+		SELECT
+		A.MGL_CT_USER_NM AS ct_u_nm1 , c.mgl_ct_user_nm as ct_u_nm2 , b.*
 		FROM 
-			${ct_idx}_TEAM 
+			${ct_idx}_USER A 
+		RIGHT JOIN
+			${ct_idx}_TEAM B 
+		ON A.MGL_CT_USER_ID = B.MGL_CT_USER_A
+		LEFT JOIN
+			${ct_idx}_USER C
+		ON C.MGL_CT_USER_ID = B.MGL_CT_USER_B
 		WHERE 
 			MGL_CT_GROUP_IDX = #{ct_g_idx}
+		ORDER BY MGL_CT_CLUB_NM
 	</select>
 	<!-- 종목인덱스를 조건으로 선수를 가져온다 -->
 	<select id="typeAll" resultMap="ContestVOMap">
 		SELECT 
-			* 
+			A.MGL_CT_USER_NM AS ct_u_nm1 , c.mgl_ct_user_nm as ct_u_nm2 , b.*
 		FROM 
-			${ct_idx}_TEAM 
+			${ct_idx}_USER A 
+		RIGHT JOIN
+			${ct_idx}_TEAM B
+		ON A.MGL_CT_USER_ID = B.MGL_CT_USER_A
+		LEFT JOIN
+			${ct_idx}_USER C
+		ON C.MGL_CT_USER_ID = B.MGL_CT_USER_B
 		WHERE 
-			MGL_CT_TYPE_IDX = #{ct_k_idx}
+			B.MGL_CT_TYPE_IDX = #{ct_k_idx}
 	</select>
 	<!-- 대진표 생성됨을 알리는 업데이트 -->
 	<update id="matchListYN">
@@ -531,7 +565,8 @@
 			NULL,
 			#{item.team_b_idx},
 			(SELECT MGL_CT_CLUB_NM FROM ${ct_idx}_team WHERE MGL_CT_TEAM_IDX = #{item.team_b_idx}),
-			NULL
+			NULL,
+			#{item.ct_kind}
 			)
 			</foreach>
 	</insert>
@@ -1128,7 +1163,7 @@
 			group by 
 				ja.mgl_CT_Team_idx
 			ORDER BY 
-				WIN_COUNT DESC ,TOTAL_SUM DESC
+				WIN_COUNT DESC ,TOTAL_SUM DESC,gap_sum desc 
 	</select>
 	
 	<!-- 코트리스트  OR 시간리스트 -->
@@ -1190,7 +1225,7 @@
 			group by 
 				ja.mgl_CT_Team_idx
 			ORDER BY 
-				WIN_COUNT DESC ,TOTAL_SUM DESC
+				WIN_COUNT DESC ,TOTAL_SUM DESC,gap_sum desc 
 	</select>
 	<!-- 종목 디테일화면에서 일정 -->
 	<select id="detailCalendar" resultMap="ContestVOMap">
@@ -1364,4 +1399,148 @@ on SUBSTR(MGL_CT_GIDX,1,13) = mgl_ct_type_idx
 	<select id="tournamentSelect" resultMap="ContestVOMap">
 		SELECT * FROM ${ct_idx}_view WHERE MGL_CT_GIDX LIKE #{win} AND SUBSTR(MGL_CT_GIDX,1,13) = #{ct_k_idx}
 	</select>
+	
+	<!-- 예선전 코트별로 출력 -->
+	<select id="courtView" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_VIEW WHERE MGL_CT_COURT = #{ct_court} AND NOT MGL_CT_GIDX LIKE '%blank%' AND NOT MGL_CT_GIDX LIKE '%win%' AND MGL_CT_STATUS != "종료" ORDER BY MGL_CT_W_DAT
+	</select>
+	
+	<!-- 순위화면에 종목 리스트 -->
+	<select id="rankKindList" resultMap="ContestVOMap">
+		select 
+			* 
+		from 
+			${ct_idx}_GROUP a 
+		left join 
+			${ct_idx}_kind b 
+		on 
+			a.mgl_ct_type_idx = b.mgl_ct_type_idx 
+		WHERE 
+			MGL_cT_KIND = "풀리그" 
+		OR 
+			MGL_CT_KIND = "결승" 
+		GROUP BY 
+			a.MGL_CT_TYPE_IDX
+		ORDER BY 
+			substr(MGL_CT_TYPE_NM,1,2),field (substr(MGL_CT_TYPE_NM,5,2),"혼복","여복","남복"),field (substr(MGL_CT_TYPE_NM,8),"A조","B조","C조","D조","초심조","왕초조")
+	</select>
+	<!-- 풀리그 순위(1,2,3위) -->
+	<select id="fullRank" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			( 
+				SELECT 
+					MGL_CT_CLUB_NM as ct_t_nm,MGL_CT_TEAM_IDX,MGL_CT_USER_A,MGL_CT_USER_B 
+				FROM 
+					${ct_idx}_TEAM 
+				WHERE 
+					MGL_CT_GROUP_IDX = #{ct_g_idx}
+			) JA 
+		LEFT JOIN 
+			( 
+				SELECT 
+					MGL_CT_TEAM_IDX,SUM(MGL_CT_TOTAL)as total_sum,SUM(MGL_CT_CNT_GAP)as gap_sum,COUNT(CASE WHEN MGL_CT_WIN = "승" THEN 1 END) as win_count,
+					COUNT(CASE WHEN MGL_CT_WIN = "패" THEN 1 END)as lose_count 
+				FROM 
+					${ct_idx}_MATCH_END 
+				WHERE 
+					MGL_CT_GROUP_IDX = #{ct_g_idx}
+				GROUP BY 
+					MGL_CT_TEAM_IDX 
+			)JB 
+		ON 
+			JA.MGL_CT_TEAM_IDX = JB.MGL_CT_TEAM_IDX 
+		LEFT JOIN 
+			( 
+				SELECT 
+					MGL_CT_USER_ID as a1_id ,MGL_CT_USER_NM as a1_nm
+				FROM 
+					${ct_idx}_USER 
+			) JC 
+		ON 
+			JA.MGL_CT_USER_A = JC.a1_id
+		LEFT JOIN 
+			( 
+				SELECT 
+					MGL_CT_USER_ID as b1_id ,MGL_CT_USER_NM as b1_nm 
+				FROM 
+					${ct_idx}_USER 
+			) JD 
+		ON 
+			JA.MGL_CT_USER_B = JD.b1_id
+		group by 
+			ja.mgl_CT_Team_idx ORDER BY WIN_COUNT DESC ,TOTAL_SUM DESC,gap_sum desc  
+		limit 3
+	</select>
+	<!-- 본선리그가 모두 끝났나 확인 -->
+	<select id="leagueEndYN" resultType="int">
+		SELECT COUNT(*) FROM ${ct_idx}_VIEW WHERE MGL_CT_STATUS !="종료" AND MGL_CT_TYPE_NM= #{ct_k_nm} 
+	</select>
+	<!-- 점수 업데이트에서 본선이외의 예선전이 모두 끝났나 확인 -->
+	<select id="leagueEndYN2" resultType="int">
+		SELECT COUNT(*) FROM ${ct_idx}_VIEW WHERE MGL_CT_STATUS !="종료" AND MGL_CT_TYPE_NM= #{ct_k_nm} AND MGL_CT_GIDX NOT LIKE "%win%"
+	</select>
+	<!-- 본선리그에서 1등과 2등 -->
+	<select id="leagueRank" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_VIEW WHERE SUBSTR(MGL_CT_GIDX,1,18) = #{ct_g_idx}
+	</select>
+	<!-- 본선리그에서 1등과 2등 -->
+	<select id="leagueRank2" resultMap="ContestVOMap">
+		SELECT * FROM ${ct_idx}_VIEW WHERE SUBSTR(MGL_CT_GIDX,1,18) = #{ct_g_idx} AND MGL_CT_GIDX NOT LIKE "%win%"
+	</select>
+	<!-- 본선리그에서 3등을 뽑기위한 셀렉문 -->
+	<select id="leagueRank3st" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			${ct_idx}_VIEW 
+		WHERE 
+			MGL_CT_A_TEAM_IDX = #{ct_t_idx}
+		OR 
+			MGL_CT_B_TEAM_IDX = #{ct_t_idx} 
+		ORDER BY 
+			field (MGL_CT_KIND,"본선4차","본선3차","본선2차","본선1차","예선","결승") 
+		limit 1
+	</select>
+	<!-- 웹 확정 대진표  -->
+	<select id="selectDesideMatchList" resultMap = "ContestVOMap">
+		SELECT * FROM ${ct_idx}_view WHERE NOT MGL_CT_GIDX LIKE '%blank%' ORDER BY MGL_CT_W_DAT,MGL_CT_COURT
+	</select>
+	 
+	
+	<!-- 웹 대회 상태 별 대진표  -->
+	<select id="selectStatusMatchList" resultMap = "ContestVOMap">
+		SELECT * FROM ${ct_idx}_view WHERE NOT MGL_CT_GIDX LIKE '%blank%' AND MGL_CT_STATUS = #{ct_status} ORDER BY MGL_CT_W_DAT,MGL_CT_COURT
+	</select>
+	<!-- ct_gidx로 레코드 한 줄 가져오기  -->
+	<select id="selectGameInfo" resultMap="ContestVOMap">
+		select * from ${ct_idx}_view where mgl_ct_gidx ='${ct_gidx}'
+	</select>
+	<!-- 종목이 2그룹일때 3위출력 -->
+	<select id="leagueRank3st2" resultType="int">
+		SELECT COUNT(*) FROM ${ct_idx}_TEAM WHERE MGL_CT_TYPE_IDX = #{ct_k_idx}
+	</select>
+	<select id="leagueRank3st3" resultMap="ContestVOMap">
+		SELECT 
+			* 
+		FROM 
+			${ct_idx}_VIEW 
+		WHERE 
+			MGL_CT_A_TEAM_IDX = #{ct_t_idx}
+		OR 
+			MGL_CT_B_TEAM_IDX = #{ct_t_idx} 
+		or
+			MGL_CT_A_TEAM_IDX = #{ct_t_idx2}
+		OR 
+			MGL_CT_B_TEAM_IDX = #{ct_t_idx2} 
+		ORDER BY 
+			field (MGL_CT_KIND,"본선4차","본선3차","본선2차","본선1차","예선","결승") 
+		limit 1
+	</select>
+	<!-- 이긴팀의 그룹인덱스 -->
+	<select id = "winGroup" resultMap="ContestVOMap">
+		SELECT mgl_ct_gROUP_idx FROM ${ct_idx}_TEAM WHERE MGL_CT_team_idx = #{ct_t_idx} AND MGL_CT_type_idx = #{ct_k_idx}
+	</select>
+	
 </mapper>

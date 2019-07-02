@@ -3,7 +3,7 @@
 @import url('../font/simple-line-icons.css');
 @import url('../font/notosanskr.css');
 @import url('../font/fontello.css');
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,legend,p,table,th,td,input,select,textarea,button {margin:0; padding:0}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,legend,p,table,th,td,input,select,textarea,button,hr{margin:0; padding:0}
 html, body{height:100%;overflow:hidden}
 body,input,select,textarea{font-family:'Noto Sans KR','NanumGothic','Nanum Gothic',sans-serif;font-size:14px; line-height:1.5; color:#555}
 h1,h2,h3,h4,h5,h6{font-weight:600;line-height:1.4;color:#222}
@@ -31,12 +31,13 @@ input:-ms-input-placeholder{/* IE 10+ */color:#666}
 .pd_lrtb{padding:10px 12px !important} .pd_m{padding:8px 12px !important} .pd_s{padding:8px 10px 9px!important} .pd_tiny{padding:6px} .pd_left0 th~th, .pd_l0{padding-left:0 !important} .pd_r0{padding-right:0 !important} 
 
 .mb_m{margin-bottom:15px} .gap_m{margin-bottom:18px; border:none} .gap_s{margin-bottom:10px; border:none} .gap_b{margin-bottom:30px; border:none} 
-.mb_t{margin-top:9px !important} .mb_b{margin-bottom:12px} .mb_bm{margin-bottom:8px} .tab_btn_bm{margin-bottom:0 !important} .mb_b0{margin-bottom:0px !important} 
+.mb_t{margin-top:9px !important} .mb_b{margin-bottom:12px} .mb_bm{margin-bottom:8px} .tab_btn_bm, .mb_b0{margin-bottom:0 !important}
 .mb_ts{margin-top:6px; margin-bottom:2px} .mb_ts:first-child, .mb_t0{margin-top:0 !important} .mb_ta{margin-top:0px !important} .mb_tiny{margin-top:6px !important} .cont_mb_b, .tit_mbig{margin-bottom:10px}
 .table_form td{padding-bottom:8px} 
+.gap_1{border:none; height:1px}
 
 /*타이틀 여백*/
-p.guide_text.tit_mb, .tit_mb{margin-bottom:6px} .tit_mbs{margin-bottom:3px; line-height:1em;margin-top:-1px} 
+p.guide_text.tit_mb, .tit_mb{margin-bottom:6px !important} .tit_mbs{margin-bottom:3px; line-height:1em;margin-top:-1px} 
 
 /*라인*/
 .line_div{border:none;border-top:1px solid #dedee0;margin:10px 0;clear:both;width:100%} .line-tb{border-top:1px solid #dedee0;border-bottom:1px solid #dedee0} .line_one{border:none;border-top:1px solid #dedee0;clear:both;width:100%}
@@ -99,7 +100,7 @@ header .logo{width:92px; height:21px} header .logo_top{text-align:center}
 .club_img{background-image:url(../img/logo32.svg);background-position:center; background-repeat:no-repeat; background-size:cover; background-attachment:scroll; position:relative; max-height:170px; min-height:160px}
 .main_top_tit{opacity:0; position:absolute;width:100%;z-index:-1} 
 .main_img .head_top{position:absolute; z-index:1} .main_img .el_club_side, .main_img .member_ub, .main_img h4, .main_img .bt_top{color:#fff !important;text-shadow:1px 1px 0px rgba(0, 0, 0, 0.2), 1px 1px 2px rgba(0, 0, 0, 0.5)}
-.main_img .btn_back, .main_img{color:#fff} .main_img:before{content:''; position:absolute; background:linear-gradient(rgba(0, 0, 0, .45), rgba(0, 0, 0, .23) 50%); width:100%; height:100%; z-index:1; }
+.main_img .btn_back, .main_img{color:#fff} .main_img:before{content:''; position:absolute; background:linear-gradient(rgba(0, 0, 0, .45), rgba(0, 0, 0, .23) 50%); width:100%; height:100%; z-index:1}
 .main_img .thum_big{box-shadow: 1px 1px 2px #fff, 1px 1px 1px rgba(255, 255, 255, 0.5), 1px 1px 3px rgba(0, 0, 0, 0.6)} .top_cont{top:0} .bot_cont{bottom:0}
 
 /*레이아웃*/
@@ -129,8 +130,7 @@ div.white_bg .li_col-nol b{color:#999}
 .dis_b{display:block} .li_inline > li, .inline_st{display:inline-block}
 
 /*사이즈*/
-.na_row_td{width:16%} .td_1{width:5%} .td_2{width:8%; white-space:nowrap} .w10{width:10%; white-space:nowrap} .w20{width:20%} .w30{width:30%} .w40{width:40%} .w50{width:50%}
-.w100{width:100%}
+.na_row_td{width:16%} .td_1{width:5%} .td_2{width:8%; white-space:nowrap} .w10{width:10%; white-space:nowrap} .w20{width:20%} .w30{width:30%} .w40{width:40%} .w50{width:50%} .w100{width:100%}
 
 /*사진-정보*/
 .photo-data{display:table; width:100%} .photo-data > div{display:table-cell; vertical-align:middle} .photo-data > div ~ div{padding-left:10px}
@@ -318,11 +318,11 @@ p.guide_text + .list_check{margin-top:4px}
 .game_td .court_td{padding-right:0; padding-left:0} .img_mix_td td:last-child{padding-right:0}
 
 /*아코디언*/
-.pd_lrtb.white_bg + .accordion_ul{margin-top:6px}
-.accordion_ul > li{position:relative;margin-bottom:6px}.accordion_ul .open .accd_head{font-weight:600;background:#ac68cc;color:#fff} .accordion_ul .open .accd_head span{color:#fff} 
+.pd_lrtb.white_bg + .accordion_ul{margin-top:5px}
+.accordion_ul > li{position:relative;margin-bottom:5px}.accordion_ul .open .accd_head{font-weight:600;background:#ac68cc;color:#fff} .accordion_ul .open .accd_head span{color:#fff} 
 .tab_btn_b_area + .accordion_ul{margin-bottom:10px}
 .accordion_ul .accd_head{position:relative;cursor:pointer;background:#fff;padding:6px 12px 0;display:table;width:100%}  .accordion_ul > li.open{border:1px solid #ac68cc}
-.accordion_ul .accd_head:before{position:absolute;content:"\e801";font-size:18px;margin-right:8px;font-family:'FontAwesome';font-weight:normal;padding:4px 4.5px;line-height:11px; top:8px;background:#adb7f0;color:#fff}
+.accordion_ul .accd_head:before{position:absolute;content:"\e801";font-size:17px;margin-right:8px;font-family:'FontAwesome';font-weight:normal;padding:4px 4.5px;line-height:11px; top:8px;background:#adb7f0;color:#fff}
 .accordion_ul .open .accd_head:before{content:"\e802";background:#ac68cc; color:#fff; font-weight:600}
 .accd_head > li{position:relative;padding:0 0px 7px 28px;display:table-cell;white-space:nowrap} .accd_head > li:first-child{overflow:hidden;text-overflow:ellipsis; max-width:100px}
 .accd_head > li+li:last-child{text-align:right;width:10%} .accd_head > li+li{padding-left:10px; width:33%} 
@@ -492,6 +492,8 @@ table{width:100%;border-collapse:collapse} .td_wauto{width:auto; margin:0 auto}
 .td_t-b_0 tr:first-child td{padding-top:0; border-top:0} .td_t-b_0 tr:last-child td{padding-bottom:0}
 .td_fix{table-layout:fixed} 
 
+/*복합 테이블*/
+.th_mix thead th{line-height: 1.3} .th_mix td{} .th_mix thead th ~ th{border-left:1px solid #cacee5} .th_mix td ~ td{border-left:1px solid #dedee0}
 /*작은테이블*/
 .td_small td, .td_small th{font-size:0.93em;white-space:nowrap;border-top:1px solid #dedee0;padding:4px 5px 5px; letter-spacing:-0.2px} 
 .td_small .name3{display:block;line-height:1.34em}
@@ -742,7 +744,7 @@ p.guide_text:before,span.guide_text:first-child:before, .td_ti b:before{content:
 .mix_img_col3.thead_td thead th{border:2px solid #fff;padding:0 !important}
 .mix_img_col3 .divide_text{font-size:0.93em} .mix_img_col3 h4 + .divide_text{margin-top:1px}
 .mix_img_col3 .td_th h3 ~ h3{margin-top:2px}.td_th{font-weight:600; color:#444} 
-.no_td{width:6%; font-weight:600;color:#5f71d4; font-size:1.01em; text-align:center} .team_nb, .nb2_td{min-width:3em} .sub_td{width:6%;color:#5f71d4;text-align:center} 
+.no_td{width:6%; font-weight:600;color:#5f71d4; text-align:center;font-size:1.01em} .team_nb, .nb2_td{min-width:3em} .sub_td{width:6%;color:#5f71d4;text-align:center} 
 .member_td > tbody > tr{border-top:5px solid #edeff0} .member_td td{white-space:nowrap;padding:7px 10px} .member_td > tbody > tr:first-child{border-top:1px solid #edeff0} .slef_data{border-top:none !important}
 .member_td .name2_td{padding-left:0} .age_rank_data:before{content:'('} .age_rank_data:after{content:')'} .age_rank_data{font-size:0.9em; font-weight:normal} .name3 + .age_rank_data{margin-left:3px}
 .member_td .age_rank{display:block} .member_td .data_th{width:82px}
@@ -887,7 +889,7 @@ thead th h4{font-size:1.07em}
 .iw_inner{max-width:250px; font-size:0.92em; padding:8px; line-height:1.4em} .iw_inner h4{font-size:1.06em; margin-bottom:0.2em} .iw_inner .bd_link{margin-top:6px;letter-spacing:-0.5px}
 
 /*링크 테이블*/
-.link_tr tr td:first-child:before{content:'\e83f';font-family:'FontAwesome';color:#974cba;font-size:1.12em;margin-right:6px}
+.link_tr tr td:first-child:before{content:'\e83f';font-family:'FontAwesome';color:#974cba;font-size:1.1em;margin-right:6px}
 .link_tr td:last-child{position:relative;text-align:right} .td_pd_l0 td,.td_pd_l0 th:not(:first-child){padding-left:0 !important} .td_pd_l0 td:last-child{padding-right:0}
 
 /*대진표*/
@@ -965,7 +967,7 @@ thead th h4{font-size:1.07em}
 .figure4 .match_data:nth-of-type(5) .win_lose:nth-of-type(2){left:255px} .figure4 .match_data:nth-of-type(6) .win_lose:nth-of-type(2){right:255px}
 
 /*토너먼트*/
-.tourna_area{border:solid #fff; border-width:0 12px; height:calc(100% - 75px); overflow:hidden} .tourna_scroll{overflow:auto; height:100%} 
+.tourna_area{border:solid #fff; border-width:0 12px} .tourna_scroll{overflow:auto; height:100%} 
 .tourna_td{width:auto;white-space:nowrap} .tourna_td td{text-align:center;font-size: 0.92em}
 .td_ne{vertical-align:top} .td_ne .name3{border:1px solid #b1b4c4; padding:4px 1px;min-width:44px; border-top:none; display:table-cell; height:20px} .td_ne .name3 + .name3{border-left:none}
 .club_ne{vertical-align:bottom;max-width:88px} .club_ne .el_date{border:1px solid #b1b4c4;background:#b1b4c4;padding:0 3px 1px;color:#fff;min-height:22px} .win_st .el_date{border-color:#c070e5;background:#c070e5}
