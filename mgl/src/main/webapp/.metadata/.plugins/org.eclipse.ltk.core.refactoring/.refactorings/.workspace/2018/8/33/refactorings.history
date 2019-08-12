@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Delete resource &apos;mgl&apos;" deleteContents="false" description="Delete resource &apos;mgl&apos;" element1="/mgl" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1534125490661"/>
-</session>
